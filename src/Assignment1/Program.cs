@@ -17,28 +17,34 @@ namespace Assignments
             List<Contact> contacts = new List<Contact>();
             
             Console.WriteLine("BASIC CONTACT MANAGER CONSOLE APPLICATION");
-
-            do
+            try
             {
-                Console.WriteLine("\nOperations Available on Contact Information: ");
-                Console.WriteLine("1. Add   2. View   3. Edit   4. Delete   5. Search   6. Sort   7. Exit\n");
-                Console.Write("Choose a functionality to continue: ");
-
-                choice = int.Parse(Console.ReadLine());
-
-                switch (choice)
+                do
                 {
-                    case 1: AddContacts(contacts); break;
-                    case 2: ViewContacts(contacts); break;
-                    case 3: EditContacts(contacts); break;
-                    case 4: DeleteContacts(contacts); break;
-                    case 5: SearchContacts(contacts); break;
-                    case 6: SortContacts(contacts);break;
-                    case 7: break;
-                    default: Console.WriteLine("Invalid choice."); break;
+                    Console.WriteLine("\nOperations Available on Contact Information: ");
+                    Console.WriteLine("1. Add   2. View   3. Edit   4. Delete   5. Search   6. Sort   7. Exit\n");
+                    Console.Write("Choose a functionality to continue: ");
+
+                    choice = int.Parse(Console.ReadLine());
+
+                    switch (choice)
+                    {
+                        case 1: AddContacts(contacts); break;
+                        case 2: ViewContacts(contacts); break;
+                        case 3: EditContacts(contacts); break;
+                        case 4: DeleteContacts(contacts); break;
+                        case 5: SearchContacts(contacts); break;
+                        case 6: SortContacts(contacts); break;
+                        case 7: break;
+                        default: Console.WriteLine("Invalid choice."); break;
+                    }
                 }
+                while (choice != 7);
             }
-            while (choice != 7);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
             Console.ReadKey();
         }
         /// <summary>
