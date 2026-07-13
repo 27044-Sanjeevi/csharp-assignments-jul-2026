@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# A hook script to verify the branch name.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+#
+# To enable this hook, rename this file to "pre-commit".
+
+#LC_ALL=C is essentially an English-only environment that specifies the ANSI C locale
+LC_ALL=C
+
+# To get the name of the current brach
+local_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+valid_branch="(feature|bugfix|improvement|library|prerelease|release|hotfix|feat|fix)-name-feature"
+
+# Regex for branch validation
+#Uncomment below regex to match pattern
+valid_branch_regex="^(feature|bugfix|improvement|library|prerelease|release|hotfix|feat|fix)\-[a-zA-Z0-9._-]+-[a-zA-Z0-9._-]+$"
+
+#Uncomment below regex to match pattern users/name/featureName
+#valid_branch_regex="^(users)\/[a-z0-9._-]+/[a-z0-9._-]+$"
+
+#Uncomment below regex to match pattern feat-moduleName/featureName
+#valid_branch_regex="^(feat)\-[a-z0-9._-]+-[a-z0-9._-]+$"
+
+#Message to display when branch name is invalid
+message="Branch name is not valid.
+Branch names should be in this format: $valid_branch.
+Your commit will be rejected. You should rename your branch to a valid name and try again.
+To rename branch name 
+		git branch -m old_branch_name new_branch_name"
+
+#Check whether the branch name is valid
+#If invalid return exit status as 1
+#Or return exit status as 0
+if [[ ! "$local_branch" == "main" && ! "$local_branch" =~ $valid_branch_regex ]]
+then
+    echo "$message"
+    exit 1
+fi
+exit 0
