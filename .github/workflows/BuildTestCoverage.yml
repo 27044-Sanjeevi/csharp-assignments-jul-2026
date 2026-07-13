@@ -1,0 +1,101 @@
+name: BuildTestCoverage
+
+on:
+  # Triggers the workflow on  pull request events 
+  pull_request:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+ changed_files:
+    runs-on: windows-latest
+    name: Test changed-files
+    steps:
+    
+      - uses: actions/checkout@v3
+       
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v37
+        with:
+            files: |
+              src/**/*.editorconfig
+              
+      - name: Verify all the project uses VSIX template 
+        run: |
+          # Search for .csproj files and remove duplicates
+          csproj_paths=$(find  ./src  -type f -name "*.csproj" | sort | uniq)
+          for file in $csproj_paths; do
+              if ! grep -q "CSharpAnalyser" $file; then
+                  echo "$file is not created based on the given VSIX Template."
+                  exit 1
+              fi
+          done
+          echo "Verified all the project uses VSIX Template."
+        shell: bash
+          
+      - name: Check whether each project contain .editorconfig file.
+        run: |
+          # Find the path of csproj and list out the count
+          csproj_paths=$(find  ./src  -type f -name "*.csproj" | sort | uniq)
+          check_editorconfig=true
+          for files in $csproj_paths; do
+             directory=$(dirname "$files")
+             if ! [ -f "$directory/.editorconfig" ]; then
+                check_editorconfig=false
+            fi
+          done
+          if [ "$check_editorconfig" = true ]; then
+            echo ".editorconfig exists for all csproj files."
+          else
+            echo "Some csproj files don't have .editorconfig."
+          fi
+        shell: bash
+
+      - name: Check only the updated/added .editorconfig file
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            #diffoutput is to comapre the file and give the modified changes.
+            diffoutput=$(diff --recursive --unified $file ./docs/assets/.editorconfig || true)
+             if ! [ -z "$diffoutput" ]; then
+                echo "Differences found in file: $file."
+                exit 1
+            fi
+          done
+          echo "No .editorconfig file has been added or updated."
+        shell: bash 
+
+ run-tests:
+    # Use the latest version of Windows as the runner
+    runs-on: windows-latest
+    needs: changed_files
+    steps:
+
+      # Checkout the repository to the runner
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      # Set up the .NET environment
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:        
+          # Replace with the desired .NET Core version
+          dotnet-version: "6.0.x"    
+          
+      # Build the solution file
+      - name: Build the solutions
+        run: dotnet build 
+
+      # Run code coverage using coverlet.msbuild
+      - name: Run code coverage
+        run: |
+          result=$(dotnet test --no-build -p:CollectCoverage=true)
+          if [ ! -z "$result" ]; then
+            printf "\e[42mTest project Found\e[0m\n"
+            echo $result
+            issues_found=true
+          else
+            printf "\e[41mNo Test project Found\e[0m"
+          fi
+        shell: bash
+

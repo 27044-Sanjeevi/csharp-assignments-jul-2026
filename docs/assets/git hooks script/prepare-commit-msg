@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# Hook script to prepare the commit log message.
+# Called by "git commit" with the name of the file that has the
+# commit message, followed by the description of the commit
+# message's source.  The hook's purpose is to edit the commit
+# message file.  If the hook fails with a non-zero status,
+# the commit is aborted.
+#
+# To enable this hook, rename this file to "prepare-commit-msg".
+
+#To get the commit message 
+MESSAGE=$(cat $1) 
+
+#Valid regex for commit message
+valid_commit_message_regex="^(feat|fix|docs|style|refactor|test|chore|perf|other|ci|build|revert)+((:)|( : )|(: ))+[a-zA-Z0-9._-]"
+valid_commit_message="(feat|fix|docs|style|refactor|test|chore|perf|other|ci|build|revert):description"
+#Message to display when commit message is invalid
+message="Your commit was rejected due to the invalid commit message. Skipping...
+Please use the following format:
+$valid_commit_message"
+
+#Check whether the commit message is valid
+#If invalid return exit flag as 1
+#Else return exit flag as 0
+if ! [[ $MESSAGE =~ $valid_commit_message_regex ]]; then
+  echo "$message"
+  exit 1
+fi
+exit 0
