@@ -25,7 +25,10 @@ namespace Assignments
                     Console.WriteLine("1. Add   2. View   3. Edit   4. Delete   5. Search   6. Sort   7. Exit\n");
                     Console.Write("Choose a functionality to continue: ");
 
-                    choice = int.Parse(Console.ReadLine());
+                    while (!int.TryParse(Console.ReadLine(), out choice))
+                    {
+                        Console.WriteLine("Invalid Input. Enter a number");
+                    }
 
                     switch (choice)
                     {
@@ -36,7 +39,7 @@ namespace Assignments
                         case 5: SearchContacts(contacts); break;
                         case 6: SortContacts(contacts); break;
                         case 7: break;
-                        default: Console.WriteLine("Invalid choice."); break;
+                        default: Console.WriteLine("Invalid choice. Enter within the given range (1-7)."); break;
                     }
                 }
                 while (choice != 7);
@@ -54,19 +57,23 @@ namespace Assignments
         private static void AddContacts(List<Contact> contacts)
         {
             Console.Write("Enter the number of Contacts to be added : ");
-            int numberOfContacts = int.Parse(Console.ReadLine());
+            int numberOfContacts;
+            while (!int.TryParse(Console.ReadLine(), out numberOfContacts) && numberOfContacts < 0)
+            {
+                Console.Write("Invalid Input. Enter a positive number: ");
+            }
 
             for (int i = 0; i < numberOfContacts; i++)
             {
                 Console.WriteLine($"\nEnter details for Contact {i + 1}:");
                 Console.Write("Name: ");
-                string name = Console.ReadLine();
+                string name = Console.ReadLine().Trim();
                 Console.Write("Phone Number: ");
-                string phoneNumber = Console.ReadLine();
+                string phoneNumber = Console.ReadLine().Trim();
                 Console.Write("Email: ");
-                string email = Console.ReadLine();
+                string email = Console.ReadLine().Trim();
                 Console.Write("Additional Notes: ");
-                string additionalNotes = Console.ReadLine();
+                string additionalNotes = Console.ReadLine().Trim();
                 Contact contact = new Contact
                 {
                     Name = name,
@@ -85,26 +92,37 @@ namespace Assignments
         private static void ViewContacts(List<Contact> contacts)
         {
             Console.WriteLine("\n1. View a particular contact\n2. View all Contacts");
-            int choice = int.Parse(Console.ReadLine());
+            int viewChoice;
+            while (!int.TryParse(Console.ReadLine(), out viewChoice))
+            {
+                Console.WriteLine("Invalid Input. Enter a number");
+            }
 
-            switch (choice)
+            switch (viewChoice)
             {
                 case 1:
                     Console.Write("Enter the name of the contact to view: ");
-                    string nameToView = Console.ReadLine();
+                    string nameToView = Console.ReadLine().Trim();
+                    int foundCount = 0;
                     foreach (var contact in contacts)
                     {
                         if (contact.Name.Equals(nameToView))
                         {
+                            foundCount++;
                             Console.WriteLine($"Name: {contact.Name}");
                             Console.WriteLine($"Phone Number: {contact.PhoneNumber}");
                             Console.WriteLine($"Email: {contact.Email}");
                             Console.WriteLine($"Additional Notes: {contact.AdditionalNotes}");
-                            return;
                         }
                     }
-                    Console.WriteLine("Contact not found.");
-
+                    if (foundCount == 0) 
+                    {
+                        Console.WriteLine("Contact not found.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Total {foundCount} contact(s) found with the name '{nameToView}'.");
+                    }
                     break;
                 case 2:
                     Console.WriteLine("\nAll Contacts:");
@@ -129,7 +147,7 @@ namespace Assignments
         private static void EditContacts(List<Contact> contacts)
         {
             Console.Write("Enter the name of the contact to edit: ");
-            string nameToEdit = Console.ReadLine();
+            string nameToEdit = Console.ReadLine().Trim();
             foreach (var contact in contacts)
             {
                 if (contact.Name.Equals(nameToEdit))
@@ -137,16 +155,16 @@ namespace Assignments
                     Console.WriteLine($"Editing Contact: {contact.Name}");
 
                     Console.Write("Name: ");
-                    string name = Console.ReadLine();
+                    string name = Console.ReadLine().Trim();
 
                     Console.Write("Phone Number: ");
-                    string phoneNumber = Console.ReadLine();
-
+                    string phoneNumber = Console.ReadLine().Trim();
+                        
                     Console.Write("Email: ");
-                    string email = Console.ReadLine();
+                    string email = Console.ReadLine().Trim();
 
                     Console.Write("Additional Notes: ");
-                    string additionalNotes = Console.ReadLine();
+                    string additionalNotes = Console.ReadLine().Trim();
 
                     contact.Name = name;
                     contact.PhoneNumber = phoneNumber;
@@ -165,7 +183,7 @@ namespace Assignments
         private static void DeleteContacts(List<Contact> contacts)
         {
             Console.Write("Enter the name of the Contact to be deleted : ");
-            string nameToDelete = Console.ReadLine();
+            string nameToDelete = Console.ReadLine().Trim();
             foreach (var contact in contacts)
             {
                 if (contact.Name.Equals(nameToDelete))
@@ -194,7 +212,7 @@ namespace Assignments
                 {
                     case 'N':
                         Console.WriteLine("Enter the name to be searched : ");
-                        string nameToSearch = Console.ReadLine();
+                        string nameToSearch = Console.ReadLine().Trim();
 
                         if (contact.Name.Equals(nameToSearch))
                         {
@@ -206,7 +224,7 @@ namespace Assignments
                         break;
                     case 'P':
                         Console.WriteLine("Enter the phone number to be searched : ");
-                        string phoneNumberToSearch = Console.ReadLine();
+                        string phoneNumberToSearch = Console.ReadLine().Trim();
 
                         if (contact.PhoneNumber.Equals(phoneNumberToSearch))
                         {
@@ -218,7 +236,7 @@ namespace Assignments
                         break;
                     case 'E':
                         Console.WriteLine("Enter the Email Address to be searched : ");
-                        string emailToSearch = Console.ReadLine();
+                        string emailToSearch = Console.ReadLine().Trim();
 
                         if (contact.PhoneNumber.Equals(emailToSearch))
                         {
@@ -244,7 +262,11 @@ namespace Assignments
             Console.WriteLine("1. Name");
             Console.WriteLine("2. Phone Number");
             Console.WriteLine("3. Email");
-            int sortChoice = int.Parse(Console.ReadLine());
+            int sortChoice;
+            while (!int.TryParse(Console.ReadLine(), out sortChoice))
+            {
+                Console.WriteLine("Invalid Input. Enter a number");
+            }
             switch (sortChoice)
             {
                 case 1: contacts.Sort((c1, c2) => c1.Name.CompareTo(c2.Name));  break;
