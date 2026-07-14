@@ -21,10 +21,12 @@ namespace Assignments
             {
                 do
                 {
+                    //menu for the user to choose the operation to perform on the contact information.
                     Console.WriteLine("\nOperations Available on Contact Information: ");
                     Console.WriteLine("1. Add   2. View   3. Edit   4. Delete   5. Search   6. Sort   7. Exit\n");
                     Console.Write("Choose a functionality to continue: ");
 
+                    // loops until the user enters a valid integer input for the choice.
                     while (!int.TryParse(Console.ReadLine(), out choice))
                     {
                         Console.WriteLine("Invalid Input. Enter a number");
@@ -50,6 +52,14 @@ namespace Assignments
             }
             Console.ReadKey();
         }
+        private static void DisplayContactDetails(Contact contact)
+        {
+            Console.WriteLine($"Name: {contact.Name}");
+            Console.WriteLine($"Phone Number: {contact.PhoneNumber}");
+            Console.WriteLine($"Email: {contact.Email}");
+            Console.WriteLine($"Additional Notes: {contact.AdditionalNotes}");
+            return;
+        }
         /// <summary>
         /// Add new contacts to the list based on user input.
         /// </summary>
@@ -63,6 +73,7 @@ namespace Assignments
                 Console.Write("Invalid Input. Enter a positive number: ");
             }
 
+            // add the contact details to the list based on the number of contacts specified by the user.
             for (int i = 0; i < numberOfContacts; i++)
             {
                 Console.WriteLine($"\nEnter details for Contact {i + 1}:");
@@ -109,10 +120,7 @@ namespace Assignments
                         if (contact.Name.Equals(nameToView))
                         {
                             foundCount++;
-                            Console.WriteLine($"Name: {contact.Name}");
-                            Console.WriteLine($"Phone Number: {contact.PhoneNumber}");
-                            Console.WriteLine($"Email: {contact.Email}");
-                            Console.WriteLine($"Additional Notes: {contact.AdditionalNotes}");
+                            DisplayContactDetails(contact);
                         }
                     }
                     if (foundCount == 0) 
@@ -128,10 +136,7 @@ namespace Assignments
                     Console.WriteLine("\nAll Contacts:");
                     foreach (var contact in contacts)
                     {
-                        Console.WriteLine($"Name: {contact.Name}");
-                        Console.WriteLine($"Phone Number: {contact.PhoneNumber}");
-                        Console.WriteLine($"Email: {contact.Email}");
-                        Console.WriteLine($"Additional Notes: {contact.AdditionalNotes}");
+                        DisplayContactDetails(contact);
                         Console.WriteLine();
                     }
                     break;
@@ -202,6 +207,7 @@ namespace Assignments
         /// <param name="contacts">Contacts Reference Type defined in Main, used here to Search in the list.</param>
         private static void SearchContacts(List<Contact> contacts)
         {
+            // search for contacts based on the user's choice of search parameter (name, phone number, or email).
             Console.WriteLine("Enter the parameter for searching : ");
             Console.WriteLine("[N]ame\n[P]hone Number\n[E]mail Address");
             char searchParameter = char.Parse(Console.ReadLine());
@@ -216,10 +222,7 @@ namespace Assignments
 
                         if (contact.Name.Equals(nameToSearch))
                         {
-                            Console.WriteLine($"Name: {contact.Name}");
-                            Console.WriteLine($"Phone Number: {contact.PhoneNumber}");
-                            Console.WriteLine($"Email: {contact.Email}");
-                            Console.WriteLine($"Additional Notes: {contact.AdditionalNotes}");
+                            DisplayContactDetails(contact);
                         }
                         break;
                     case 'P':
@@ -228,10 +231,7 @@ namespace Assignments
 
                         if (contact.PhoneNumber.Equals(phoneNumberToSearch))
                         {
-                            Console.WriteLine($"Name: {contact.Name}");
-                            Console.WriteLine($"Phone Number: {contact.PhoneNumber}");
-                            Console.WriteLine($"Email: {contact.Email}");
-                            Console.WriteLine($"Additional Notes: {contact.AdditionalNotes}");
+                            DisplayContactDetails(contact);
                         }
                         break;
                     case 'E':
@@ -240,10 +240,7 @@ namespace Assignments
 
                         if (contact.PhoneNumber.Equals(emailToSearch))
                         {
-                            Console.WriteLine($"Name: {contact.Name}");
-                            Console.WriteLine($"Phone Number: {contact.PhoneNumber}");
-                            Console.WriteLine($"Email: {contact.Email}");
-                            Console.WriteLine($"Additional Notes: {contact.AdditionalNotes}");
+                            DisplayContactDetails(contact);
                         }
                         break;
                     default:
@@ -258,6 +255,7 @@ namespace Assignments
         /// <param name="contacts">A list of contacts defined in Main, used here to sort the contacts.</param>
         private static void SortContacts(List<Contact> contacts)
         {
+            //sort the contacts based on the user's choice of sorting parameter (name, phone number, or email).
             Console.WriteLine("Sort Contacts by:");
             Console.WriteLine("1. Name");
             Console.WriteLine("2. Phone Number");
