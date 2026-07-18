@@ -44,18 +44,18 @@
 
                     switch (choice)
                     {
-                        case 1: this.AddContactFlow();  break;
+                        case 1: this.AddContactFlow(); break;
                         case 2: this.ViewContactsFlow(); break;
                         case 3: this.EditContactFlow(); break;
                         case 4: this.DeleteContactFlow(); break;
                         case 5: this.SearchContactsFlow(); break;
                         case 6: this.SortContactsFlow(); break;
-                        case 7: 
+                        case 7:
                             exit = true;
                             this._consoleIo.WriteColored("Thank you for using Basic Contact Manager. Goodbye!", ConsoleColor.Cyan);
                             break;
                     }
-                }   
+                }
                 catch (Exception ex)
                 {
                     this._consoleIo.WriteColored($"An unexpected error occurred: {ex.Message}", ConsoleColor.Red);
@@ -90,7 +90,7 @@
         }
 
         /// <summary>
-        /// Cpn the process of adding a new contact.
+        /// the process of adding a new contact.
         /// </summary>
         private void AddContactFlow()
         {
@@ -262,7 +262,7 @@
             List<ContactInfo> sortedList = this._contactManager.GetSortedContacts(sortBy, choice);
             this._consoleIo.Clear();
             string directionText = choice ? "Ascending" : "Descending";
-            this._consoleIo.WriteColored($"=== CONTACTS SORTED BY {sortBy.ToUpper()} ({directionText}) ===", ConsoleColor.Yellow);
+            this._consoleIo.WriteColored($"=== CONTACTS SORTED BY {sortBy} ({directionText}) ===", ConsoleColor.Yellow);
             this.DisplayContactsTable(sortedList);
         }
 
@@ -330,6 +330,7 @@
             {
                 return val;
             }
+
             return val.Substring(0, maxLength - 3) + "...";
         }
     }

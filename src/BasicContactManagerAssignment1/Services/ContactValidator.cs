@@ -27,7 +27,7 @@
                 throw new Exception("Contact name is required and cannot be empty or whitespace.");
             }
 
-            // 2. Validate Phone 
+            // 2. Validate Phone
             if (!string.IsNullOrEmpty(contact.Phone))
             {
                 if (string.IsNullOrWhiteSpace(contact.Phone))
@@ -37,10 +37,10 @@
 
                 foreach (char c in contact.Phone)
                 {
-                    if (!char.IsDigit(c) && c != ' ' && c != '-' && c != '(' && c != ')' && c != '+')
+                    if (!char.IsDigit(c) && c != ' ' && c != '-' && c != '+')
                     {
                         throw new Exception(
-                            "Phone number can only contain digits, spaces, dashes, parentheses, or plus symbols.");
+                            "Phone number can only contain digits, spaces, dashes, or plus symbols.");
                     }
                 }
             }

@@ -25,6 +25,7 @@
         {
             return Console.ReadLine();
         }
+
         /// <summary>
         /// Writes message to screen with custom color.
         /// </summary>
@@ -36,6 +37,7 @@
             this.WriteLine(message);
             Console.ResetColor();
         }
+
         /// <summary>
         /// Writes the specified string value to the standard output stream.
         /// </summary>

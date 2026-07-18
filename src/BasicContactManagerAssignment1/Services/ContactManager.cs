@@ -159,6 +159,7 @@
 
             return contacts;
         }
+
         /// <summary>
         /// Creates a deep copy of a contact info object.
         /// </summary>
