@@ -8,16 +8,6 @@
     internal class ConsoleIO
     {
         /// <summary>
-        /// Gets or sets the foreground color of the console.
-        /// </summary>
-        /// <value>gets or sets the value of the Foreground Color</value>
-        public ConsoleColor ForegroundColor
-        {
-            get => Console.ForegroundColor;
-            set => Console.ForegroundColor = value;
-        }
-
-        /// <summary>
         /// Reads the next line of characters from the standard input stream.
         /// </summary>
         /// <returns>The next line of input from the console, or null if no lines are available.</returns>
