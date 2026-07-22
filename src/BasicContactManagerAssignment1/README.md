@@ -10,7 +10,7 @@ A simple, console-based application to help organize and manage your personal co
 *   **Delete Contacts:** Remove contacts you no longer need.
 *   **Search:** Quickly find contacts by searching through their name, phone number, email, or notes.
 *   **Sort:** Organize your contact list by Name, Phone, or Email in either Ascending or Descending order.
- 
+
 ## Operations Available
  
 ### Adding a New Contact
