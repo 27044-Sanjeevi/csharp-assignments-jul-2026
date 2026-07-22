@@ -1,6 +1,6 @@
 ﻿namespace BasicContactManagerAssignment1
 {
-    using System;
+    using BasicContactManagerAssignment1.Controller;
     using BasicContactManagerAssignment1.IO;
     using BasicContactManagerAssignment1.Persistence;
     using BasicContactManagerAssignment1.Services;
@@ -16,15 +16,22 @@
         /// </summary>
         public static void Main()
         {
-            // Set up dependency injection chain (Composition Root)
-            ConsoleIO consoleIo = new ConsoleIO();
-            Repository repository = new Repository();
-            ContactValidator validator = new ContactValidator();
-            ContactManager contactManager = new ContactManager(repository, validator);
-            ContactConsoleUI ui = new ContactConsoleUI(contactManager, consoleIo);
+            try
+            {
+                ConsoleIO consoleIo = new ConsoleIO();
+                Repository repository = new Repository();
+                ContactValidator validator = new ContactValidator(repository);
+                ContactManager contactManager = new ContactManager(repository, validator);
+                ContactConsoleUI ui = new ContactConsoleUI(consoleIo);
+                ContactController controller = new ContactController(contactManager, ui);
 
-            // Execute the UI loop
-            ui.RunApplication();
+                // Execute the UI loop
+                controller.HandleMenu();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
         }
     }
 }

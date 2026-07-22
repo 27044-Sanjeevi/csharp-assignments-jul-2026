@@ -21,7 +21,7 @@
         /// <value>
         /// Name of the contact person, represented as a string.
         /// </value>
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// gets or sets the Email of the contact person.

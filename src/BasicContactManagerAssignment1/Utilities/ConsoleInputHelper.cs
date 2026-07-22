@@ -1,4 +1,4 @@
-﻿namespace BasicContactManagerAssignment1
+﻿namespace BasicContactManagerAssignment1.Utilities
 {
     using System;
     using BasicContactManagerAssignment1.IO;
@@ -6,16 +6,16 @@
     /// <summary>
     /// Provides helper methods for reading and validating console input.
     /// </summary>
-    internal class Helpers
+    internal class ConsoleInputHelper
     {
         private readonly ConsoleIO _consoleIo;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Helpers"/> class.
+        /// Initializes a new instance of the <see cref="ConsoleInputHelper"/> class.
         /// </summary>
         /// <param name="consoleIo">The console I/O wrapper.</param>
         /// <exception cref="ArgumentNullException">Thrown when consoleIo is null.</exception>
-        public Helpers(ConsoleIO consoleIo)
+        public ConsoleInputHelper(ConsoleIO consoleIo)
         {
             this._consoleIo = consoleIo ?? throw new ArgumentNullException(nameof(consoleIo));
         }
@@ -106,6 +106,23 @@
 
                 this._consoleIo.WriteLine("Invalid input. Please enter 'y' or 'n'.");
             }
+        }
+
+        /// <summary>
+        /// Truncates a string to the specified maximum length, appending "..." if it exceeds that length.
+        /// </summary>
+        /// <param name="value">String to be truncated.</param>
+        /// <param name="maxLength">Maxlength allowed to be printed</param>
+        /// <returns>Truncated message</returns>
+        public string Truncate(string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value) ||
+                value.Length <= maxLength)
+            {
+                return value;
+            }
+
+            return value.Substring(0, maxLength - 3) + "...";
         }
     }
 }

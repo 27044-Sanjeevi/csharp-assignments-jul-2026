@@ -4,6 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Text.RegularExpressions;
     using BasicContactManagerAssignment1.Models;
+    using BasicContactManagerAssignment1.Persistence;
 
     /// <summary>
     /// Provides methods for validating contact information against system business rules.
@@ -15,6 +16,18 @@
         private static readonly Regex PhoneStructureRegex = new (@"^\+?[0-9\s\-]{7,20}$", RegexOptions.Compiled);
 
         private static readonly EmailAddressAttribute FrameworkEmailValidator = new ();
+
+        private readonly Repository _repository;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContactValidator"/> class with a reference to the contact repository.
+        /// </summary>
+        /// <param name="repository">Provides the repository from persistence</param>
+        /// <exception cref="ArgumentNullException">Throws exception when Argument is null</exception>
+        public ContactValidator(Repository repository)
+        {
+            this._repository = repository ?? throw new ArgumentNullException(nameof(repository), "Cannot process validation routines on a null reference.");
+        }
 
         /// <summary>
         /// Validates a contact info object against business rules.
@@ -31,6 +44,7 @@
 
             ValidateName(contact.Name);
             ValidatePhone(contact.Phone);
+            ValidateUniquePhone(contact.Phone, this._repository);
             ValidateEmail(contact.Email);
             ValidateNotes(contact.Notes);
         }
@@ -61,6 +75,28 @@
             if (!PhoneStructureRegex.IsMatch(phone) || GetNumericDigitCount(phone) < 7)
             {
                 throw new ArgumentException("Phone number must contain at least 7 numeric digits and use valid formatting symbols.", nameof(phone));
+            }
+        }
+
+        /// <summary>
+        /// Validates that the phone number is unique across all existing contacts in the repository.
+        /// </summary>
+        /// <param name="phone">Phone number to be checked in repository</param>
+        /// <param name="repository">Repository object for validation</param>
+        /// <exception cref="ArgumentException">Throws when argument exception occurs</exception>
+        private static void ValidateUniquePhone(string? phone, Repository repository)
+        {
+            if (string.IsNullOrEmpty(phone))
+            {
+                return;
+            }
+
+            foreach (var contact in repository.GetAll())
+            {
+                if (contact.Phone == phone)
+                {
+                    throw new ArgumentException("Phone number must be unique. This phone number is already in use.", nameof(phone));
+                }
             }
         }
 

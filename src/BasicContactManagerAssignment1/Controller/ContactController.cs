@@ -1,42 +1,41 @@
 ﻿namespace BasicContactManagerAssignment1.Controller
 {
-    using BasicContactManagerAssignment1.IO;
     using BasicContactManagerAssignment1.Models;
     using BasicContactManagerAssignment1.Services;
-    using BasicContactManagerAssignment1.Utilities;
     using BasicContactManagerAssignment1.View;
 
     /// <summary>
-    /// Class to handle the control operations between UI and Service layers
+    /// Coordinates interactions between the view and service layers.
     /// </summary>
     internal class ContactController
     {
-        private ContactManager _contactManager;
-        private ContactConsoleUI _view;
-        private Helpers _helpers;
+        private readonly ContactManager _contactManager;
+        private readonly ContactConsoleUI _view;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ContactController"/> class
+        /// Initializes a new instance of the <see cref="ContactController"/> class.
         /// </summary>
-        /// <param name="contactManager">The business logic contact manager.</param>
-        /// <param name="view">The view layer of the contact manager</param>
-        /// <param name="helpers">Common helpers</param>
-        /// <exception cref="ArgumentNullException">Thrown when contact reference parameter is null.</exception>
-        public ContactController(ContactManager contactManager, ContactConsoleUI view, Helpers helpers)
+        /// <param name="contactManager">Handles contact manager operations</param>
+        /// <param name="view">Handles view operations</param>
+        /// <exception cref="ArgumentNullException">Throws exception when Argument is null.</exception>
+        public ContactController(ContactManager contactManager, ContactConsoleUI view)
         {
             this._contactManager = contactManager ?? throw new ArgumentNullException(nameof(contactManager));
             this._view = view ?? throw new ArgumentNullException(nameof(view));
-            this._helpers = helpers ?? throw new ArgumentNullException(nameof(helpers));
         }
 
-        public bool HandleMenu()
+        /// <summary>
+        /// Handles the main menu loop and user selections.
+        /// </summary>
+        public void HandleMenu()
         {
             bool exit = false;
+
             while (!exit)
             {
                 this._view.ShowMainMenu();
 
-                int choice = this._helpers.GetMenuChoice("Choose a functionality to continue: ", 1, 7);
+                int choice = this._view.GetMenuChoice();
                 this._view.Clear();
 
                 switch (choice)
@@ -44,260 +43,157 @@
                     case 1:
                         this.AddContact();
                         break;
+
                     case 2:
                         this.ViewContacts();
                         break;
+
                     case 3:
                         this.EditContact();
                         break;
+
                     case 4:
                         this.DeleteContact();
                         break;
+
                     case 5:
                         this.SearchContacts();
                         break;
+
                     case 6:
                         this.SortContacts();
                         break;
+
                     case 7:
                         exit = true;
-                        this._view.WriteColored("Thank you for using Basic Contact Manager. Goodbye!", ConsoleColor.Cyan);
+                        this._view.ShowSuccessMessage(
+                            "Thank you for using Basic Contact Manager. Goodbye!");
                         break;
+                }
+
+                if (!exit)
+                {
+                    this._view.PauseAndReturnToMenu();
                 }
             }
         }
 
         /// <summary>
-        /// Contains the process of adding a new contact.
+        /// Creates a new contact.
         /// </summary>
         private void AddContact()
         {
-            this._view.WriteColored("=== ADD NEW CONTACT ===", ConsoleColor.Yellow);
-
-            string name = this._helpers.GetRequiredString("Enter Name (Required): ");
-            string? phone = this._helpers.GetOptionalString("Enter Phone Number (Optional): ");
-            string? email =this._helpers.GetOptionalString("Enter Email Address (Optional): ");
-            string? notes = this._helpers.GetOptionalString("Enter Additional Notes (Optional): ");
-
-            ContactInfo newContact = new ContactInfo
-            {
-                Name = name,
-                Phone = phone,
-                Email = email,
-                Notes = notes,
-            };
-
             try
             {
-                this._contactManager.AddContact(newContact);
-                this._view.WriteColored("\nContact added successfully!", ConsoleColor.Green);
+                ContactInfo contact = this._view.GetNewContactDetails();
+                this._contactManager.AddContact(contact);
+                this._view.ShowSuccessMessage("Contact added successfully!");
             }
             catch (Exception ex)
             {
-                this._view.WriteColored($"\nError: {ex.Message}", ConsoleColor.Red);
+                this._view.ShowErrorMessage(ex.Message);
             }
         }
 
         /// <summary>
-        /// Displays all contacts in a table.
+        /// Displays all contacts.
         /// </summary>
         private void ViewContacts()
         {
-            this._view.WriteColored("=== VIEW ALL CONTACTS ===", ConsoleColor.Yellow);
-            List<ContactInfo> contacts = _contactManager.GetAllContacts();
-            this.DisplayContactsTable(contacts);
+            List<ContactInfo> contacts = this._contactManager.GetAllContacts();
+            this._view.DisplayContactsTable(contacts);
         }
 
         /// <summary>
-        /// Orchestrates the process of editing an existing contact.
+        /// Updates an existing contact.
         /// </summary>
         private void EditContact()
         {
-            this._view.WriteColored("=== EDIT EXISTING CONTACT ===", ConsoleColor.Yellow);
-            List<ContactInfo> contacts = _contactManager.GetAllContacts();
+            List<ContactInfo> contacts = this._contactManager.GetAllContacts();
 
             if (contacts.Count == 0)
             {
-                this._view.WriteLine("No contacts available to edit.");
+                this._view.ShowErrorMessage("No contacts available to edit.");
                 return;
             }
 
-            ContactInfo? selected = SelectContact(contacts, "edit");
+            ContactInfo? selected =
+                this._view.SelectContact(contacts, "edit");
+
             if (selected == null)
             {
-                this._view.WriteLine("Edit cancelled.");
                 return;
             }
 
-            _consoleIo.ClearAndWriteColored($"--- Editing Contact: {selected.Name} ---", ConsoleColor.Yellow);
-
-            _consoleIo.WriteLine("Press [Enter] to keep current value.");
-
-            _consoleIo.Write($"Name [Current: {selected.Name}]: ");
-            string? input = _consoleIo.ReadLine()?.Trim();
-            selected.Name = string.IsNullOrEmpty(input) ? selected.Name : input;
-
-            _consoleIo.Write($"Phone [Current: {selected.Phone}]: ");
-            input = _consoleIo.ReadLine()?.Trim();
-            selected.Phone = string.IsNullOrEmpty(input) ? selected.Phone : input;
-
-            _consoleIo.Write($"Email [Current: {selected.Email}]: ");
-            input = _consoleIo.ReadLine()?.Trim();
-            selected.Email = string.IsNullOrEmpty(input) ? selected.Email : input;
-
-            _consoleIo.Write($"Notes [Current: {selected.Notes}]: ");
-            input = _consoleIo.ReadLine()?.Trim();
-            selected.Notes = string.IsNullOrEmpty(input) ? selected.Notes : input;
+            ContactInfo updatedContact =
+                this._view.GetUpdatedContactDetails(selected);
 
             try
             {
-                _contactManager.UpdateContact(selected);
-                _consoleIo.WriteColored("\nContact updated successfully!", ConsoleColor.Green);
+                this._contactManager.UpdateContact(updatedContact);
+                this._view.ShowSuccessMessage("Contact updated successfully!");
             }
             catch (Exception ex)
             {
-                _consoleIo.WriteColored($"\nError: {ex.Message}", ConsoleColor.Red);
+                this._view.ShowErrorMessage(ex.Message);
             }
         }
 
         /// <summary>
-        /// Allows the user to select and delete an existing contact.
+        /// Deletes an existing contact.
         /// </summary>
         private void DeleteContact()
         {
-            _consoleIo.WriteColored("=== DELETE CONTACT ===", ConsoleColor.Yellow);
-            List<ContactInfo> contacts = _contactManager.GetAllContacts();
+            List<ContactInfo> contacts = this._contactManager.GetAllContacts();
 
             if (contacts.Count == 0)
             {
-                _consoleIo.WriteLine("No contacts available to delete.");
+                this._view.ShowErrorMessage("No contacts available to delete.");
                 return;
             }
 
-            ContactInfo? selected = SelectContact(contacts, "delete");
+            ContactInfo? selected = this._view.SelectContact(contacts, "delete");
+
             if (selected == null)
             {
-                _consoleIo.WriteLine("Delete cancelled.");
                 return;
             }
-            else
+
+            try
             {
-                try
-                {
-                    _contactManager.DeleteContact(selected.Id);
-                    _consoleIo.WriteColored("\nContact deleted successfully!", ConsoleColor.Green);
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    _consoleIo.WriteColored($"\nError: {ex.Message}", ConsoleColor.Red);
-                }
+                this._contactManager.DeleteContact(selected.Id);
+                this._view.ShowSuccessMessage("Contact deleted successfully!");
+            }
+            catch (Exception ex)
+            {
+                this._view.ShowErrorMessage(ex.Message);
             }
         }
+
         /// <summary>
-        /// Prompts the user for a search term and displays matching contacts.
-        /// </summary
+        /// Searches contacts and displays matching results.
+        /// </summary>
         private void SearchContacts()
         {
-            _consoleIo.WriteColored("=== SEARCH CONTACTS ===", ConsoleColor.Yellow);
-            string term = _helpers.GetRequiredString("Enter search term (name, phone, email, or notes): ");
+            string searchTerm = this._view.GetSearchTerm();
 
-            List<ContactInfo> results = _contactManager.SearchContacts(term);
-            _consoleIo.ClearAndWriteColored($"=== SEARCH RESULTS FOR '{term}' ===", ConsoleColor.Yellow);
-            DisplayContactsTable(results);
+            List<ContactInfo> results = this._contactManager.SearchContacts(searchTerm);
+
+            this._view.DisplayContactsTable(results);
         }
 
         /// <summary>
-        /// Prompts the user for sorting options and displays the sorted contact list.
+        /// Sorts contacts and displays the results.
         /// </summary>
         private void SortContacts()
         {
-            _consoleIo.WriteColored("=== SORT CONTACTS ===", ConsoleColor.Yellow);
-            _consoleIo.WriteLine("Sort by:");
-            _consoleIo.WriteLine("1. Name");
-            _consoleIo.WriteLine("2. Phone Number");
-            _consoleIo.WriteLine("3. Email Address");
+            SortField sortField = this._view.GetSortField();
 
-            int sortChoice = _helpers.GetMenuChoice("Choose sort field (1-3): ", 1, 3);
-            SortField sortField = (SortField)sortChoice;
+            bool isAscending = this._view.GetSortDirection();
 
-            _consoleIo.WriteLine("\nSort direction:");
-            _consoleIo.WriteLine("1. Ascending");
-            _consoleIo.WriteLine("2. Descending");
-            int directionChoice = _helpers.GetMenuChoice("Choose direction (1-2): ", 1, 2);
-            bool choice = directionChoice == 1;
+            List<ContactInfo> contacts = this._contactManager.GetSortedContacts(sortField, isAscending);
 
-            List<ContactInfo> sortedList = _contactManager.GetSortedContacts(sortField, choice);
-            string directionText = choice ? "Ascending" : "Descending";
-            _consoleIo.ClearAndWriteColored($"=== CONTACTS SORTED BY {sortField} ({directionText}) ===", ConsoleColor.Yellow);
-            DisplayContactsTable(sortedList);
-        }
-
-        /// <summary>
-        /// Renders the provided contacts in a tabular format.
-        /// </summary>
-        /// <param name="contacts">The list of contacts to show.</param>
-        private void DisplayContactsTable(List<ContactInfo> contacts)
-        {
-            if (contacts.Count == 0)
-            {
-                _consoleIo.WriteLine("No contacts to display.");
-                return;
-            }
-
-            _consoleIo.WriteLine(string.Format("{0,-20} | {1,-15} | {2,-25} | {3}", "Name", "Phone", "Email", "Notes"));
-            _consoleIo.WriteLine(new string('-', 85));
-
-            foreach (ContactInfo contact in contacts)
-            {
-                string name = Truncate(contact.Name ?? string.Empty, 20);
-                string phone = Truncate(contact.Phone ?? "N/A", 15);
-                string email = Truncate(contact.Email ?? "N/A", 25);
-                string notes = Truncate(contact.Notes ?? "N/A", 20);
-
-                _consoleIo.WriteLine(string.Format("{0,-20} | {1,-15} | {2,-25} | {3}", name, phone, email, notes));
-            }
-
-            _consoleIo.WriteLine(new string('-', 85));
-            _consoleIo.WriteLine($"Total Contacts: {contacts.Count}");
-        }
-
-        /// <summary>
-        /// Prompts the user to select a contact from a list by standard choice numbers.
-        /// </summary>
-        /// <param name="contacts">The list of contacts.</param>
-        /// <param name="actionName">The action being performed (e.g. edit, delete).</param>
-        /// <returns>The selected contact or null if cancelled.</returns>
-        private ContactInfo? SelectContact(List<ContactInfo> contacts, string actionName)
-        {
-            _consoleIo.WriteLine($"Available contacts to {actionName}:");
-            for (int i = 0; i < contacts.Count; i++)
-            {
-                _consoleIo.WriteLine($"[{i + 1}] {contacts[i].Name} (Phone: {contacts[i].Phone ?? "N/A"})");
-            }
-
-            int choice = _helpers.GetMenuChoice($"Select contact index (1-{contacts.Count}) or 0 to cancel: ", 0, contacts.Count);
-            if (choice == 0)
-            {
-                return null;
-            }
-
-            return contacts[choice - 1];
-        }
-
-        /// <summary>
-        /// Truncates string to a max length and appends ellipsis if truncated.
-        /// </summary>
-        /// <param name="val">The string value.</param>
-        /// <param name="maxLength">The maximum length allowed.</param>
-        /// <returns>A truncated string.</returns>
-        private string Truncate(string val, int maxLength)
-        {
-            if (val.Length <= maxLength)
-            {
-                return val;
-            }
-
-            return val.Substring(0, maxLength - 3) + "...";
+            this._view.DisplayContactsTable(contacts);
         }
     }
 }

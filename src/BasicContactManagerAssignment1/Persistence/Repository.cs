@@ -44,6 +44,8 @@
                     return;
                 }
             }
+
+            throw new KeyNotFoundException($"Contact with ID {contact.Id} not found.");
         }
 
         /// <summary>
@@ -60,6 +62,8 @@
                     return;
                 }
             }
+
+            throw new KeyNotFoundException($"Contact with ID {id} not found.");
         }
     }
 }
