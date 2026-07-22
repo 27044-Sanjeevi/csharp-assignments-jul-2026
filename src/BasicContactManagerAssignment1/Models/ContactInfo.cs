@@ -20,7 +20,6 @@
         /// </summary>
         /// <value>
         /// Name of the contact person, represented as a string.
-        /// It can be null if the name is not provided.
         /// </value>
         public string? Name { get; set; }
 
@@ -29,7 +28,6 @@
         /// </summary>
         /// <value>
         /// Email of the contact person, represented as a string.
-        /// It can be null if the name is not provided.
         /// </value>
         public string? Email { get; set; }
 
@@ -38,7 +36,6 @@
         /// </summary>
         /// <value>
         /// Phone Number of the contact person, represented as a string.
-        /// It can be null if the name is not provided.
         /// </value>
         public string? Phone { get; set; }
 
@@ -47,7 +44,6 @@
         /// </summary>
         /// <value>
         /// Additional Notes about the contact person, represented as a string.
-        /// It can be null if the name is not provided.
         /// </value>
         public string? Notes { get; set; }
     }

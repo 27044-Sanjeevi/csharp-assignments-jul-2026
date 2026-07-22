@@ -1,98 +1,129 @@
 ﻿namespace BasicContactManagerAssignment1.Services
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.Text.RegularExpressions;
     using BasicContactManagerAssignment1.Models;
 
     /// <summary>
-    /// Provides methods for validating contact information.
+    /// Provides methods for validating contact information against system business rules.
     /// </summary>
     internal class ContactValidator
     {
+        private const int MaxNotesLengthAllowed = 1000;
+
+        private static readonly Regex PhoneStructureRegex = new (@"^\+?[0-9\s\-]{7,20}$", RegexOptions.Compiled);
+
+        private static readonly EmailAddressAttribute FrameworkEmailValidator = new ();
+
         /// <summary>
         /// Validates a contact info object against business rules.
         /// </summary>
-        /// <param name="contact">The contact information to validate.</param>
-        /// <exception cref="ArgumentNullException">Thrown when contact is null.</exception>
-        /// <exception cref="Exception">Thrown when validation fails.</exception>
-        public void Validate(ContactInfo contact)
+        /// <param name="contact">The contact information profile to validate.</param>
+        /// <exception cref="ArgumentNullException">Thrown when contact reference parameter is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when properties contain structurally invalid data.</exception>
+        public void ValidateOrThrow(ContactInfo contact)
         {
             if (contact == null)
             {
-                throw new ArgumentNullException(nameof(contact));
+                throw new ArgumentNullException(nameof(contact), "Cannot process validation routines on a null reference.");
             }
 
-            // 1. Validate Name (Required)
-            if (string.IsNullOrWhiteSpace(contact.Name))
+            ValidateName(contact.Name);
+            ValidatePhone(contact.Phone);
+            ValidateEmail(contact.Email);
+            ValidateNotes(contact.Notes);
+        }
+
+        /// <summary>
+        /// Validates that the mandatory name component.
+        /// </summary>
+        private static void ValidateName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new Exception("Contact name is required and cannot be empty or whitespace.");
-            }
-
-            // 2. Validate Phone
-            if (!string.IsNullOrEmpty(contact.Phone))
-            {
-                if (string.IsNullOrWhiteSpace(contact.Phone))
-                {
-                    throw new Exception("Phone number cannot consist of only whitespace.");
-                }
-
-                foreach (char c in contact.Phone)
-                {
-                    if (!char.IsDigit(c) && c != ' ' && c != '-' && c != '+')
-                    {
-                        throw new Exception(
-                            "Phone number can only contain digits, spaces, dashes, or plus symbols.");
-                    }
-                }
-            }
-
-            // 3. Validate Email
-            if (!string.IsNullOrEmpty(contact.Email))
-            {
-                if (string.IsNullOrWhiteSpace(contact.Email))
-                {
-                    throw new Exception("Email address cannot consist of only whitespace.");
-                }
-
-                if (!IsValidEmail(contact.Email))
-                {
-                    throw new Exception(
-                        "Email address is not in a valid format (e.g., example@domain.com).");
-                }
+                throw new ArgumentException("Contact name is a mandatory field and cannot be empty or whitespace.", nameof(name));
             }
         }
 
-        private static bool IsValidEmail(string email)
+        /// <summary>
+        /// Validates the arrangement and numerical count of the phone string.
+        /// </summary>
+        private static void ValidatePhone(string? phone)
         {
-            int atIndex = email.IndexOf('@');
-
-            // Must contain exactly one '@'
-            if (atIndex <= 0 || atIndex != email.LastIndexOf('@'))
+            if (string.IsNullOrEmpty(phone))
             {
-                return false;
+                return;
             }
 
-            // Must have characters after '@'
-            if (atIndex == email.Length - 1)
+            ValidateWhitespaceOnly(phone, nameof(phone));
+
+            if (!PhoneStructureRegex.IsMatch(phone) || GetNumericDigitCount(phone) < 7)
             {
-                return false;
+                throw new ArgumentException("Phone number must contain at least 7 numeric digits and use valid formatting symbols.", nameof(phone));
+            }
+        }
+
+        /// <summary>
+        /// Validates the email address layout using native .NET framework.
+        /// </summary>
+        private static void ValidateEmail(string? email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return;
             }
 
-            string domainPart = email.Substring(atIndex + 1);
+            ValidateWhitespaceOnly(email, nameof(email));
 
-            // Domain must contain a dot and not start/end with it
-            int dotIndex = domainPart.IndexOf('.');
-            if (dotIndex <= 0 || dotIndex == domainPart.Length - 1)
+            if (!FrameworkEmailValidator.IsValid(email))
             {
-                return false;
+                throw new ArgumentException("Provided email address does not conform to a valid routing schema (e.g., user@domain.com).", nameof(email));
+            }
+        }
+
+        /// <summary>
+        /// Validtes the notes from the user
+        /// </summary>
+        private static void ValidateNotes(string? notes)
+        {
+            if (string.IsNullOrEmpty(notes))
+            {
+                return;
             }
 
-            // No spaces allowed
-            if (email.Contains(" "))
+            if (notes.Length > MaxNotesLengthAllowed)
             {
-                return false;
+                throw new ArgumentException($"Notes cannot exceed the maximum of {MaxNotesLengthAllowed} characters.", nameof(notes));
+            }
+        }
+
+        /// <summary>
+        /// Reusable check logic for ensuring string cannot consist purely of spaces.
+        /// </summary>
+        private static void ValidateWhitespaceOnly(string targetFieldValue, string propertyName)
+        {
+            if (string.IsNullOrWhiteSpace(targetFieldValue))
+            {
+                throw new ArgumentException($"Field value for '{propertyName}' cannot consist solely of blank whitespace parameters.", propertyName);
+            }
+        }
+
+        /// <summary>
+        /// Reusable helper evaluating absolute count of raw integers inside a text pattern sequence.
+        /// </summary>
+        private static int GetNumericDigitCount(string textInput)
+        {
+            int numericCount = 0;
+            foreach (char characterToken in textInput)
+            {
+                if (char.IsDigit(characterToken))
+                {
+                    numericCount++;
+                }
             }
 
-            return true;
+            return numericCount;
         }
     }
 }

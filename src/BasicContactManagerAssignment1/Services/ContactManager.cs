@@ -6,6 +6,27 @@
     using BasicContactManagerAssignment1.Persistence;
 
     /// <summary>
+    /// Represents the available fields that contacts can be sorted by.
+    /// </summary>
+    internal enum SortField
+    {
+        /// <summary>
+        /// Sort contacts by name.
+        /// </summary>
+        Name = 1,
+
+        /// <summary>
+        /// Sort contacts by phone number.
+        /// </summary>
+        Phone = 2,
+
+        /// <summary>
+        /// Sort contacts by email address.
+        /// </summary>
+        Email = 3,
+    }
+
+    /// <summary>
     /// Provides business operations for managing contacts.
     /// </summary>
     internal class ContactManager
@@ -31,7 +52,7 @@
         /// <param name="contact">The contact to add.</param>
         public void AddContact(ContactInfo contact)
         {
-            this._validator.Validate(contact);
+            this._validator.ValidateOrThrow(contact);
 
             // Clone contact to store a copy, ensuring isolation of the stored state
             ContactInfo storedContact = this.CloneContact(contact);
@@ -62,7 +83,7 @@
         /// <param name="contact">The contact with updated details.</param>
         public void UpdateContact(ContactInfo contact)
         {
-            this._validator.Validate(contact);
+            this._validator.ValidateOrThrow(contact);
             this._repository.Update(this.CloneContact(contact));
         }
 
@@ -93,26 +114,7 @@
 
             foreach (ContactInfo contact in allContacts)
             {
-                bool matches = false;
-
-                if (contact.Name != null && contact.Name.ToLowerInvariant().Contains(lowerSearchTerm))
-                {
-                    matches = true;
-                }
-                else if (contact.Phone != null && contact.Phone.ToLowerInvariant().Contains(lowerSearchTerm))
-                {
-                    matches = true;
-                }
-                else if (contact.Email != null && contact.Email.ToLowerInvariant().Contains(lowerSearchTerm))
-                {
-                    matches = true;
-                }
-                else if (contact.Notes != null && contact.Notes.ToLowerInvariant().Contains(lowerSearchTerm))
-                {
-                    matches = true;
-                }
-
-                if (matches)
+                if (this.IsMatch(contact, searchTerm))
                 {
                     results.Add(this.CloneContact(contact));
                 }
@@ -124,10 +126,10 @@
         /// <summary>
         /// Gets all contacts sorted by the specified criteria and direction.
         /// </summary>
-        /// <param name="sortBy">The field to sort by (e.g., "name", "phone", "email").</param>
-        /// <param name="choice">True to sort in ascending order; false for descending.</param>
+        /// <param name="sortField">The field to sort by (e.g., "name", "phone", "email").</param>
+        /// <param name="isAscending">True to sort in ascending order; false for descending.</param>
         /// <returns>A sorted list of contacts.</returns>
-        public List<ContactInfo> GetSortedContacts(string sortBy, bool choice)
+        public List<ContactInfo> GetSortedContacts(SortField sortField, bool isAscending)
         {
             List<ContactInfo> contacts = this.GetAllContacts();
 
@@ -136,17 +138,17 @@
                 string valueX = string.Empty;
                 string valueY = string.Empty;
 
-                if (sortBy.Equals("name", StringComparison.OrdinalIgnoreCase))
+                if (sortField == SortField.Name)
                 {
                     valueX = x.Name ?? string.Empty;
                     valueY = y.Name ?? string.Empty;
                 }
-                else if (sortBy.Equals("phone", StringComparison.OrdinalIgnoreCase))
+                else if (sortField == SortField.Phone)
                 {
                     valueX = x.Phone ?? string.Empty;
                     valueY = y.Phone ?? string.Empty;
                 }
-                else if (sortBy.Equals("email", StringComparison.OrdinalIgnoreCase))
+                else if (sortField == SortField.Email)
                 {
                     valueX = x.Email ?? string.Empty;
                     valueY = y.Email ?? string.Empty;
@@ -154,7 +156,7 @@
 
                 int result = string.Compare(valueX, valueY, StringComparison.OrdinalIgnoreCase);
 
-                return choice ? result : -result;
+                return isAscending ? result : -result;
             });
 
             return contacts;
@@ -175,6 +177,22 @@
                 Email = source.Email,
                 Notes = source.Notes,
             };
+        }
+
+        /// <summary>
+        /// Determines whether a contact matches the provided search term.
+        /// </summary>
+        /// <param name="contact">The contact to evaluate.</param>
+        /// <param name="searchTerm">The search term.</param>
+        /// <returns>True if any field contains the search term; otherwise, false.</returns>
+        private bool IsMatch(ContactInfo contact, string searchTerm)
+        {
+            string lowerSearchTerm = searchTerm.ToLowerInvariant();
+
+            return (contact.Name != null && contact.Name.ToLowerInvariant().Contains(lowerSearchTerm)) ||
+                   (contact.Phone != null && contact.Phone.ToLowerInvariant().Contains(lowerSearchTerm)) ||
+                   (contact.Email != null && contact.Email.ToLowerInvariant().Contains(lowerSearchTerm)) ||
+                   (contact.Notes != null && contact.Notes.ToLowerInvariant().Contains(lowerSearchTerm));
         }
     }
 }

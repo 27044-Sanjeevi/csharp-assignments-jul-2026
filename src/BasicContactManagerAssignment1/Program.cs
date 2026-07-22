@@ -4,6 +4,7 @@
     using BasicContactManagerAssignment1.IO;
     using BasicContactManagerAssignment1.Persistence;
     using BasicContactManagerAssignment1.Services;
+    using BasicContactManagerAssignment1.View;
 
     /// <summary>
     /// Provides the main entry point for the contact manager console application.
@@ -23,7 +24,7 @@
             ContactConsoleUI ui = new ContactConsoleUI(contactManager, consoleIo);
 
             // Execute the UI loop
-            ui.Run();
+            ui.RunApplication();
         }
     }
 }
