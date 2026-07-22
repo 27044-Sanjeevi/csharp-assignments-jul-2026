@@ -1,4 +1,4 @@
-﻿namespace Assignment2BasicsOfOOPs.Task3BankSystem
+﻿namespace Assignment2BasicsOfOOPs.Models
 {
     /// <summary>
     /// Represents the Checking account derived from the base class Bank Account
@@ -20,9 +20,11 @@
         /// Withdraws (subtarcts) the given amount from the Checking Account
         /// </summary>
         /// <param name="amount">Amount to be withdrawn from the Savings account</param>
-        public override void Withdraw(decimal amount)
+        /// <returns>True if the withdrawal is successful, otherwise false</returns>
+        public override bool Withdraw(decimal amount)
         {
             this.Balance -= amount;
+            return true; // checking account allows overdrafts (as per the Assignment requirements), so it always returns true
         }
     }
 }

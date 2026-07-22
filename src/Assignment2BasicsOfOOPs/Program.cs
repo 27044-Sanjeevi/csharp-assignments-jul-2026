@@ -1,7 +1,8 @@
 ﻿namespace Assignments
 {
     using Assignment2BasicsOfOOPs;
-    using Assignment2BasicsOfOOPs.Task1ShapeHierarchy;
+    using Assignment2BasicsOfOOPs.Exceptions;
+    using Assignment2BasicsOfOOPs.Models;
     using Assignment2BasicsOfOOPs.Task2EmployeeHierarchy;
     using Assignment2BasicsOfOOPs.Task3BankSystem;
 

@@ -1,4 +1,4 @@
-﻿namespace Assignment2BasicsOfOOPs.Task1ShapeHierarchy
+﻿namespace Assignment2BasicsOfOOPs.Models
 {
     /// <summary>
     /// defines about the shape Rectangle

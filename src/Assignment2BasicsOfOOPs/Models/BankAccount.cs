@@ -1,4 +1,4 @@
-﻿namespace Assignment2BasicsOfOOPs.Task3BankSystem
+﻿namespace Assignment2BasicsOfOOPs.Models
 {
     /// <summary>
     /// Represents the base class for bank account
@@ -20,7 +20,7 @@
         /// Gets or sets the Account Number of the bank account
         /// </summary>
         /// <value name="AccountNumber">Account number of the bank account</value>
-        public string? AccountNumber { get; set; }
+        public string AccountNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the Balance in the bank account
@@ -41,23 +41,19 @@
         /// Withdraws (subtarcts) the given amount from the bank account balance
         /// </summary>
         /// <param name="amount">Amount to be withdrawn from the account</param>
-        public abstract void Withdraw(decimal amount);
+        /// <returns>True if the withdrawal is successful, otherwise false</returns>
+        public abstract bool Withdraw(decimal amount);
 
         /// <summary>
         /// Prints both Account Number and Current Balance
         /// </summary>
-        public void PrintAllDetails()
-        {
-            ConsoleIO.Write($"Account Number: {this.AccountNumber}\n" +
-                            $"Current Balance: {this.Balance}\n");
-        }
+        /// <returns>The bank account details</returns>
+        public string PrintAllDetails() => $"Account Number: {this.AccountNumber}\nCurrent Balance: {this.Balance}\n";
 
         /// <summary>
         /// Prints only the current Balance
         /// </summary>
-        public void PrintCurrentBalance()
-        {
-            ConsoleIO.Write($"Current Balance: {this.Balance}\n");
-        }
+        /// <returns>The Current Balance of the Bank Account</returns>
+        public string PrintCurrentBalance() => $"Current Balance: {this.Balance}\n";
     }
 }

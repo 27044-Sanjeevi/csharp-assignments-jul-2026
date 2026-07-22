@@ -1,4 +1,4 @@
-﻿namespace Assignment2BasicsOfOOPs.Task2EmployeeHierarchy
+﻿namespace Assignment2BasicsOfOOPs.Models
 {
     /// <summary>
     /// Represents a manager in the organization, derived from Employee class
@@ -25,13 +25,11 @@
         /// <summary>
         /// Prints the details of the Manager
         /// </summary>
-        public override void PrintDetails()
-        {
-            ConsoleIO.Write($"Name: {this.Name}\n" +
-                            $"Position: {nameof(Manager)}\n" +
-                            $"Salary: Rs. {this.Salary}\n" +
-                            $"Bonus: Rs. {this.CalculateBonus()}\n" +
-                            $"-----------------------\n");
-        }
+        /// <returns>The string containing the details of the Employee</returns>
+        public override string PrintDetails() => $"Name: {this.Name}\n" +
+                   $"Position: {nameof(Manager)}\n" +
+                   $"Salary: Rs. {this.Salary}\n" +
+                   $"Bonus: Rs. {this.CalculateBonus()}\n" +
+                   $"-----------------------\n";
     }
 }

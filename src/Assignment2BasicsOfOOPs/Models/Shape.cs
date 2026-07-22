@@ -1,4 +1,4 @@
-﻿namespace Assignment2BasicsOfOOPs.Task1ShapeHierarchy
+﻿namespace Assignment2BasicsOfOOPs.Models
 {
     /// <summary>
     /// Holds the properties and parent classes for shapes
@@ -27,9 +27,7 @@
         /// prints the color and area of the shape
         /// </summary>
         /// <param name="area">holds the area of the shape</param>
-        public void PrintDetails(double area)
-        {
-            Console.WriteLine($"Shape Type: {this.ShapeType}\nColor: {this.Color}\nArea: {area}\n");
-        }
+        /// <returns>A string containing the details of the shape</returns>
+        public string PrintDetails(double area) => $"Shape Type: {this.ShapeType}\nColor: {this.Color}\nArea: {area}\n";
     }
 }

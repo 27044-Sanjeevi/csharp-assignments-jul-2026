@@ -1,4 +1,4 @@
-﻿namespace Assignment2BasicsOfOOPs.Task3BankSystem
+﻿namespace Assignment2BasicsOfOOPs.Models
 {
     /// <summary>
     /// Represents the savings account in a bank system, derived from BankAccount
@@ -20,16 +20,16 @@
         /// Withdraws (subtarcts) the given amount from the Savings Account
         /// </summary>
         /// <param name="amount">Amount to be withdrawn from the Savings account</param>
-        public override void Withdraw(decimal amount)
+        /// <returns>True if the withdrawal is successful, otherwise false</returns>
+        public override bool Withdraw(decimal amount)
         {
             if (amount > this.Balance)
             {
-                throw new BankSystemException("\nTry again." +
-                    "\nThe amount to be Withdrawn exceeds the current Balance, " +
-                    "you are allowed to withdraw within your current balance.\n");
+                return false;
             }
 
             this.Balance -= amount;
+            return true;
         }
     }
 }
