@@ -38,37 +38,44 @@
                 int choice = this._view.GetMenuChoice();
                 this._view.Clear();
 
-                switch (choice)
+                try
                 {
-                    case 1:
-                        this.AddContact();
-                        break;
+                    switch (choice)
+                    {
+                        case 1:
+                            this.AddContact();
+                            break;
 
-                    case 2:
-                        this.ViewContacts();
-                        break;
+                        case 2:
+                            this.ViewContacts();
+                            break;
 
-                    case 3:
-                        this.EditContact();
-                        break;
+                        case 3:
+                            this.EditContact();
+                            break;
 
-                    case 4:
-                        this.DeleteContact();
-                        break;
+                        case 4:
+                            this.DeleteContact();
+                            break;
 
-                    case 5:
-                        this.SearchContacts();
-                        break;
+                        case 5:
+                            this.SearchContacts();
+                            break;
 
-                    case 6:
-                        this.SortContacts();
-                        break;
+                        case 6:
+                            this.SortContacts();
+                            break;
 
-                    case 7:
-                        exit = true;
-                        this._view.ShowSuccessMessage(
-                            "Thank you for using Basic Contact Manager. Goodbye!");
-                        break;
+                        case 7:
+                            exit = true;
+                            this._view.ShowSuccessMessage(
+                                "Thank you for using Basic Contact Manager. Goodbye!");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this._view.ShowErrorMessage(ex.Message);
                 }
 
                 if (!exit)
@@ -83,16 +90,9 @@
         /// </summary>
         private void AddContact()
         {
-            try
-            {
                 ContactInfo contact = this._view.GetNewContactDetails();
                 this._contactManager.AddContact(contact);
                 this._view.ShowSuccessMessage("Contact added successfully!");
-            }
-            catch (Exception ex)
-            {
-                this._view.ShowErrorMessage(ex.Message);
-            }
         }
 
         /// <summary>
@@ -125,18 +125,9 @@
                 return;
             }
 
-            ContactInfo updatedContact =
-                this._view.GetUpdatedContactDetails(selected);
-
-            try
-            {
-                this._contactManager.UpdateContact(updatedContact);
-                this._view.ShowSuccessMessage("Contact updated successfully!");
-            }
-            catch (Exception ex)
-            {
-                this._view.ShowErrorMessage(ex.Message);
-            }
+            ContactInfo updatedContact = this._view.GetUpdatedContactDetails(selected);
+            this._contactManager.UpdateContact(updatedContact);
+            this._view.ShowSuccessMessage("Contact updated successfully!");
         }
 
         /// <summary>
@@ -159,15 +150,8 @@
                 return;
             }
 
-            try
-            {
-                this._contactManager.DeleteContact(selected.Id);
-                this._view.ShowSuccessMessage("Contact deleted successfully!");
-            }
-            catch (Exception ex)
-            {
-                this._view.ShowErrorMessage(ex.Message);
-            }
+            this._contactManager.DeleteContact(selected.Id);
+            this._view.ShowSuccessMessage("Contact deleted successfully!");
         }
 
         /// <summary>
