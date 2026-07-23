@@ -20,7 +20,7 @@
                 "3. Task 3 - Bank System\n" +
                 "4. Exit Application\n\n",
                 ConsoleColor.Cyan);
-            Console.Write("Choose the Task to run: ");
+            this.Display("Choose the Task to run: ");
         }
 
         /// <summary>
@@ -28,15 +28,20 @@
         /// </summary>
         /// <param name="min">The minimum valid choice.</param>
         /// <param name="max">The maximum valid choice.</param>
+        /// <param name="message">Optional message to be displayed.</param>
         /// <returns>A valid choice integer.</returns>
-        public int ReadChoice(int min, int max)
+        public int ReadChoice(int min, int max, string? message = null)
         {
             int result;
+
+            if (message != null)
+            {
+                this.Display(message);
+            }
+
             while (!int.TryParse(Console.ReadLine(), out result) || result < min || result > max)
             {
-                Console.Clear();
-                this.WriteColored($"[INPUT ERROR] Invalid Choice. Choose an integer between {min} to {max}: \n\n", ConsoleColor.Red);
-                this.ShowMainMenu();
+                this.WriteColored($"[INPUT ERROR] Invalid Choice. Choose an integer between {min} to {max}: ", ConsoleColor.Red);
             }
 
             return result;
@@ -47,29 +52,12 @@
         /// </summary>
         public void ShowBankMenu()
         {
-            Console.WriteLine("\nAvailable Actions:");
-            Console.WriteLine("1. Deposit Money");
-            Console.WriteLine("2. Withdraw Money");
-            Console.WriteLine("3. Print Account Details");
-            Console.WriteLine("4. Return to Task Menu");
-            Console.Write("Choose Action (1-4): ");
-        }
-
-        /// <summary>
-        /// Prompts the user continuously until they enter a valid bank menu choice in the specified range.
-        /// </summary>
-        /// <param name="min">The minimum valid choice.</param>
-        /// <param name="max">The maximum valid choice.</param>
-        /// <returns>A valid choice between min and max.</returns>
-        public int ReadBankChoice(int min, int max)
-        {
-            int result;
-            while (!int.TryParse(Console.ReadLine(), out result) || result < min || result > max)
-            {
-                this.WriteColored($"[INPUT ERROR] Invalid action. Enter a number between {min} and {max}: ", ConsoleColor.Red);
-            }
-
-            return result;
+            this.Display("\nAvailable Actions:\n");
+            this.Display("1. Deposit Money\n");
+            this.Display("2. Withdraw Money\n");
+            this.Display("3. Print Account Details\n");
+            this.Display("4. Return to Task Menu\n");
+            this.Display("Choose Action (1-4): ");
         }
 
         /// <summary>
@@ -199,6 +187,14 @@
         }
 
         /// <summary>
+        /// Prints the error message on the wrong value of the color of the shape.
+        /// </summary>
+        public void PrintInvalidShapeColor()
+        {
+            this.WriteColored("The color of the shape can contain only alphabets.", ConsoleColor.Red);
+        }
+
+        /// <summary>
         /// Formats and prints employee details by fetching the model's details string.
         /// </summary>
         /// <param name="employee">The employee model.</param>
@@ -282,11 +278,20 @@
         /// </summary>
         /// <param name="message">The text to write.</param>
         /// <param name="color">The target console color.</param>
-        private void WriteColored(string message, ConsoleColor color)
+        public void WriteColored(string message, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.Write(message);
             Console.ResetColor();
+        }
+
+        /// <summary>
+        /// Displays the message given.
+        /// </summary>
+        /// <param name="message">Message to be displayed.</param>
+        public void Display(string message)
+        {
+            Console.Write(message);
         }
     }
 }

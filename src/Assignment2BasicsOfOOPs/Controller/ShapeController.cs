@@ -1,5 +1,7 @@
 ﻿namespace Assignment2BasicsOfOOPs.Controller
 {
+    using System.Reflection.Metadata;
+    using System.Runtime.Serialization.Formatters;
     using Assignment2BasicsOfOOPs.Models;
     using Assignment2BasicsOfOOPs.Services;
     using Assignment2BasicsOfOOPs.View;
@@ -32,7 +34,7 @@
 
             // 1. Get Rectangle Details
             this._view.PrintSubHeader("Rectangle Creation");
-            string rectColor = this._view.ReadString("Enter Rectangle Color: ");
+            string rectColor = this.GetShapeColor();
             double rectHeight = this._view.ReadDouble("Enter Rectangle Height: ");
             double rectWidth = this._view.ReadDouble("Enter Rectangle Width: ");
             Shape rectangle = new Rectangle(rectColor, rectHeight, rectWidth);
@@ -40,7 +42,7 @@
             // 2. Get Circle Details
             this._view.PrintDivider();
             this._view.PrintSubHeader("Circle Creation");
-            string circleColor = this._view.ReadString("Enter Circle Color: ");
+            string circleColor = this.GetShapeColor();
             double circleRadius = this._view.ReadDouble("Enter Circle Radius: ");
             Shape circle = new Circle(circleColor, circleRadius);
 
@@ -52,6 +54,27 @@
 
             this._view.PrintShapeDetails(rectangle, rectArea);
             this._view.PrintShapeDetails(circle, circleArea);
+        }
+
+        /// <summary>
+        /// Recursively prompts user until color contains only alphabets.
+        /// </summary>
+        /// <returns>The color containing only alphabets.</returns>
+        public string GetShapeColor()
+        {
+            string color;
+
+            while (true)
+            {
+                color = this._view.ReadString("\nEnter the Color: ");
+
+                if (this._shapeService.IsValidColor(color))
+                {
+                    return color;
+                }
+
+                this._view.PrintInvalidShapeColor();
+            }
         }
     }
 }

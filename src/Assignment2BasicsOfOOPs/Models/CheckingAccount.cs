@@ -27,7 +27,7 @@
         {
             errorMessage = string.Empty;
             this.Balance -= amount;
-            return true;
+            return true; // always returns true, since overdraft is allowed
         }
     }
 }

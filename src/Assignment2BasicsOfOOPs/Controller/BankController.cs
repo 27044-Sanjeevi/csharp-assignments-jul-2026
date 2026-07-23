@@ -34,14 +34,13 @@
             this._view.PrintHeader("Task 3: Bank System");
 
             // 1. Create Bank Account
-            this._view.PrintSubHeader("Account Setup");
-            Console.WriteLine("1. Savings Account (Requires positive balance, overdraft not allowed)");
-            Console.WriteLine("2. Checking Account (Allows overdraft balance)");
-            double typeChoice = this._view.ReadDouble("Choose Account Type (1-2): ");
-            while (typeChoice != 1.0 && typeChoice != 2.0)
-            {
-                typeChoice = this._view.ReadDouble("[INPUT ERROR] Enter 1 or 2 only: ");
-            }
+            this._view.PrintSubHeader("Account Setup\n" +
+                                      "1. Savings Account (Requires positive balance, overdraft not allowed\n" +
+                                      "2. Checking Account (Allows overdraft balance)");
+
+            this._view.Display("Choose Account Type (1-2): ");
+
+            int typeChoice = this._view.ReadChoice(1, 2);
 
             string accNumber = this._view.ReadString("Enter Account Number: ");
             decimal initBalance = this._view.ReadDecimal("Enter Initial Deposit Balance: Rs. ");
@@ -64,7 +63,7 @@
                 string accTypeTitle = account is SavingsAccount ? "Savings Account" : "Checking Account";
                 this._view.PrintSubHeader($"Active Session: {accTypeTitle} ({account.AccountNumber})");
                 this._view.ShowBankMenu();
-                int bankChoice = this._view.ReadBankChoice(MinBankChoice, MaxBankChoice);
+                int bankChoice = this._view.ReadChoice(MinBankChoice, MaxBankChoice);
                 Console.WriteLine();
 
                 switch (bankChoice)

@@ -21,5 +21,28 @@
 
             return shape.CalculateArea();
         }
+
+        /// <summary>
+        /// Validates if the color has only alphabets in it
+        /// </summary>
+        /// <param name="shapeColor">The string representing the color of the shape.</param>
+        /// <returns>True if color contains only alphabets, false otherwise.</returns>
+        public bool IsValidColor(string shapeColor)
+        {
+            if (shapeColor == null)
+            {
+                return false;
+            }
+
+            foreach (char ch in shapeColor)
+            {
+                if (!char.IsLetter(ch))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
