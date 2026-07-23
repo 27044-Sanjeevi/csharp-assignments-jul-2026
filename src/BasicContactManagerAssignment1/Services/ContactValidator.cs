@@ -65,14 +65,12 @@
         /// </summary>
         private static void ValidatePhone(string? phone)
         {
-            if (string.IsNullOrEmpty(phone))
+            if (!ValidateOptionalString(phone, nameof(phone)))
             {
                 return;
             }
 
-            ValidateWhitespaceOnly(phone, nameof(phone));
-
-            if (!PhoneStructureRegex.IsMatch(phone) || GetNumericDigitCount(phone) < 7)
+            if (!PhoneStructureRegex.IsMatch(phone!) || GetNumericDigitCount(phone!) < 7)
             {
                 throw new ArgumentException("Phone number must contain at least 7 numeric digits and use valid formatting symbols.", nameof(phone));
             }
@@ -105,12 +103,10 @@
         /// </summary>
         private static void ValidateEmail(string? email)
         {
-            if (string.IsNullOrEmpty(email))
+            if (!ValidateOptionalString(email, nameof(email)))
             {
                 return;
             }
-
-            ValidateWhitespaceOnly(email, nameof(email));
 
             if (!FrameworkEmailValidator.IsValid(email))
             {
@@ -160,6 +156,23 @@
             }
 
             return numericCount;
+        }
+
+        /// <summary>
+        /// Method to validate optional string fields, ensuring they are not empty or whitespace only.
+        /// </summary>
+        /// <param name="value">Value to be validated></param>
+        /// <param name="propertyName">Name of the Property</param>
+        /// <returns>True if validation is correct else false</returns>
+        private static bool ValidateOptionalString(string? value, string propertyName)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            ValidateWhitespaceOnly(value, propertyName);
+            return true;
         }
     }
 }
