@@ -108,7 +108,11 @@
         /// <param name="id">The unique identifier of the contact to delete.</param>
         public void DeleteContact(Guid id)
         {
-            this._repository.Delete(id);
+            bool success = this._repository.Delete(id);
+            if (!success)
+            {
+                throw new KeyNotFoundException($"Contact with ID {id} was not found.");
+            }
         }
 
         /// <summary>
