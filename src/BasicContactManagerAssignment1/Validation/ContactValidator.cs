@@ -72,7 +72,7 @@
 
             if (!FrameworkEmailValidator.IsValid(email))
             {
-                throw new ArgumentException("Provided email address does not conform to a valid routing schema (e.g., user@domain.com).", nameof(email));
+                throw new ArgumentException("Provide a valid email address (e.g., user@domain.com).", nameof(email));
             }
         }
 
