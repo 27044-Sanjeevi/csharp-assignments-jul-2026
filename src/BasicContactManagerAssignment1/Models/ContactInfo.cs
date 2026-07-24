@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// Contains the contact information of a person, including their name, email, phone number, and any additional notes.
+    ///  Represents a contact within the application.
     /// </summary>
     internal class ContactInfo
     {
@@ -37,7 +37,7 @@
         /// <value>
         /// Phone Number of the contact person, represented as a string.
         /// </value>
-        public string? Phone { get; set; }
+        public string? PhoneNumber { get; set; }
 
         /// <summary>
         /// gets or sets any additional notes of the contact person.

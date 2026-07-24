@@ -34,10 +34,8 @@
             while (!exit)
             {
                 this._view.ShowMainMenu();
-
                 int choice = this._view.GetMenuChoice();
                 this._view.Clear();
-
                 try
                 {
                     switch (choice)
@@ -68,10 +66,17 @@
 
                         case 7:
                             exit = true;
-                            this._view.ShowSuccessMessage(
-                                "Thank you for using Basic Contact Manager. Goodbye!");
+                            this._view.ShowSuccessMessage("Thank you for using Basic Contact Manager. Goodbye!");
                             break;
                     }
+                }
+                catch (ArgumentException ex)
+                {
+                    this._view.ShowErrorMessage(ex.Message);
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    this._view.ShowErrorMessage(ex.Message);
                 }
                 catch (Exception ex)
                 {
@@ -109,17 +114,7 @@
         /// </summary>
         private void EditContact()
         {
-            List<ContactInfo> contacts = this._contactManager.GetAllContacts();
-
-            if (contacts.Count == 0)
-            {
-                this._view.ShowErrorMessage("No contacts available to edit.");
-                return;
-            }
-
-            ContactInfo? selected =
-                this._view.SelectContact(contacts, "edit");
-
+            ContactInfo? selected = this.VerifyAndSelect(ContactAction.Edit);
             if (selected == null)
             {
                 return;
@@ -135,16 +130,7 @@
         /// </summary>
         private void DeleteContact()
         {
-            List<ContactInfo> contacts = this._contactManager.GetAllContacts();
-
-            if (contacts.Count == 0)
-            {
-                this._view.ShowErrorMessage("No contacts available to delete.");
-                return;
-            }
-
-            ContactInfo? selected = this._view.SelectContact(contacts, "delete");
-
+            ContactInfo? selected = this.VerifyAndSelect(ContactAction.Delete);
             if (selected == null)
             {
                 return;
@@ -154,15 +140,26 @@
             this._view.ShowSuccessMessage("Contact deleted successfully!");
         }
 
+        private ContactInfo? VerifyAndSelect(ContactAction action)
+        {
+            List<ContactInfo> contacts = this._contactManager.GetAllContacts();
+            if (contacts.Count == 0)
+            {
+                this._view.ShowErrorMessage("No contacts available.");
+                return null;
+            }
+
+            ContactInfo? selected = this._view.SelectContact(contacts, action);
+            return selected;
+        }
+
         /// <summary>
         /// Searches contacts and displays matching results.
         /// </summary>
         private void SearchContacts()
         {
             string searchTerm = this._view.GetSearchTerm();
-
             List<ContactInfo> results = this._contactManager.SearchContacts(searchTerm);
-
             this._view.DisplayContactsTable(results);
         }
 
@@ -172,11 +169,8 @@
         private void SortContacts()
         {
             SortField sortField = this._view.GetSortField();
-
             bool isAscending = this._view.GetSortDirection();
-
             List<ContactInfo> contacts = this._contactManager.GetSortedContacts(sortField, isAscending);
-
             this._view.DisplayContactsTable(contacts);
         }
     }

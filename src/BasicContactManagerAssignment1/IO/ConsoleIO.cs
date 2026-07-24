@@ -58,7 +58,7 @@
         }
 
         /// <summary>
-        /// Clears the console buffer and corresponding console window of diagnostic information.
+        /// Clears the console window.
         /// </summary>
         public void Clear()
         {
@@ -73,14 +73,6 @@
         public ConsoleKeyInfo ReadKey(bool intercept)
         {
             return Console.ReadKey(intercept);
-        }
-
-        /// <summary>
-        /// Sets the foreground color of the console to its default.
-        /// </summary>
-        public void ResetColor()
-        {
-            Console.ResetColor();
         }
     }
 }

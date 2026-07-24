@@ -43,8 +43,8 @@
             }
 
             ValidateName(contact.Name);
-            ValidatePhone(contact.Phone);
-            ValidateUniquePhone(contact.Phone, this._repository);
+            ValidatePhone(contact.PhoneNumber);
+            ValidateUniquePhone(contact.PhoneNumber, this._repository);
             ValidateEmail(contact.Email);
             ValidateNotes(contact.Notes);
         }
@@ -91,7 +91,7 @@
 
             foreach (var contact in repository.GetAll())
             {
-                if (contact.Phone == phone)
+                if (contact.PhoneNumber == phone)
                 {
                     throw new ArgumentException("Phone number must be unique. This phone number is already in use.", nameof(phone));
                 }

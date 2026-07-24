@@ -6,6 +6,22 @@
     using BasicContactManagerAssignment1.Utilities;
 
     /// <summary>
+    /// Enum for the Action Item of the contact
+    /// </summary>
+    internal enum ContactAction
+    {
+        /// <summary>
+        /// Retrieves contact for edit
+        /// </summary>
+        Edit = 1,
+
+        /// <summary>
+        /// Retrieves contacts for delete
+        /// </summary>
+        Delete = 2,
+    }
+
+    /// <summary>
     /// Handles console rendering and user interaction.
     /// </summary>
     internal class ContactConsoleUI
@@ -63,7 +79,7 @@
             return new ContactInfo
             {
                 Name = this._helpers.GetRequiredString("Enter Name (Required): "),
-                Phone = this._helpers.GetOptionalString("Enter Phone Number (Optional): "),
+                PhoneNumber = this._helpers.GetOptionalString("Enter Phone Number (Optional): "),
                 Email = this._helpers.GetOptionalString("Enter Email Address (Optional): "),
                 Notes = this._helpers.GetOptionalString("Enter Additional Notes (Optional): "),
             };
@@ -80,7 +96,7 @@
             {
                 Id = contact.Id,
                 Name = contact.Name,
-                Phone = contact.Phone,
+                PhoneNumber = contact.PhoneNumber,
                 Email = contact.Email,
                 Notes = contact.Notes,
             };
@@ -97,12 +113,12 @@
                 updatedContact.Name = input;
             }
 
-            this._consoleIo.Write($"Phone [Current: {contact.Phone}]: ");
+            this._consoleIo.Write($"Phone [Current: {contact.PhoneNumber}]: ");
             input = this._consoleIo.ReadLine()?.Trim();
 
             if (!string.IsNullOrWhiteSpace(input))
             {
-                updatedContact.Phone = input;
+                updatedContact.PhoneNumber = input;
             }
 
             this._consoleIo.Write($"Email [Current: {contact.Email}]: ");
@@ -205,7 +221,7 @@
                     string.Format(
                         "{0,-20} | {1,-15} | {2,-25} | {3}",
                         this._helpers.Truncate(contact.Name ?? string.Empty, 20),
-                        this._helpers.Truncate(contact.Phone ?? "N/A", 15),
+                        this._helpers.Truncate(contact.PhoneNumber ?? "N/A", 15),
                         this._helpers.Truncate(contact.Email ?? "N/A", 25),
                         this._helpers.Truncate(contact.Notes ?? "N/A", 20)));
             }
@@ -218,18 +234,17 @@
         /// Allows the user to select a contact.
         /// </summary>
         /// <param name="contacts">List of contacts to choose from.</param>
-        /// <param name="actionName">Action being performed (e.g., "edit", "delete").</param>
+        /// <param name="action">Action being performed (e.g., "edit", "delete").</param>
         /// <returns>The selected ContactInfo object or null if canceled.</returns>
-        public ContactInfo? SelectContact(List<ContactInfo> contacts, string actionName)
+        public ContactInfo? SelectContact(List<ContactInfo> contacts, ContactAction action)
         {
-            this._consoleIo.WriteLine(
-                $"Available contacts to {actionName}:");
+            this._consoleIo.WriteLine($"Available contacts to {action.ToString()}:");
 
             for (int i = 0; i < contacts.Count; i++)
             {
                 this._consoleIo.WriteLine(
                     $"[{i + 1}] {contacts[i].Name} | " +
-                    $"{contacts[i].Phone ?? "N/A"} | " +
+                    $"{contacts[i].PhoneNumber ?? "N/A"} | " +
                     $"{contacts[i].Email ?? "N/A"}");
             }
 

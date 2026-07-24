@@ -18,7 +18,7 @@
         /// <summary>
         /// Sort contacts by phone number.
         /// </summary>
-        Phone = 2,
+        PhoneNumber = 2,
 
         /// <summary>
         /// Sort contacts by email address.
@@ -143,10 +143,10 @@
                     valueX = x.Name ?? string.Empty;
                     valueY = y.Name ?? string.Empty;
                 }
-                else if (sortField == SortField.Phone)
+                else if (sortField == SortField.PhoneNumber)
                 {
-                    valueX = x.Phone ?? string.Empty;
-                    valueY = y.Phone ?? string.Empty;
+                    valueX = x.PhoneNumber ?? string.Empty;
+                    valueY = y.PhoneNumber ?? string.Empty;
                 }
                 else if (sortField == SortField.Email)
                 {
@@ -162,6 +162,16 @@
             return contacts;
         }
 
+
+        private string GetValueForSort(ContactInfo contact, SortField field)
+        {
+            return field switch
+            {
+                SortField.Name => contact.Name ?? string.Empty,
+                SortField.PhoneNumber => contact.PhoneNumber ?? string.Empty,
+
+            }
+        }
         /// <summary>
         /// Creates a deep copy of a contact info object.
         /// </summary>
@@ -173,7 +183,7 @@
             {
                 Id = source.Id,
                 Name = source.Name,
-                Phone = source.Phone,
+                PhoneNumber = source.PhoneNumber,
                 Email = source.Email,
                 Notes = source.Notes,
             };
@@ -190,7 +200,7 @@
             string lowerSearchTerm = searchTerm.ToLowerInvariant();
 
             return (contact.Name != null && contact.Name.ToLowerInvariant().Contains(lowerSearchTerm)) ||
-                   (contact.Phone != null && contact.Phone.ToLowerInvariant().Contains(lowerSearchTerm)) ||
+                   (contact.PhoneNumber != null && contact.PhoneNumber.ToLowerInvariant().Contains(lowerSearchTerm)) ||
                    (contact.Email != null && contact.Email.ToLowerInvariant().Contains(lowerSearchTerm)) ||
                    (contact.Notes != null && contact.Notes.ToLowerInvariant().Contains(lowerSearchTerm));
         }
