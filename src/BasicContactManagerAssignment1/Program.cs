@@ -20,12 +20,21 @@
         {
             try
             {
-                ConsoleIO consoleIo = new ConsoleIO();
-                ConsoleInputHelper helpers = new ConsoleInputHelper(consoleIo);
+                // Persistence
                 Repository repository = new Repository();
+
+                // Services
                 ContactValidator validator = new ContactValidator();
                 ContactManager contactManager = new ContactManager(repository, validator);
+
+                // UI
+                ConsoleIO consoleIo = new ConsoleIO();
                 ContactConsoleUI ui = new ContactConsoleUI(consoleIo, helpers);
+
+                // Helper
+                ConsoleInputHelper helpers = new ConsoleInputHelper(consoleIo);
+
+                // Controller
                 ContactController controller = new ContactController(contactManager, ui);
 
                 // Execute the UI loop
