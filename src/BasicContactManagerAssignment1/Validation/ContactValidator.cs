@@ -1,33 +1,18 @@
-﻿namespace BasicContactManagerAssignment1.Services
+﻿namespace BasicContactManagerAssignment1.Validation
 {
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Text.RegularExpressions;
     using BasicContactManagerAssignment1.Models;
-    using BasicContactManagerAssignment1.Persistence;
 
     /// <summary>
-    /// Provides methods for validating contact information against system business rules.
+    /// Provides methods for validating contact information.
     /// </summary>
     internal class ContactValidator
     {
         private const int MaxNotesLengthAllowed = 1000;
-
         private static readonly Regex PhoneStructureRegex = new (@"^\+?[0-9\s\-]{7,20}$", RegexOptions.Compiled);
-
         private static readonly EmailAddressAttribute FrameworkEmailValidator = new ();
-
-        private readonly Repository _repository;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ContactValidator"/> class with a reference to the contact repository.
-        /// </summary>
-        /// <param name="repository">Provides the repository from persistence</param>
-        /// <exception cref="ArgumentNullException">Throws exception when Argument is null</exception>
-        public ContactValidator(Repository repository)
-        {
-            this._repository = repository ?? throw new ArgumentNullException(nameof(repository), "Cannot process validation routines on a null reference.");
-        }
 
         /// <summary>
         /// Validates a contact info object against business rules.
@@ -39,12 +24,11 @@
         {
             if (contact == null)
             {
-                throw new ArgumentNullException(nameof(contact), "Cannot process validation routines on a null reference.");
+                throw new ArgumentNullException(nameof(contact));
             }
 
             ValidateName(contact.Name);
             ValidatePhone(contact.PhoneNumber);
-            ValidateUniquePhone(contact.PhoneNumber, this._repository);
             ValidateEmail(contact.Email);
             ValidateNotes(contact.Notes);
         }
@@ -56,7 +40,7 @@
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("Contact name is a mandatory field and cannot be empty or whitespace.", nameof(name));
+                throw new ArgumentException("Name is required.", nameof(name));
             }
         }
 
@@ -73,28 +57,6 @@
             if (!PhoneStructureRegex.IsMatch(phone!) || GetNumericDigitCount(phone!) < 7)
             {
                 throw new ArgumentException("Phone number must contain at least 7 numeric digits and use valid formatting symbols.", nameof(phone));
-            }
-        }
-
-        /// <summary>
-        /// Validates that the phone number is unique across all existing contacts in the repository.
-        /// </summary>
-        /// <param name="phone">Phone number to be checked in repository</param>
-        /// <param name="repository">Repository object for validation</param>
-        /// <exception cref="ArgumentException">Throws when argument exception occurs</exception>
-        private static void ValidateUniquePhone(string? phone, Repository repository)
-        {
-            if (string.IsNullOrEmpty(phone))
-            {
-                return;
-            }
-
-            foreach (var contact in repository.GetAll())
-            {
-                if (contact.PhoneNumber == phone)
-                {
-                    throw new ArgumentException("Phone number must be unique. This phone number is already in use.", nameof(phone));
-                }
             }
         }
 
@@ -119,12 +81,7 @@
         /// </summary>
         private static void ValidateNotes(string? notes)
         {
-            if (string.IsNullOrEmpty(notes))
-            {
-                return;
-            }
-
-            if (notes.Length > MaxNotesLengthAllowed)
+            if (!string.IsNullOrEmpty(notes) && notes.Length > MaxNotesLengthAllowed)
             {
                 throw new ArgumentException($"Notes cannot exceed the maximum of {MaxNotesLengthAllowed} characters.", nameof(notes));
             }
@@ -133,9 +90,9 @@
         /// <summary>
         /// Reusable check logic for ensuring string cannot consist purely of spaces.
         /// </summary>
-        private static void ValidateWhitespaceOnly(string targetFieldValue, string propertyName)
+        private static void ValidateWhitespaceOnly(string value, string propertyName)
         {
-            if (string.IsNullOrWhiteSpace(targetFieldValue))
+            if (string.IsNullOrWhiteSpace(value))
             {
                 throw new ArgumentException($"Field value for '{propertyName}' cannot consist solely of blank whitespace parameters.", propertyName);
             }
@@ -147,9 +104,9 @@
         private static int GetNumericDigitCount(string textInput)
         {
             int numericCount = 0;
-            foreach (char characterToken in textInput)
+            foreach (char character in textInput)
             {
-                if (char.IsDigit(characterToken))
+                if (char.IsDigit(character))
                 {
                     numericCount++;
                 }

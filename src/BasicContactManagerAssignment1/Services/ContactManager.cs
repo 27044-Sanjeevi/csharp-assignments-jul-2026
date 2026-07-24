@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using BasicContactManagerAssignment1.Models;
     using BasicContactManagerAssignment1.Persistence;
+    using BasicContactManagerAssignment1.Validation;
 
     /// <summary>
     /// Represents the available fields that contacts can be sorted by.
@@ -54,6 +55,11 @@
         {
             this._validator.ValidateOrThrow(contact);
 
+            if (!string.IsNullOrEmpty(contact.PhoneNumber))
+            {
+                this.EnsureUniquePhoneNumber(contact.PhoneNumber, Guid.Empty);
+            }
+
             // Clone contact to store a copy, ensuring isolation of the stored state
             ContactInfo storedContact = this.CloneContact(contact);
             storedContact.Id = Guid.NewGuid(); // Assign new ID upon addition
@@ -84,7 +90,16 @@
         public void UpdateContact(ContactInfo contact)
         {
             this._validator.ValidateOrThrow(contact);
-            this._repository.Update(this.CloneContact(contact));
+            if (!string.IsNullOrEmpty(contact.PhoneNumber))
+            {
+                this.EnsureUniquePhoneNumber(contact.PhoneNumber, contact.Id);
+            }
+
+            bool success = this._repository.Update(this.CloneContact(contact));
+            if (!success)
+            {
+                throw new KeyNotFoundException($"Contact with ID {contact.Id} was not found.");
+            }
         }
 
         /// <summary>
@@ -135,24 +150,8 @@
 
             contacts.Sort((x, y) =>
             {
-                string valueX = string.Empty;
-                string valueY = string.Empty;
-
-                if (sortField == SortField.Name)
-                {
-                    valueX = x.Name ?? string.Empty;
-                    valueY = y.Name ?? string.Empty;
-                }
-                else if (sortField == SortField.PhoneNumber)
-                {
-                    valueX = x.PhoneNumber ?? string.Empty;
-                    valueY = y.PhoneNumber ?? string.Empty;
-                }
-                else if (sortField == SortField.Email)
-                {
-                    valueX = x.Email ?? string.Empty;
-                    valueY = y.Email ?? string.Empty;
-                }
+                string valueX = this.GetValueForSort(x, sortField);
+                string valueY = this.GetValueForSort(y, sortField);
 
                 int result = string.Compare(valueX, valueY, StringComparison.OrdinalIgnoreCase);
 
@@ -162,16 +161,43 @@
             return contacts;
         }
 
+        private void EnsureUniquePhoneNumber(string phoneNumber, Guid currentContactId)
+        {
+            string normalized = phoneNumber.Trim();
+            List<ContactInfo> allContacts = this._repository.GetAll();
 
+            foreach (ContactInfo contact in allContacts)
+            {
+                // skip the current contact
+                if (contact.Id == currentContactId)
+                {
+                    continue;
+                }
+
+                if (contact.PhoneNumber != null && contact.PhoneNumber == normalized)
+                {
+                    throw new ArgumentException($"A contact with phone number {phoneNumber} already exists.", nameof(phoneNumber));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the value used for sorting from the specified contact based on the given field.
+        /// </summary>
+        /// <param name="contact">The contact information to evaluate.</param>
+        /// <param name="field">The field indicating which contact property to use for sorting.</param>
+        /// <returns>The value of the specified field, or an empty string if the field is not recognized.</returns>
         private string GetValueForSort(ContactInfo contact, SortField field)
         {
             return field switch
             {
                 SortField.Name => contact.Name ?? string.Empty,
                 SortField.PhoneNumber => contact.PhoneNumber ?? string.Empty,
-
-            }
+                SortField.Email => contact.Email ?? string.Empty,
+                _ => string.Empty, // for safety
+            };
         }
+
         /// <summary>
         /// Creates a deep copy of a contact info object.
         /// </summary>
@@ -193,7 +219,7 @@
         /// Determines whether a contact matches the provided search term.
         /// </summary>
         /// <param name="contact">The contact to evaluate.</param>
-        /// <param name="searchTerm">The search term.</param>
+        /// <param name="searchTerm">The search term.</param    >
         /// <returns>True if any field contains the search term; otherwise, false.</returns>
         private bool IsMatch(ContactInfo contact, string searchTerm)
         {

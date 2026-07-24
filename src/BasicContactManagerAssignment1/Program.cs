@@ -4,6 +4,7 @@
     using BasicContactManagerAssignment1.IO;
     using BasicContactManagerAssignment1.Persistence;
     using BasicContactManagerAssignment1.Services;
+    using BasicContactManagerAssignment1.Validation;
     using BasicContactManagerAssignment1.View;
 
     /// <summary>
@@ -20,7 +21,7 @@
             {
                 ConsoleIO consoleIo = new ConsoleIO();
                 Repository repository = new Repository();
-                ContactValidator validator = new ContactValidator(repository);
+                ContactValidator validator = new ContactValidator();
                 ContactManager contactManager = new ContactManager(repository, validator);
                 ContactConsoleUI ui = new ContactConsoleUI(consoleIo);
                 ContactController controller = new ContactController(contactManager, ui);
