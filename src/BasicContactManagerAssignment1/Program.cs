@@ -29,10 +29,8 @@
 
                 // UI
                 ConsoleIO consoleIo = new ConsoleIO();
-                ContactConsoleUI ui = new ContactConsoleUI(consoleIo, helpers);
-
-                // Helper
                 ConsoleInputHelper helpers = new ConsoleInputHelper(consoleIo);
+                ContactConsoleUI ui = new ContactConsoleUI(consoleIo, helpers);
 
                 // Controller
                 ContactController controller = new ContactController(contactManager, ui);
