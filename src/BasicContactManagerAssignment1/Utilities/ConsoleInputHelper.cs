@@ -21,6 +21,37 @@
         }
 
         /// <summary>
+        /// Prompts the user for input and returns the input if it is not null or whitespace.
+        /// </summary>
+        /// <param name="prompt">The message displayed to the user to request input.</param>
+        /// <returns>The user input as a string, or null if the input is null or whitespace.</returns>
+        public string? TryGetRequiredString(string prompt)
+        {
+            this._consoleIo.Write(prompt);
+            string? input = this._consoleIo.ReadLine();
+            return string.IsNullOrWhiteSpace(input) ? null : input;
+        }
+
+        /// <summary>
+        /// Prompts for a menu choice and returns the validated selection within the specified range.
+        /// </summary>
+        /// <param name="prompt">The message displayed to the user.</param>
+        /// <param name="min">The minimum valid menu choice.</param>
+        /// <param name="max">The maximum valid menu choice.</param>
+        /// <returns>The selected menu choice if valid; otherwise, -1.</returns>
+        public int TryGetMenuChoice(string prompt, int min, int max)
+        {
+            this._consoleIo.Write(prompt);
+            string? inpu = this._consoleIo.ReadLine();
+            if (int.TryParse(inpu, out int choice) && choice >= min && choice <= max)
+            {
+                return choice;
+            }
+
+            return -1; // value for invalid
+        }
+
+        /// <summary>
         /// Prompts the user for a non-empty string input.
         /// </summary>
         /// <param name="prompt">The prompt message to display.</param>
@@ -29,15 +60,13 @@
         {
             while (true)
             {
-                this._consoleIo.Write(prompt);
-                string? input = this._consoleIo.ReadLine();
-
-                if (!string.IsNullOrWhiteSpace(input))
+                string? cleanInput = this.ReadCleanLine(prompt);
+                if (cleanInput != null)
                 {
-                    return input.Trim();
+                    return cleanInput;
                 }
 
-                this._consoleIo.WriteLine("Input cannot be empty. Please try again.");
+                this._consoleIo.WriteLine("[INPUT ERROR] Value cannot be empty.");
             }
         }
 
@@ -48,15 +77,7 @@
         /// <returns>The input string, trimmed, or null if empty.</returns>
         public string? GetOptionalString(string prompt)
         {
-            this._consoleIo.Write(prompt);
-            string? input = this._consoleIo.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                return null;
-            }
-
-            return input.Trim();
+            return this.ReadCleanLine(prompt);
         }
 
         /// <summary>
@@ -70,59 +91,25 @@
         {
             while (true)
             {
-                this._consoleIo.Write(prompt);
-                string? input = this._consoleIo.ReadLine();
+                string? rawInput = this.ReadCleanLine(prompt);
 
-                if (int.TryParse(input, out int choice) && choice >= min && choice <= max)
+                if (int.TryParse(rawInput, out int choice) && choice >= min && choice <= max)
                 {
                     return choice;
                 }
 
-                this._consoleIo.WriteLine($"Invalid choice. Please enter a number between {min} and {max}.");
+                this._consoleIo.WriteColored($"[INPUT ERROR] Please enter a valid number between {min} and {max}.", ConsoleColor.Red);
             }
         }
 
         /// <summary>
-        /// Prompts the user with a yes/no question.
+        /// A centralized method to ensure basic trimming.
         /// </summary>
-        /// <param name="prompt">The prompt question to display.</param>
-        /// <returns>True if the user chose yes; false if they chose no.</returns>
-        public bool GetConfirmation(string prompt)
+        private string? ReadCleanLine(string prompt)
         {
-            while (true)
-            {
-                this._consoleIo.Write($"{prompt} (y/n): ");
-                string? input = this._consoleIo.ReadLine()?.Trim().ToLowerInvariant();
-
-                if (input == "y" || input == "yes")
-                {
-                    return true;
-                }
-
-                if (input == "n" || input == "no")
-                {
-                    return false;
-                }
-
-                this._consoleIo.WriteLine("Invalid input. Please enter 'y' or 'n'.");
-            }
-        }
-
-        /// <summary>
-        /// Truncates a string to the specified maximum length, appending "..." if it exceeds that length.
-        /// </summary>
-        /// <param name="value">String to be truncated.</param>
-        /// <param name="maxLength">Maxlength allowed to be printed</param>
-        /// <returns>Truncated message</returns>
-        public string Truncate(string value, int maxLength)
-        {
-            if (string.IsNullOrEmpty(value) ||
-                value.Length <= maxLength)
-            {
-                return value;
-            }
-
-            return value.Substring(0, maxLength - 3) + "...";
+            this._consoleIo.Write(prompt);
+            string? input = this._consoleIo.ReadLine();
+            return string.IsNullOrWhiteSpace(input) ? null : input.Trim();
         }
     }
 }

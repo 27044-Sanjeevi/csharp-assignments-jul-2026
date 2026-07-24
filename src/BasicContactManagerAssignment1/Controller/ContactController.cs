@@ -34,7 +34,7 @@
             while (!exit)
             {
                 this._view.ShowMainMenu();
-                int choice = this._view.GetMenuChoice();
+                int choice = this._view.GetMenuChoiceLoop();
                 this._view.Clear();
                 try
                 {

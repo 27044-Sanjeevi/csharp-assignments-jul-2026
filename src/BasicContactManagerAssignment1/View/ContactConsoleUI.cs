@@ -4,6 +4,7 @@
     using BasicContactManagerAssignment1.Models;
     using BasicContactManagerAssignment1.Services;
     using BasicContactManagerAssignment1.Utilities;
+    using ConsoleTables;
 
     /// <summary>
     /// Enum for the Action Item of the contact
@@ -26,18 +27,22 @@
     /// </summary>
     internal class ContactConsoleUI
     {
+        private const int MenuChoiceMin = 1;
+        private const int MenuChoiceMax = 7;
+
         private readonly ConsoleIO _consoleIo;
-        private readonly ConsoleInputHelper _helpers;
+        private readonly ConsoleInputHelper _consoleInputHelpers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContactConsoleUI"/> class.
         /// </summary>
-        /// <param name="consoleIo">Provides console input and output operations for the user interfac</param>
+        /// <param name="consoleIo">Provides console input and output operations for the user interface</param>
+        /// <param name="consoleInputHelpers">Helpers object injection.</param>
         /// <exception cref="ArgumentNullException">Throws exception when null</exception>
-        public ContactConsoleUI(ConsoleIO consoleIo)
+        public ContactConsoleUI(ConsoleIO consoleIo, ConsoleInputHelper consoleInputHelpers)
         {
             this._consoleIo = consoleIo ?? throw new ArgumentNullException(nameof(consoleIo));
-            this._helpers = new ConsoleInputHelper(consoleIo);
+            this._consoleInputHelpers = consoleInputHelpers ?? throw new ArgumentNullException(nameof(consoleInputHelpers));
         }
 
         /// <summary>
@@ -60,12 +65,41 @@
         }
 
         /// <summary>
+        /// Prompts for user input until a non-empty string is entered.
+        /// </summary>
+        /// <param name="prompt">The message displayed to the user when requesting input.</param>
+        /// <returns>A non-empty string entered by the user.</returns>
+        public string GetRequiredString(string prompt)
+        {
+            while (true)
+            {
+                string? result = this._consoleInputHelpers.TryGetRequiredString(prompt);
+                if (result != null)
+                {
+                    return result;
+                }
+
+                this._consoleIo.WriteColored("Input cannot be empty. Please try again.", ConsoleColor.Red);
+            }
+        }
+
+        /// <summary>
         /// Gets the user's menu choice.
         /// </summary>
         /// <returns>The selected menu option as an integer.</returns>
-        public int GetMenuChoice()
+        public int GetMenuChoiceLoop()
         {
-            return this._helpers.GetMenuChoice("Choose a functionality to continue: ", 1, 7);
+            while (true)
+            {
+                int choice = this._consoleInputHelpers.TryGetMenuChoice("Choose a functionality to continue: ", MenuChoiceMin, MenuChoiceMax);
+
+                if (choice != -1)
+                {
+                    return choice;
+                }
+
+                this._consoleIo.WriteColored($"Invalid choice. Please enter a number between {MenuChoiceMin} and {MenuChoiceMax}.", ConsoleColor.Red);
+            }
         }
 
         /// <summary>
@@ -78,10 +112,10 @@
 
             return new ContactInfo
             {
-                Name = this._helpers.GetRequiredString("Enter Name (Required): "),
-                PhoneNumber = this._helpers.GetOptionalString("Enter Phone Number (Optional): "),
-                Email = this._helpers.GetOptionalString("Enter Email Address (Optional): "),
-                Notes = this._helpers.GetOptionalString("Enter Additional Notes (Optional): "),
+                Name = this.GetRequiredString("Enter Name (Required): "),
+                PhoneNumber = this._consoleInputHelpers.GetOptionalString("Enter Phone Number (Optional): "),
+                Email = this._consoleInputHelpers.GetOptionalString("Enter Email Address (Optional): "),
+                Notes = this._consoleInputHelpers.GetOptionalString("Enter Additional Notes (Optional): "),
             };
         }
 
@@ -150,7 +184,7 @@
                 "=== SEARCH CONTACTS ===",
                 ConsoleColor.Yellow);
 
-            return this._helpers.GetRequiredString(
+            return this._consoleInputHelpers.GetRequiredString(
                 "Enter search term (name, phone, email, or notes): ");
         }
 
@@ -169,10 +203,7 @@
             this._consoleIo.WriteLine("2. Phone Number");
             this._consoleIo.WriteLine("3. Email Address");
 
-            int choice = this._helpers.GetMenuChoice(
-                "Choose sort field (1-3): ",
-                1,
-                3);
+            int choice = this._consoleInputHelpers.GetMenuChoice("Choose sort field (1-3): ", 1, 3);
 
             return (SortField)choice;
         }
@@ -188,7 +219,7 @@
             this._consoleIo.WriteLine("1. Ascending");
             this._consoleIo.WriteLine("2. Descending");
 
-            int choice = this._helpers.GetMenuChoice("Choose direction (1-2): ", 1, 2);
+            int choice = this._consoleInputHelpers.GetMenuChoice("Choose direction (1-2): ", 1, 2);
 
             return choice == 1;
         }
@@ -205,29 +236,18 @@
                 return;
             }
 
-            this._consoleIo.WriteLine(
-                string.Format(
-                    "{0,-20} | {1,-15} | {2,-25} | {3}",
-                    "Name",
-                    "Phone",
-                    "Email",
-                    "Notes"));
-
-            this._consoleIo.WriteLine(new string('-', 85));
+            ConsoleTable table = new ConsoleTable("Name", "Phone Number", "Email", "Notes");
 
             foreach (ContactInfo contact in contacts)
             {
-                this._consoleIo.WriteLine(
-                    string.Format(
-                        "{0,-20} | {1,-15} | {2,-25} | {3}",
-                        this._helpers.Truncate(contact.Name ?? string.Empty, 20),
-                        this._helpers.Truncate(contact.PhoneNumber ?? "N/A", 15),
-                        this._helpers.Truncate(contact.Email ?? "N/A", 25),
-                        this._helpers.Truncate(contact.Notes ?? "N/A", 20)));
+                table.AddRow(
+                    contact.Name ?? string.Empty,
+                    contact.PhoneNumber ?? "N/A",
+                    contact.Email ?? "N/A",
+                    contact.Notes ?? "N/A");
             }
 
-            this._consoleIo.WriteLine(new string('-', 85));
-            this._consoleIo.WriteLine($"Total Contacts: {contacts.Count}");
+            this._consoleIo.WriteLine(table.ToString());
         }
 
         /// <summary>
@@ -248,7 +268,7 @@
                     $"{contacts[i].Email ?? "N/A"}");
             }
 
-            int choice = this._helpers.GetMenuChoice($"Select contact index (1-{contacts.Count}) or 0 to cancel: ", 0, contacts.Count);
+            int choice = this._consoleInputHelpers.GetMenuChoice($"Select contact index (1-{contacts.Count}) or 0 to cancel: ", 0, contacts.Count);
 
             return choice == 0 ? null : contacts[choice - 1];
         }
@@ -287,6 +307,23 @@
         public void Clear()
         {
             this._consoleIo.Clear();
+        }
+
+        /// <summary>
+        /// Truncates a string to the specified maximum length, appending "..." if it exceeds that length.
+        /// </summary>
+        /// <param name="value">String to be truncated.</param>
+        /// <param name="maxLength">Maxlength allowed to be printed</param>
+        /// <returns>Truncated message</returns>
+        public string Truncate(string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value) ||
+                value.Length <= maxLength)
+            {
+                return value;
+            }
+
+            return value.Substring(0, maxLength - 3) + "...";
         }
     }
 }
