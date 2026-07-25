@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment2BasicsOfOOPs.Models.Enums
+﻿namespace Assignment2BasicsOfOOPs.Models.Enums
 {
-    internal class ShapeType
+    /// <summary>
+    /// Specifies the type of the shape
+    /// </summary>
+    internal enum ShapeType
     {
+        /// <summary>
+        /// Specifies a rectangle
+        /// </summary>
+        Rectangle = 1,
+
+        /// <summary>
+        /// Specifies a circle
+        /// </summary>
+        Circle = 2,
     }
 }

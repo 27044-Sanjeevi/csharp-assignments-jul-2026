@@ -1,7 +1,5 @@
 ﻿namespace Assignment2BasicsOfOOPs.Models
 {
-    using System;
-
     /// <summary>
     /// Represents a developer in an organization, derived from the Employee class.
     /// </summary>

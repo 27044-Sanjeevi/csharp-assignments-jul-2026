@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment2BasicsOfOOPs.Models.Enums
+﻿namespace Assignment2BasicsOfOOPs.Models.Enums
 {
-    internal class EmployeeRole
+    /// <summary>
+    /// Specifies the role of the employee in an organization
+    /// </summary>
+    internal enum EmployeeRole
     {
+        /// <summary>
+        /// Specifies the manager role
+        /// </summary>
+        Manager = 1,
+
+        /// <summary>
+        /// Specifies the developer role
+        /// </summary>
+        Developer = 2,
     }
 }

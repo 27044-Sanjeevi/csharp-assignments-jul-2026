@@ -1,7 +1,5 @@
 ﻿namespace Assignment2BasicsOfOOPs.Models
 {
-    using System;
-
     /// <summary>
     /// Defines about the shape Rectangle.
     /// </summary>

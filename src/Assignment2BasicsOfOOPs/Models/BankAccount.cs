@@ -1,7 +1,7 @@
-﻿namespace Assignment2BasicsOfOOPs.Models
-{
-    using System;
+﻿using Assignment2BasicsOfOOPs.Models.Enums;
 
+namespace Assignment2BasicsOfOOPs.Models
+{
     /// <summary>
     /// Represents the base class for a bank account.
     /// </summary>
@@ -12,11 +12,19 @@
         /// </summary>
         /// <param name="accountNumber">Account number of the bank account.</param>
         /// <param name="initialBalance">Initial Balance of the bank account.</param>
-        public BankAccount(string accountNumber, decimal initialBalance)
+        /// <param name="accountType">The type of the Account.</param>
+        public BankAccount(string accountNumber, decimal initialBalance, BankAccountType accountType)
         {
             this.AccountNumber = accountNumber;
             this.Balance = initialBalance;
+            this.AccountType = accountType;
         }
+
+        /// <summary>
+        /// Gets the type of the bank account.
+        /// </summary>
+        /// <value>Type of the account as an enum.</value>
+        public BankAccountType AccountType { get; }
 
         /// <summary>
         /// Gets or sets the Account Number of the bank account.

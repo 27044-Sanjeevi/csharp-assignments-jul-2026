@@ -1,8 +1,5 @@
 ﻿namespace Assignment2BasicsOfOOPs.Controller
 {
-    using System;
-    using Assignment2BasicsOfOOPs.Models;
-    using Assignment2BasicsOfOOPs.Services;
     using Assignment2BasicsOfOOPs.View;
 
     /// <summary>

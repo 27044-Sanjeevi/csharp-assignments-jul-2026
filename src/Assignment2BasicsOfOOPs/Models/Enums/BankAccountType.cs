@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment2BasicsOfOOPs.Models.Enums
+﻿namespace Assignment2BasicsOfOOPs.Models.Enums
 {
-    internal class BankAccountType
+    /// <summary>
+    /// Specifies the type of the account in a bank
+    /// </summary>
+    internal enum BankAccountType
     {
+        /// <summary>
+        /// Specifies savings account
+        /// </summary>
+        Savings = 1,
+
+        /// <summary>
+        /// Specifies the checking account
+        /// </summary>
+        Checking = 2,
     }
 }

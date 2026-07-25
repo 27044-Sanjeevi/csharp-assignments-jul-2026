@@ -1,6 +1,6 @@
 ﻿namespace Assignment2BasicsOfOOPs.Models
 {
-    using System;
+    using Assignment2BasicsOfOOPs.Models.Enums;
 
     /// <summary>
     /// Represents the savings account in a bank system, derived from BankAccount.
@@ -13,7 +13,7 @@
         /// <param name="accountNumber">Account Number of the bank account.</param>
         /// <param name="initialBalance">Initial Balance of the bank account.</param>
         public SavingsAccount(string accountNumber, decimal initialBalance)
-            : base(accountNumber, initialBalance)
+            : base(accountNumber, initialBalance, BankAccountType.Savings)
         {
         }
 

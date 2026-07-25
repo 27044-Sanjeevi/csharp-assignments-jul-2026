@@ -1,6 +1,7 @@
 ﻿namespace Assignment2BasicsOfOOPs.Controller
 {
     using Assignment2BasicsOfOOPs.Models;
+    using Assignment2BasicsOfOOPs.Models.Enums;
     using Assignment2BasicsOfOOPs.Services;
     using Assignment2BasicsOfOOPs.View;
 
@@ -30,18 +31,18 @@
         {
             this._view.PrintHeader("Task 2: Employee Hierarchy");
 
-            // 1. Get Manager Details
+            // 1. Manager Details
             this._view.PrintSubHeader("Manager Creation");
-            string mgrName = this._view.ReadString("Enter Manager Name: ");
-            decimal mgrSalary = this._view.ReadDecimal("Enter Manager Monthly Salary: Rs. ");
-            Employee manager = new Manager(mgrName, mgrSalary);
+            string managerName = this._view.ReadString("Enter Manager Name: ");
+            decimal managerSalary = this._view.ReadDecimal("Enter Manager Monthly Salary: Rs. ");
+            Employee manager = this._employeeService.CreateEmployee(EmployeeRole.Manager, managerName, managerSalary);
 
-            // 2. Get Developer Details
+            // 2. Developer Details
             this._view.PrintDivider();
             this._view.PrintSubHeader("Developer Creation");
             string devName = this._view.ReadString("Enter Developer Name: ");
             decimal devSalary = this._view.ReadDecimal("Enter Developer Monthly Salary: Rs. ");
-            Employee developer = new Developer(devName, devSalary);
+            Employee developer = this._employeeService.CreateEmployee(EmployeeRole.Developer, devName, devSalary);
 
             // 3. Print Details
             this._view.PrintDivider();

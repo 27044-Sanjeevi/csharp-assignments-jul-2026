@@ -1,6 +1,7 @@
 ﻿namespace Assignment2BasicsOfOOPs.View
 {
     using System;
+    using Assignment2BasicsOfOOPs.IO;
     using Assignment2BasicsOfOOPs.Models;
 
     /// <summary>
@@ -8,6 +9,18 @@
     /// </summary>
     internal class ConsoleView
     {
+        private readonly ConsoleIO _consoleIo;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConsoleView"/> class.
+        /// </summary>
+        /// <param name="consoleIo">The console view input output renderer.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the Argument is null.</exception>
+        public ConsoleView(ConsoleIO consoleIo)
+        {
+            this._consoleIo = new ConsoleIO() ?? throw new ArgumentNullException(nameof(consoleIo));
+        }
+
         /// <summary>
         /// Displays the main application task menu.
         /// </summary>
@@ -20,7 +33,7 @@
                 "3. Task 3 - Bank System\n" +
                 "4. Exit Application\n\n",
                 ConsoleColor.Cyan);
-            this.Display("Choose the Task to run: ");
+            this.Write("Choose the Task to run: ");
         }
 
         /// <summary>
@@ -36,10 +49,10 @@
 
             if (message != null)
             {
-                this.Display(message);
+                this.Write(message);
             }
 
-            while (!int.TryParse(Console.ReadLine(), out result) || result < min || result > max)
+            while (!int.TryParse(this.ReadLine(), out result) || result < min || result > max)
             {
                 this.WriteColored($"[INPUT ERROR] Invalid Choice. Choose an integer between {min} to {max}: ", ConsoleColor.Red);
             }
@@ -52,12 +65,12 @@
         /// </summary>
         public void ShowBankMenu()
         {
-            this.Display("\nAvailable Actions:\n");
-            this.Display("1. Deposit Money\n");
-            this.Display("2. Withdraw Money\n");
-            this.Display("3. Print Account Details\n");
-            this.Display("4. Return to Task Menu\n");
-            this.Display("Choose Action (1-4): ");
+            this.Write("\nAvailable Actions:\n" +
+                "1. Deposit Money\n" +
+                "2. Withdraw Money\n" +
+                "3. Print Account Details\n" +
+                "4. Return to Task Menu\n" +
+                "Choose Action (1-4): ");
         }
 
         /// <summary>
@@ -69,8 +82,7 @@
         {
             while (true)
             {
-                Console.Write(prompt);
-                string? input = Console.ReadLine();
+                string? input = this.ReadLine(prompt);
                 if (!string.IsNullOrWhiteSpace(input))
                 {
                     return input.Trim();
@@ -90,8 +102,8 @@
             double value;
             while (true)
             {
-                Console.Write(prompt);
-                if (double.TryParse(Console.ReadLine(), out value) && value >= 0.0)
+                this.Write(prompt);
+                if (double.TryParse(this.ReadLine(), out value) && value >= 0.0)
                 {
                     return value;
                 }
@@ -110,8 +122,7 @@
             decimal value;
             while (true)
             {
-                Console.Write(prompt);
-                if (decimal.TryParse(Console.ReadLine(), out value) && value >= 0.0M)
+                if (decimal.TryParse(this.ReadLine(prompt), out value) && value >= 0.0M)
                 {
                     return value;
                 }
@@ -125,7 +136,7 @@
         /// </summary>
         public void ClearScreen()
         {
-            Console.Clear();
+            this._consoleIo.Clear();
         }
 
         /// <summary>
@@ -151,7 +162,7 @@
         /// </summary>
         public void PrintDivider()
         {
-            Console.Write("\n" + new string('-', 40) + "\n\n");
+            this.Write("\n" + new string('-', 40) + "\n\n");
         }
 
         /// <summary>
@@ -159,7 +170,7 @@
         /// </summary>
         public void PrintGoodbye()
         {
-            Console.WriteLine("Press any key to exit the application...");
+            this.WriteLine("Press any key to exit the application...");
         }
 
         /// <summary>
@@ -167,8 +178,8 @@
         /// </summary>
         public void PauseAndReturn()
         {
-            Console.Write("\nPress any key to return to Main Page...");
-            Console.ReadKey(true);
+            this.Write("\nPress any key to return to Main Page...");
+            this._consoleIo.ReadKey(true);
         }
 
         /// <summary>
@@ -183,7 +194,7 @@
                 return;
             }
 
-            Console.WriteLine($"Shape Type: {shape.ShapeType}\nColor: {shape.Color}\nArea: {area:F2}\n");
+            this.WriteLine($"Shape Type: {shape.ShapeType}\nColor: {shape.Color}\nArea: {area:F2}\n");
         }
 
         /// <summary>
@@ -205,7 +216,7 @@
                 return;
             }
 
-            Console.Write(employee.GetDetails());
+            this.Write(employee.GetDetails());
         }
 
         /// <summary>
@@ -219,7 +230,7 @@
                 return;
             }
 
-            Console.Write(account.GetDetails());
+            this.WriteColored(account.GetDetails(), ConsoleColor.Cyan);
         }
 
         /// <summary>
@@ -233,7 +244,7 @@
                 return;
             }
 
-            Console.Write(account.GetBalanceDetails());
+            this.Write(account.GetBalanceDetails());
         }
 
         /// <summary>
@@ -242,7 +253,7 @@
         /// <param name="amount">The deposit amount.</param>
         public void PrintDepositSuccess(decimal amount)
         {
-            Console.WriteLine($"Successfully Deposited: Rs. {amount:F2}");
+            this.WriteLine($"Successfully Deposited: Rs. {amount:F2}");
         }
 
         /// <summary>
@@ -251,7 +262,7 @@
         /// <param name="amount">The withdrawal amount.</param>
         public void PrintWithdrawAttempt(decimal amount)
         {
-            Console.WriteLine($"Attempting to withdraw: Rs. {amount:F2}");
+            this.WriteLine($"Attempting to withdraw: Rs. {amount:F2}");
         }
 
         /// <summary>
@@ -270,7 +281,7 @@
         public void PrintWithdrawFailure(string message)
         {
             this.WriteColored($"[TRANSACTION BLOCKED] {message}\n", ConsoleColor.Red);
-            Console.WriteLine("Current status is not affected.");
+            this.WriteLine("Current status is not affected.");
         }
 
         /// <summary>
@@ -280,18 +291,35 @@
         /// <param name="color">The target console color.</param>
         public void WriteColored(string message, ConsoleColor color)
         {
-            Console.ForegroundColor = color;
-            Console.Write(message);
-            Console.ResetColor();
+            this._consoleIo.WriteColored(message, color);
         }
 
         /// <summary>
         /// Displays the message given.
         /// </summary>
         /// <param name="message">Message to be displayed.</param>
-        public void Display(string message)
+        public void Write(string message)
         {
-            Console.Write(message);
+            this._consoleIo.Write(message);
+        }
+
+        /// <summary>
+        /// Writes the message with a new line.
+        /// </summary>
+        /// <param name="message">Message to be written on console.</param>
+        public void WriteLine(string message)
+        {
+            this._consoleIo.WriteLine(message);
+        }
+
+        /// <summary>
+        /// Reads a the input from the user as string.
+        /// </summary>
+        /// <param name="prompt">Optional prompt to be displayed.</param>
+        /// <returns>The read string value.</returns>
+        public string? ReadLine(string? prompt = "")
+        {
+            return this._consoleIo.ReadLine(prompt);
         }
     }
 }

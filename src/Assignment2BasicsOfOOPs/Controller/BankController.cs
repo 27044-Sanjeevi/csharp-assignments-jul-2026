@@ -1,6 +1,8 @@
 ﻿namespace Assignment2BasicsOfOOPs.Controller
 {
+    using System.Security.Principal;
     using Assignment2BasicsOfOOPs.Models;
+    using Assignment2BasicsOfOOPs.Models.Enums;
     using Assignment2BasicsOfOOPs.Services;
     using Assignment2BasicsOfOOPs.View;
 
@@ -22,8 +24,8 @@
         /// <param name="bankService">The bank related services.</param>
         public BankController(ConsoleView view, BankService bankService)
         {
-            this._view = view;
-            this._bankService = bankService;
+            this._view = view ?? throw new ArgumentNullException(nameof(view));
+            this._bankService = bankService ?? throw new ArgumentNullException(nameof(bankService));
         }
 
         /// <summary>
@@ -35,62 +37,38 @@
 
             // 1. Create Bank Account
             this._view.PrintSubHeader("Account Setup\n" +
-                                      "1. Savings Account (Requires positive balance, overdraft not allowed\n" +
+                                      "1. Savings Account (Requires positive balance, overdraft not allowed)\n" +
                                       "2. Checking Account (Allows overdraft balance)");
 
-            this._view.Display("Choose Account Type (1-2): ");
+            this._view.Write("Choose Account Type (1-2): ");
 
             int typeChoice = this._view.ReadChoice(1, 2);
+
+            BankAccountType accountType = (BankAccountType)typeChoice;
 
             string accNumber = this._view.ReadString("Enter Account Number: ");
             decimal initBalance = this._view.ReadDecimal("Enter Initial Deposit Balance: Rs. ");
 
-            BankAccount account;
-            if (typeChoice == 1.0)
-            {
-                account = new SavingsAccount(accNumber, initBalance);
-            }
-            else
-            {
-                account = new CheckingAccount(accNumber, initBalance);
-            }
+            BankAccount account = this._bankService.CreateAccount(accountType, accNumber, initBalance);
 
-            // 2. Bank Action Loop
             bool finish = false;
             do
             {
                 this._view.PrintDivider();
-                string accTypeTitle = account is SavingsAccount ? "Savings Account" : "Checking Account";
-                this._view.PrintSubHeader($"Active Session: {accTypeTitle} ({account.AccountNumber})");
+                this._view.PrintSubHeader($"Active Session: {accountType} ({account.AccountNumber})");
                 this._view.ShowBankMenu();
+
                 int bankChoice = this._view.ReadChoice(MinBankChoice, MaxBankChoice);
-                Console.WriteLine();
+                this._view.Write("\n");
 
                 switch (bankChoice)
                 {
                     case 1:
-                        decimal depAmount = this._view.ReadDecimal("Enter amount to deposit: Rs. ");
-                        if (this._bankService.Deposit(account, depAmount))
-                        {
-                            this._view.PrintDepositSuccess(depAmount);
-                        }
-
-                        this._view.PrintBankAccountBalance(account);
+                        this.Deposit(account);
                         break;
 
                     case 2:
-                        decimal withAmount = this._view.ReadDecimal("Enter amount to withdraw: Rs. ");
-                        this._view.PrintWithdrawAttempt(withAmount);
-                        if (this._bankService.Withdraw(account, withAmount, out string error))
-                        {
-                            this._view.PrintWithdrawSuccess(withAmount);
-                        }
-                        else
-                        {
-                            this._view.PrintWithdrawFailure(error);
-                        }
-
-                        this._view.PrintBankAccountBalance(account);
+                        this.Withdraw(account);
                         break;
 
                     case 3:
@@ -103,6 +81,42 @@
                 }
             }
             while (!finish);
+        }
+
+        /// <summary>
+        /// Process a specified amount into the given bank account.
+        /// </summary>
+        /// <param name="account">The bank account to deposit funds into.</param>
+        public void Deposit(BankAccount account)
+        {
+            decimal depositAmount = this._view.ReadDecimal("Enter amount to deposit: Rs. ");
+            if (this._bankService.Deposit(account, depositAmount))
+            {
+                this._view.PrintDepositSuccess(depositAmount);
+            }
+
+            this._view.PrintBankAccountBalance(account);
+        }
+
+        /// <summary>
+        /// Processes a withdrawal transaction for the specified bank account.
+        /// balance.
+        /// </summary>
+        /// <param name="account">The bank account from which the withdrawal is made.</param>
+        public void Withdraw(BankAccount account)
+        {
+            decimal withdrawalAmount = this._view.ReadDecimal("Enter amount to withdraw: Rs. ");
+
+            if (this._bankService.Withdraw(account, withdrawalAmount, out string error))
+            {
+                this._view.PrintWithdrawSuccess(withdrawalAmount);
+            }
+            else
+            {
+                this._view.PrintWithdrawFailure(error);
+            }
+
+            this._view.PrintBankAccountBalance(account);
         }
     }
 }

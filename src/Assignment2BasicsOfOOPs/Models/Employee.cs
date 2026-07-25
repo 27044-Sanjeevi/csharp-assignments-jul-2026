@@ -1,7 +1,5 @@
 ﻿namespace Assignment2BasicsOfOOPs.Models
 {
-    using System;
-
     /// <summary>
     /// Represents the base class for the employee hierarchy in an organization.
     /// </summary>

@@ -1,7 +1,5 @@
 ﻿namespace Assignment2BasicsOfOOPs.Models
 {
-    using System;
-
     /// <summary>
     /// Holds the properties and parent classes for shapes.
     /// </summary>
