@@ -32,40 +32,29 @@
         }
 
         /// <summary>
-        /// Runs the main application control loop.
+        /// Processes the selected menu option and executes the corresponding controller task.
         /// </summary>
-        public void RunApplication()
+        /// <param name="choice">The user's menu selection.</param>
+        /// <returns>true to continue displaying the menu; false to exit.</returns>
+        public bool HandleMenu(int choice)
         {
-            int choice = 0;
-            do
+            switch (choice)
             {
-                this._view.ClearScreen();
-                this._view.ShowMainMenu();
-                choice = this._view.ReadChoice(MinTaskChoice, MaxTaskChoice);
-                this._view.ClearScreen();
-
-                switch (choice)
-                {
-                    case 1:
-                        this._shapeController.RunShapeTask();
-                        break;
-                    case 2:
-                        this._employeeController.RunEmployeeTask();
-                        break;
-                    case 3:
-                        this._bankController.RunBankTask();
-                        break;
-                    case 4:
-                        this._view.PrintGoodbye();
-                        break;
-                }
-
-                if (choice != 4)
-                {
-                    this._view.PauseAndReturn();
-                }
+                case 1:
+                    this._shapeController.RunShapeTask();
+                    break;
+                case 2:
+                    this._employeeController.RunEmployeeTask();
+                    break;
+                case 3:
+                    this._bankController.RunBankTask();
+                    break;
+                case 4:
+                    this._view.PrintGoodbye();
+                    return true;
             }
-            while (choice != 4);
+
+            return false;
         }
     }
 }
