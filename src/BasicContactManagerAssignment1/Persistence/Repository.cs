@@ -61,6 +61,7 @@
             if (index != -1)
             {
                 this._contacts.RemoveAt(index);
+                return true;
             }
 
             return false;
