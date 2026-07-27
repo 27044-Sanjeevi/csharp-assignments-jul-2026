@@ -8,14 +8,14 @@
     /// </summary>
     internal class ProductValidation
     {
-        private readonly ProductManager _productManager;
+        private readonly InventoryManager _productManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductValidation"/> class.
         /// </summary>
         /// <param name="productManager">The product manager.</param>
         /// <exception cref="ArgumentNullException">Thrown when the product manager is null.</exception>
-        public ProductValidation(ProductManager productManager)
+        public ProductValidation(InventoryManager productManager)
         {
             this._productManager = productManager ?? throw new ArgumentNullException(nameof(productManager));
         }
@@ -31,8 +31,8 @@
 
             return product switch
             {
-                { Name: null or "" } => "Product name cannot be empty.",
-                { Name.Length: < 3 or > 50 } => "Product name must contain between 3 and 50 characters.",
+                { Name: null } => "Product name cannot be empty.",
+                { Name: {Length: < 3 or > 50 } } => "Product name must contain between 3 and 50 characters.",
                 { Price: <= 0 } => "Product price must be greater than 0.",
                 { Quantity: <= 0 } => "Product quantity must be greater than 0.",
                 { Id: <= 0 } => "Product ID must be greater than 0.",

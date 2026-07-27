@@ -6,11 +6,13 @@
         {
             switch (choice)
             {
-                case 1
+                case 1:
+                    AddProduct();
+                    break;
             }
         }
 
-        public void AddContacts()
+        public void AddProduct()
         {
             this._view
         }

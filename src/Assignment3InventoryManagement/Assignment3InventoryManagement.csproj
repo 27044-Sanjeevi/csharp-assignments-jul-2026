@@ -14,4 +14,11 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Controller\" />
+    <Folder Include="Persistence\" />
+    <Folder Include="Utilities\" />
+  </ItemGroup>
+
 </Project>

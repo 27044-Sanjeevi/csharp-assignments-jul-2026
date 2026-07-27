@@ -7,7 +7,7 @@
     /// </summary>
     internal class Repository
     {
-        private readonly List<Product> _products = [];
+        private readonly List<Product> _products = new List<Product>();
 
         /// <summary>
         /// Adds a new product to the repository.
@@ -15,7 +15,7 @@
         /// <param name="product">The product to add.</param>
         public void Add(Product product)
         {
-            _products.Add(product);
+            this._products.Add(product);
         }
 
         /// <summary>
@@ -25,10 +25,10 @@
         /// <returns>true if the product was found and removed; otherwise, false.</returns>
         public bool Remove(int id)
         {
-            var product = _products.FirstOrDefault(p => p.Id == id);
+            var product = this._products.FirstOrDefault(p => p.Id == id);
             if (product != null)
             {
-                _products.Remove(product);
+                this._products.Remove(product);
                 return true;
             }
 
@@ -57,7 +57,7 @@
         /// <returns>The product with the specified identifier, or null if not found.</returns>
         public Product? GetById(int id)
         {
-            return _products.FirstOrDefault(p => p.Id == id);
+            return this._products.FirstOrDefault(p => p.Id == id);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@
                 Id = product.Id,
                 Name = product.Name,
                 Price = product.Price,
-                Quantity = product.Quantity
+                Quantity = product.Quantity,
             };
         }
 

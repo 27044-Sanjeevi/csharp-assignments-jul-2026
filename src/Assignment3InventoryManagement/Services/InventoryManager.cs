@@ -7,18 +7,18 @@
     /// <summary>
     /// Represents a manager for handling product-related operations in the inventory management system.
     /// </summary>
-    internal class ProductManager
+    internal class InventoryManager
     {
         private readonly Repository _repository;
         private readonly ProductValidation _validator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProductManager"/> class.
+        /// Initializes a new instance of the <see cref="InventoryManager"/> class.
         /// </summary>
         /// <param name="repository">The repository to use for product operations.</param>
         /// <param name="validator">The validator to use for product validation.</param>
         /// <exception cref="ArgumentNullException">Thrown when the repository or validator is null.</exception>
-        public ProductManager(Repository repository, ProductValidation validator)
+        public InventoryManager(Repository repository, ProductValidation validator)
         {
             this._repository = repository ?? throw new ArgumentNullException(nameof(repository));
             this._validator = validator ?? throw new ArgumentNullException(nameof(validator));
@@ -29,13 +29,16 @@
         /// </summary>
         /// <param name="product">The product to add.</param>
         /// <returns>A string containing the validation error message, or an empty string if the product is valid.</returns>
-        public string AddProduct(Product product)
+        public string? AddProduct(Product product)
         {
             ArgumentNullException.ThrowIfNull(product);
 
             string validationError = this.ValidateProduct(product);
 
-            _repository.Add(product);
+            if (validationError is not null)
+            {
+                this._repository.Add(product);
+            }
 
             return validationError;
         }
@@ -50,7 +53,7 @@
             ArgumentNullException.ThrowIfNull(product);
 
             string validationError = this.ValidateProduct(product);
-            _repository.Remove(product.Id);
+            this._repository.Remove(product.Id);
 
             return validationError;
         }
@@ -64,7 +67,7 @@
         {
             ArgumentNullException.ThrowIfNull(product);
 
-            Product? existingProduct = _repository.GetById(product.Id);
+            Product? existingProduct = this._repository.GetById(product.Id);
             return existingProduct?.Quantity ?? 0;
         }
 
@@ -73,14 +76,15 @@
         /// </summary>
         /// <param name="product">The product with updated details.</param>
         /// <exception cref="ArgumentNullException">Thrown when the product is null.</exception>
+        /// <returns>A string which represents the error occured, null if no error occured.</returns>
         public string UpdateProduct(Product product)
         {
             ArgumentNullException.ThrowIfNull(product);
 
-            Product? existingProduct = _repository.GetById(product.Id);
+            Product? existingProduct = this._repository.GetById(product.Id);
 
             string validationError = this.ValidateProduct(product);
-            
+
             if (existingProduct != null && string.IsNullOrEmpty(validationError))
             {
                 existingProduct.Name = product.Name;
@@ -99,7 +103,7 @@
         public string ValidateProduct(Product product)
         {
             ArgumentNullException.ThrowIfNull(product);
-            return _validator.ValidateProduct(product) ?? string.Empty;
+            return this._validator.ValidateProduct(product) ?? string.Empty;
         }
     }
 }
