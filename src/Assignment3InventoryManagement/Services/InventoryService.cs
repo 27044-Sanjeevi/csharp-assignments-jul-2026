@@ -1,27 +1,45 @@
-﻿namespace InventoryManagementAssignment3.Services
+﻿namespace Assignment3InventoryManagement.Services
 {
-    using InventoryManagementAssignment3.Models;
-    using InventoryManagementAssignment3.Persistence;
-    using InventoryManagementAssignment3.Validation;
+    using Assignment3InventoryManagement.Models;
+    using Assignment3InventoryManagement.Persistence;
+    using Assignment3InventoryManagement.Validation;
 
     /// <summary>
     /// Represents a manager for handling product-related operations in the inventory management system.
     /// </summary>
-    internal class InventoryManager
+    internal class InventoryService
     {
         private readonly Repository _repository;
         private readonly ProductValidation _validator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InventoryManager"/> class.
+        /// Initializes a new instance of the <see cref="InventoryService"/> class.
         /// </summary>
         /// <param name="repository">The repository to use for product operations.</param>
         /// <param name="validator">The validator to use for product validation.</param>
         /// <exception cref="ArgumentNullException">Thrown when the repository or validator is null.</exception>
-        public InventoryManager(Repository repository, ProductValidation validator)
+        public InventoryService(Repository repository, ProductValidation validator)
         {
-            this._repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            this._validator = validator ?? throw new ArgumentNullException(nameof(validator));
+            this._repository = repository ?? throw new ArgumentNullException(nameof(Repository));
+            this._validator = validator ?? throw new ArgumentNullException(nameof(ProductValidation));
+        }
+
+        /// <summary>
+        /// Creates a new product with the specified identifier, name, price, and quantity.
+        /// </summary>
+        /// <param name="name">Name of the product.</param>
+        /// <param name="price">Price of the product.</param>
+        /// <param name="quantity">Quantity of the product in stock.</param>
+        /// <returns>A new Product instance with the provided details.</returns>
+        public Product CreateProduct(string name, decimal price, int quantity)
+        {
+            return new Product
+            {
+                Id = this._repository.GetNextId(),
+                Name = name,
+                Price = price,
+                Quantity = quantity,
+            };
         }
 
         /// <summary>
@@ -35,7 +53,7 @@
 
             string validationError = this.ValidateProduct(product);
 
-            if (validationError is not null)
+            if (string.IsNullOrEmpty(validationError))
             {
                 this._repository.Add(product);
             }
@@ -44,16 +62,39 @@
         }
 
         /// <summary>
+        /// Retrieves the Id to be used next.
+        /// </summary>
+        /// <returns>The next product Id.</returns>
+        public int GetNextId()
+        {
+            return this._repository.GetNextId();
+        }
+
+        /// <summary>
+        /// Retrieves the products list from the repository.
+        /// </summary>
+        /// <returns>A list of all products in repository.</returns>
+        public List<Product> GetAllProducts()
+        {
+            List<Product> products = this._repository.GetAll();
+            return products;
+        }
+
+        /// <summary>
         /// Removes a product from the inventory.
         /// </summary>
         /// <param name="product">The product to remove.</param>
         /// <returns>A string containing the validation error message, or an empty string if the product is valid.</returns>
-        public string RemoveProduct(Product product)
+        public string? RemoveProduct(Product product)
         {
             ArgumentNullException.ThrowIfNull(product);
 
-            string validationError = this.ValidateProduct(product);
-            this._repository.Remove(product.Id);
+            string? validationError = this.ValidateProduct(product);
+
+            if (string.IsNullOrEmpty(validationError))
+            {
+                this._repository.Remove(product.Id);
+            }
 
             return validationError;
         }

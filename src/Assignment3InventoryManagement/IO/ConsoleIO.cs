@@ -10,9 +10,15 @@
         /// <summary>
         /// Reads the next line of characters from the standard input stream.
         /// </summary>
+        /// <param name="prompt">Prompt to be displayed to the user.</param>
         /// <returns>The next line of input from the console, or null if no lines are available.</returns>
-        public string? ReadLine()
+        public string? ReadLine(string? prompt)
         {
+            if (prompt != null)
+            {
+                this.Write(prompt);
+            }
+
             return Console.ReadLine();
         }
 
@@ -35,7 +41,7 @@
         public void WriteColored(string message, ConsoleColor color)
         {
             Console.ForegroundColor = color;
-            this.WriteLine(message);
+            this.Write(message);
             Console.ResetColor();
         }
 

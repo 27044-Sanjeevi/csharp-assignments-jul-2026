@@ -1,4 +1,4 @@
-﻿namespace InventoryManagementAssignment3.Models
+﻿namespace Assignment3InventoryManagement.Models
 {
     /// <summary>
     /// Represents a product in the inventory management system.

@@ -1,6 +1,6 @@
-﻿namespace InventoryManagementAssignment3.Persistence
+﻿namespace Assignment3InventoryManagement.Persistence
 {
-    using InventoryManagementAssignment3.Models;
+    using Assignment3InventoryManagement.Models;
 
     /// <summary>
     /// Represents a repository for managing product data in the inventory management system.
@@ -8,6 +8,7 @@
     internal class Repository
     {
         private readonly List<Product> _products = new List<Product>();
+        private int _nextId = 1;
 
         /// <summary>
         /// Adds a new product to the repository.
@@ -42,12 +43,21 @@
         public List<Product> GetAll()
         {
             List<Product> clonedProducts = new List<Product>();
-            foreach (var product in _products)
+            foreach (var product in this._products)
             {
                 clonedProducts.Add(this.Clone(product));
             }
 
             return clonedProducts;
+        }
+
+        /// <summary>
+        /// Retrieves the Id to be used next.
+        /// </summary>
+        /// <returns>The next product Id.</returns>
+        public int GetNextId()
+        {
+            return this._nextId++;
         }
 
         /// <summary>
