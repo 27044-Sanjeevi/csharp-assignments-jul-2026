@@ -43,6 +43,25 @@
         }
 
         /// <summary>
+        /// Creates a new Product with existing ID
+        /// </summary>
+        /// <param name="id">Existing product Id</param>
+        /// <param name="name">Updated Name</param>
+        /// <param name="price">Updated price</param>
+        /// <param name="quantity">Updated quantity</param>
+        /// <returns>New product object with updated details.</returns>
+        public Product CreateUpdatedProduct(int id, string name, decimal price, int quantity)
+        {
+            return new Product
+            {
+                Id = id,
+                Name = name,
+                Price = price,
+                Quantity = quantity,
+            };
+        }
+
+        /// <summary>
         /// Adds a product to the inventory.
         /// </summary>
         /// <param name="product">The product to add.</param>
@@ -85,7 +104,7 @@
         /// </summary>
         /// <param name="product">The product to remove.</param>
         /// <returns>A string containing the validation error message, or an empty string if the product is valid.</returns>
-        public string? RemoveProduct(Product product)
+        public string? RemoveProduct(Product? product)
         {
             ArgumentNullException.ThrowIfNull(product);
 
@@ -110,6 +129,28 @@
 
             Product? existingProduct = this._repository.GetById(product.Id);
             return existingProduct?.Quantity ?? 0;
+        }
+
+        /// <summary>
+        /// Retrieves the product based on the Id provided.
+        /// </summary>
+        /// <param name="id">Id of the existing product.</param>
+        /// <returns>The matched product object, else null.</returns>
+        public Product? GetProductById(int id)
+        {
+            ArgumentNullException.ThrowIfNull(id);
+
+            List<Product> products = this.GetAllProducts();
+
+            foreach (Product product in products)
+            {
+                if (product.Id == id)
+                {
+                    return product;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -145,6 +186,73 @@
         {
             ArgumentNullException.ThrowIfNull(product);
             return this._validator.ValidateProduct(product) ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Searches for products whose properties match the specified keyword.
+        /// </summary>
+        /// <param name="keyword">The keyword to search for within product properties.</param>
+        /// <returns>A list of products that match the keyword.</returns>
+        public List<Product> SearchContacts(string keyword)
+        {
+            ArgumentNullException.ThrowIfNull(keyword);
+
+            List<Product> results = new List<Product>();
+
+            string lowerSearchTerm = keyword.ToLowerInvariant();
+            List<Product> products = this._repository.GetAll();
+
+            foreach (Product product in products)
+            {
+                if (this.IsMatch(product, keyword))
+                {
+                    results.Add(product);
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Check if a product exists in the products list.
+        /// </summary>
+        /// <param name="id">Id of the product to be searched.</param>
+        /// <returns>true if product exists, else false.</returns>
+        public bool CheckExistance(int id)
+        {
+            List<Product> products = this._repository.GetAll();
+
+            foreach (Product product in products)
+            {
+                if (id == product.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether a product has matches with the provided keyword.
+        /// </summary>
+        /// <param name="product">The product to evaluate.</param>
+        /// <param name="keyword">The search keyword.</param>
+        /// <returns>True if any field contains the search keyword; otherwise, false.</returns>
+        private bool IsMatch(Product product, string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return false;
+            }
+
+            bool idMatches = product.Id.ToString().Equals(keyword, StringComparison.OrdinalIgnoreCase);
+            bool quantityMatches = product.Quantity.ToString().Equals(keyword, StringComparison.OrdinalIgnoreCase);
+            bool priceMatches = product.Price.ToString("G").Equals(keyword, StringComparison.OrdinalIgnoreCase) ||
+                           product.Price.ToString("F2").Equals(keyword, StringComparison.OrdinalIgnoreCase);
+            bool nameMatches = product.Name != null && product.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase);
+
+            return idMatches || nameMatches || priceMatches || quantityMatches;
         }
     }
 }

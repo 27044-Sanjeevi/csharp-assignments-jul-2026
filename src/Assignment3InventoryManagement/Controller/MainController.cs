@@ -42,16 +42,16 @@
                     this.ViewProducts();
                     break;
                 case 3:
-                    // this.SearchProduct();
+                    this.SearchProduct();
                     break;
                 case 4:
-                    // this.UpdateProduct();
+                    this.UpdateProduct();
                     break;
                 case 5:
-                    // this.DeleteProduct();
+                    this.RemoveProduct();
                     break;
                 case 6:
-                    // this.AddStock();
+                    this.AddStock();
                     break;
                 case 7:
                     // this.RemoveStock();
@@ -69,6 +69,7 @@
         /// </summary>
         public void AddProduct()
         {
+            this._view.DisplayAddHeader();
             string name = this._view.GetProductName();
             decimal price = this._view.GetProductPrice();
             int quantity = this._view.GetProductQuantity();
@@ -86,11 +87,91 @@
             this._view.DisplayId(product.Id);
         }
 
-
+        /// <summary>
+        /// Displays all the products as a table.
+        /// </summary>
         public void ViewProducts()
         {
+            this._view.DisplayViewHeader();
             List<Product> products = this._inventoryService.GetAllProducts();
             this._view.DisplayAsTable(products);
+        }
+
+        /// <summary>
+        /// Searches for products using a keyword and displays the matching results in a table.
+        /// </summary>
+        public void SearchProduct()
+        {
+            this._view.DisplaySearchHeader();
+            string keyword = this._view.GetSearchKeyword();
+            List<Product> results = this._inventoryService.SearchContacts(keyword);
+            this._view.DisplayAsTable(results);
+        }
+
+        /// <summary>
+        /// Updates the details of an existing product in the inventory.
+        /// </summary>
+        public void UpdateProduct()
+        {
+            this._view.DisplayUpdateHeader();
+            int idToUpdate = this._view.GetIdFromUser();
+
+            if (!this._inventoryService.CheckExistance(idToUpdate))
+            {
+                this._view.DisplayProductNotFound();
+                return;
+            }
+
+            Product? existingProduct = this._inventoryService.GetProductById(idToUpdate);
+
+            if (existingProduct is not null)
+            {
+                string name = this._view.GetOptionalName() ?? existingProduct.Name;
+                decimal price = this._view.GetOptionalPrice() ?? existingProduct.Price;
+                int quantity = this._view.GetOptionalQuantity() ?? existingProduct.Quantity;
+                Product updatedProduct = this._inventoryService.CreateUpdatedProduct(idToUpdate, name, price, quantity);
+
+                this._inventoryService.UpdateProduct(updatedProduct);
+
+                this._view.DisplayProductIsUpdated(idToUpdate);
+            }
+
+            return;
+        }
+
+        /// <summary>
+        /// Removes the product from the inventory.
+        /// </summary>
+        public void RemoveProduct()
+        {
+            this._view.DisplayDeleteHeader();
+
+            int idToDelete = this._view.GetIdFromUser();
+
+            if (!this._inventoryService.CheckExistance(idToDelete))
+            {
+                this._view.DisplayProductNotFound();
+                return;
+            }
+
+            this._inventoryService.RemoveProduct(this._inventoryService.GetProductById(idToDelete));
+            this._view.DisplayProductIsDeleted(idToDelete);
+        }
+
+        public void AddStock()
+        {
+            this._view.DisplayAddStockHeader();
+
+            int id = this._view.GetIdFromUser();
+
+            if (!this._inventoryService.CheckExistance(id))
+            {
+                this._view.DisplayProductNotFound();
+                return;
+            }
+
+            int quantity = this._view.GetProductQuantity();
+            this._inventoryService.AddStock(id, quantity);
         }
     }
 }

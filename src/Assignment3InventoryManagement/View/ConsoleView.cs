@@ -2,7 +2,7 @@
 {
     using Assignment3InventoryManagement.IO;
     using Assignment3InventoryManagement.Models;
-    using ConsoleTables;
+    using Spectre.Console;
 
     /// <summary>
     /// Handles presentation rendering, headers, menus, and user inputs for the console UI.
@@ -46,7 +46,7 @@
         /// <returns>A string holding the name of the product.</returns>
         public string GetProductName()
         {
-            return this.ReadString("Name of the Product : ");
+            return this.ReadString("Name of the Product : ") ?? string.Empty;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@
         /// <returns>An integer holding the intial quantity of the product.</returns>
         public int GetProductQuantity()
         {
-            return this.ReadInt("Initial quantity to add : ");
+            return this.ReadInt("Initial quantity to add : ") ?? 0;
         }
 
         /// <summary>
@@ -64,7 +64,34 @@
         /// <returns>A decimal holding the price of the product.</returns>
         public decimal GetProductPrice()
         {
-            return this.ReadDecimal("Price of the Product : ");
+            return this.ReadDecimal("Price of the Product : ") ?? 0.0M;
+        }
+
+        /// <summary>
+        /// Gets the name, allows empty or whitespace values.
+        /// </summary>
+        /// <returns>The name of the product, or empty string</returns>
+        public string? GetOptionalName()
+        {
+            return this.ReadString("Name of the Product : ", isOptional: true);
+        }
+
+        /// <summary>
+        /// Gets an optional product price, validating the input numeric bounds if entered.
+        /// </summary>
+        /// <returns>The parsed decimal value if a valid amount was entered; null if skipped.</returns>
+        public decimal? GetOptionalPrice()
+        {
+            return this.ReadDecimal("New Price of the Product (Leave blank to keep unchanged): ", isOptional: true);
+        }
+
+        /// <summary>
+        /// Gets an optional product stock quantity, validating the integer bounds if entered.
+        /// </summary>
+        /// <returns>The parsed integer value if a valid count was entered; null if skipped.</returns>
+        public int? GetOptionalQuantity()
+        {
+            return this.ReadInt("New Stock Quantity (Leave blank to keep unchanged): ", isOptional: true);
         }
 
         /// <summary>
@@ -77,43 +104,140 @@
         }
 
         /// <summary>
+        /// Displays the header for Add method.
+        /// </summary>
+        public void DisplayAddHeader()
+        {
+            this.PrintHeader("ADD A PRODUCT");
+        }
+
+        /// <summary>
+        /// Displays the header for View operation.
+        /// </summary>
+        public void DisplayViewHeader()
+        {
+            this.PrintHeader("ALL CONTACTS LIST");
+        }
+
+        /// <summary>
+        /// Displays the header for Search operation.
+        /// </summary>
+        public void DisplaySearchHeader()
+        {
+            this.PrintHeader("SEARCH RESULTS");
+        }
+
+        /// <summary>
+        /// Displays a header indicating the update contact operation.
+        /// </summary>
+        public void DisplayUpdateHeader()
+        {
+            this.PrintHeader("UPDATE THE CONTACT");
+            this.PrintSubHeader("Leave Blank Space for Unmodified Values.");
+        }
+
+        /// <summary>
+        /// Displays an error message indicating that the product was not found.
+        /// </summary>
+        public void DisplayProductNotFound()
+        {
+            this.DisplayError("\nThe product is not found.\n");
+        }
+
+        /// <summary>
+        /// Prompts the user to enter an existing product ID.
+        /// </summary>
+        /// <returns>The entered product ID as an integer, or 0 if no valid input is provided.</returns>
+        public int GetIdFromUser()
+        {
+            return this.ReadInt("Enter the existing product Id : ") ?? 0;
+        }
+
+        /// <summary>
+        /// Displays message on successfull product updation.
+        /// </summary>
+        /// <param name="id">Id of the updated product.</param>
+        public void DisplayProductIsUpdated(int id)
+        {
+            this.WriteColored($"\nProduct with ID = {id} is updated successfully.\n", ConsoleColor.DarkGreen);
+        }
+
+        /// <summary>
+        /// Displays the header for the deletion page.
+        /// </summary>
+        public void DisplayDeleteHeader()
+        {
+            this.PrintHeader("DELETION PAGE");
+        }
+
+        /// <summary>
+        /// Displays a confirmation message indicating successful deletion of a product by its identifier.
+        /// </summary>
+        /// <param name="id">The identifier of the deleted product.</param>
+        public void DisplayProductIsDeleted(int id)
+        {
+            this.WriteColored($"\nProduct with ID = {id} is deleted successfully.\n", ConsoleColor.DarkGreen);
+        }
+
+        /// <summary>
         /// Displays products in a table.
         /// </summary>
         /// <param name="products">List of products to display.</param>
         public void DisplayAsTable(List<Product> products)
         {
+            ArgumentNullException.ThrowIfNull(products);
+
             if (products.Count == 0)
             {
-                this._consoleIo.WriteLine("No products to display.");
+                this._consoleIo.WriteColored("\nNo products to display.\n", ConsoleColor.Red);
                 return;
             }
 
-            ConsoleTable table = new ConsoleTable("Id", "Name", "Price (Rs.)", "Quantity");
+            var table = new Table();
+
+            table.AddColumn(new TableColumn("Id").Centered());
+            table.AddColumn(new TableColumn("Name").LeftAligned());
+            table.AddColumn(new TableColumn("Price (Rs.)").RightAligned());
+            table.AddColumn(new TableColumn("Quantity").RightAligned());
 
             foreach (Product product in products)
             {
                 table.AddRow(
-                    product.Id,
+                    product.Id.ToString(),
                     product.Name,
-                    product.Price,
-                    product.Quantity);
+                    $"{product.Price:F2}",
+                    product.Quantity.ToString());
             }
 
-            this._consoleIo.WriteLine(table.ToString());
+            AnsiConsole.Write(table);
         }
 
         /// <summary>
-        /// Prompts the user for a valid positive int value.
+        /// Prompts for a search term.
         /// </summary>
-        /// <param name="prompt">The prompt message.</param>
-        /// <returns>The parsed integer value.</returns>
-        public int ReadInt(string prompt)
+        /// <returns>The search term entered by the user.</returns>
+        public string GetSearchKeyword()
         {
-            int value;
+            return this.ReadString("Enter search Keyword: ") ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Reads an integer value from the console, optionally allowing an empty input to bypass validation.
+        /// </summary>
+        /// <param name="prompt">The prompt message to display.</param>
+        /// <param name="isOptional">If true, pressing Enter returns null instead of a validation error.</param>
+        /// <returns>The parsed integer value, or null if the field was skipped.</returns>
+        public int? ReadInt(string prompt, bool isOptional = false)
+        {
             while (true)
             {
-                this.Write(prompt);
-                if (int.TryParse(this.ReadLine(), out value) && value >= 0.0)
+                string? input = this.ReadLine(prompt);
+                if (isOptional && string.IsNullOrWhiteSpace(input))
+                {
+                    return null;
+                }
+
+                if (int.TryParse(input, out int value) && value >= 0)
                 {
                     return value;
                 }
@@ -123,15 +247,22 @@
         }
 
         /// <summary>
-        /// Prompts the user for a non-empty string.
+        /// Reads a string value from the console, optionally allowing an empty input to bypass validation.
         /// </summary>
-        /// <param name="prompt">The prompt message.</param>
-        /// <returns>The validated string input.</returns>
-        public string ReadString(string prompt)
+        /// <param name="prompt">The prompt message to display.</param>
+        /// <param name="isOptional">If true, pressing Enter returns null instead of a validation error.</param>
+        /// <returns>The trimmed string input, or null if skipped.</returns>
+        public string? ReadString(string prompt, bool isOptional = false)
         {
             while (true)
             {
                 string? input = this.ReadLine(prompt);
+
+                if (isOptional && string.IsNullOrWhiteSpace(input))
+                {
+                    return null;
+                }
+
                 if (!string.IsNullOrWhiteSpace(input))
                 {
                     return input.Trim();
@@ -162,16 +293,23 @@
         }
 
         /// <summary>
-        /// Prompts the user for a valid positive decimal value.
+        /// Reads a decimal value from the console, optionally allowing an empty input to bypass validation.
         /// </summary>
-        /// <param name="prompt">The prompt message.</param>
-        /// <returns>The parsed decimal value.</returns>
-        public decimal ReadDecimal(string prompt)
+        /// <param name="prompt">The prompt message to display.</param>
+        /// <param name="isOptional">If true, pressing Enter returns null. If false, it loops until a valid decimal is entered.</param>
+        /// <returns>The parsed decimal value, or null if the field was skipped.</returns>
+        public decimal? ReadDecimal(string prompt, bool isOptional = false)
         {
-            decimal value;
             while (true)
             {
-                if (decimal.TryParse(this.ReadLine(prompt), out value) && value >= 0.0M)
+                string? input = this.ReadLine(prompt);
+
+                if (isOptional && string.IsNullOrWhiteSpace(input))
+                {
+                    return null;
+                }
+
+                if (decimal.TryParse(input, out decimal value) && value >= 0.0M)
                 {
                     return value;
                 }
@@ -300,6 +438,16 @@
         public void ClearScreen()
         {
             this._consoleIo.Clear();
+        }
+
+        /// <summary>
+        /// A centralized method to ensure basic trimming.
+        /// </summary>
+        private string? ReadCleanLine(string prompt)
+        {
+            this._consoleIo.Write(prompt);
+            string? input = this.ReadLine();
+            return string.IsNullOrWhiteSpace(input) ? null : input.Trim();
         }
     }
 }
