@@ -138,7 +138,7 @@ namespace Assignment3InventoryManagement.View
         /// </summary>
         public void DisplayViewHeader()
         {
-            this._consoleHelper.PrintHeader("ALL CONTACTS LIST");
+            this._consoleHelper.PrintHeader("ALL PRODUCTS LIST");
         }
 
         /// <summary>
@@ -150,11 +150,11 @@ namespace Assignment3InventoryManagement.View
         }
 
         /// <summary>
-        /// Displays a header indicating the update contact operation.
+        /// Displays a header indicating the update product operation.
         /// </summary>
         public void DisplayUpdateHeader()
         {
-            this._consoleHelper.PrintHeader("UPDATE THE CONTACT");
+            this._consoleHelper.PrintHeader("UPDATE THE PRODUCT");
             this._consoleHelper.PrintSubHeader("Leave Blank Space for Unmodified Values.");
         }
 

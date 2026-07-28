@@ -86,14 +86,14 @@ namespace Assignment3InventoryManagement.Services
         /// </summary>
         /// <param name="keyword">The keyword to search for within product properties.</param>
         /// <returns>A list of products that match the keyword.</returns>
-        List<Product> SearchContacts(string keyword);
+        List<Product> SearchProducts(string keyword);
 
         /// <summary>
         /// Check if a product exists in the products list.
         /// </summary>
         /// <param name="id">Id of the product to be searched.</param>
         /// <returns>true if product exists, else false.</returns>
-        bool CheckExistance(int id);
+        bool CheckExistence(int id);
 
         /// <summary>
         /// Adds stock to an existing product in the inventory.

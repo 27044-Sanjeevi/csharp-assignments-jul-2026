@@ -9,9 +9,6 @@ namespace Assignment3InventoryManagement.Controller
     /// </summary>
     internal class MainController
     {
-        private const int MinTaskChoice = 1;
-        private const int MaxTaskChoice = 4;
-
         private readonly ConsoleView _view;
         private readonly IInventoryService _inventoryService;
 
@@ -104,7 +101,7 @@ namespace Assignment3InventoryManagement.Controller
         {
             this._view.DisplaySearchHeader();
             string keyword = this._view.GetSearchKeyword();
-            List<Product> results = this._inventoryService.SearchContacts(keyword);
+            List<Product> results = this._inventoryService.SearchProducts(keyword);
             this._view.DisplayAsTable(results);
         }
 
@@ -212,7 +209,7 @@ namespace Assignment3InventoryManagement.Controller
         {
             int id = this._view.GetIdFromUser();
 
-            if (!this._inventoryService.CheckExistance(id))
+            if (!this._inventoryService.CheckExistence(id))
             {
                 this._view.DisplayProductNotFound();
                 return null;

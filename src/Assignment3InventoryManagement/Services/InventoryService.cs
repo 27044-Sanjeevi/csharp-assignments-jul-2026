@@ -139,8 +139,6 @@ namespace Assignment3InventoryManagement.Services
         /// <returns>The matched product object, else null.</returns>
         public Product? GetProductById(int id)
         {
-            ArgumentNullException.ThrowIfNull(id);
-
             List<Product> products = this.GetAllProducts();
 
             foreach (Product product in products)
@@ -194,7 +192,7 @@ namespace Assignment3InventoryManagement.Services
         /// </summary>
         /// <param name="keyword">The keyword to search for within product properties.</param>
         /// <returns>A list of products that match the keyword.</returns>
-        public List<Product> SearchContacts(string keyword)
+        public List<Product> SearchProducts(string keyword)
         {
             ArgumentNullException.ThrowIfNull(keyword);
 
@@ -215,7 +213,7 @@ namespace Assignment3InventoryManagement.Services
         }
 
         /// <inheritdoc />
-        public bool CheckExistance(int id)
+        public bool CheckExistence(int id)
         {
             List<Product> products = this._repository.GetAll();
 
