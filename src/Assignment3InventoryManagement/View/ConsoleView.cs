@@ -3,6 +3,7 @@ namespace Assignment3InventoryManagement.View
     using System;
     using System.Collections.Generic;
     using Assignment3InventoryManagement.Models;
+    using Assignment3InventoryManagement.Models.Enum;
     using Assignment3InventoryManagement.Utilities;
     using Spectre.Console;
 
@@ -45,7 +46,8 @@ namespace Assignment3InventoryManagement.View
             table.AddRow("5", "[bold]Delete Product[/]", "Removes a product completely from the inventory.");
             table.AddRow("6", "[bold]Add Stock[/]", "Replenishes stock quantity of an existing product.");
             table.AddRow("7", "[bold]Remove Stock[/]", "Deducts stock quantity of an existing product.");
-            table.AddRow("8", "[bold]Exit[/]", "Closes and exits the application.");
+            table.AddRow("8", "[bold]Sort Products[/]", "Sorts the Products.");
+            table.AddRow("9", "[bold]Exit[/]", "Exits the Application.");
 
             AnsiConsole.Write(table);
             this._consoleHelper.WriteLine(string.Empty);
@@ -192,6 +194,41 @@ namespace Assignment3InventoryManagement.View
         }
 
         /// <summary>
+        /// Gets selected sort field.
+        /// </summary>
+        /// <returns>The selected sort field as a SortField enum.</returns>
+        public SortField GetSortField()
+        {
+            this._consoleHelper.PrintHeader("Sort Products");
+
+            this._consoleHelper.WriteLine("Sort by:");
+            this._consoleHelper.WriteLine("1. Id");
+            this._consoleHelper.WriteLine("2. Name");
+            this._consoleHelper.WriteLine("3. Price");
+            this._consoleHelper.WriteLine("4. Quantity");
+
+            int choice = this._consoleHelper.ReadChoice(1, 4, "Choose sort field (1-4): ");
+
+            return (SortField)choice;
+        }
+
+        /// <summary>
+        /// Gets selected sort direction.
+        /// </summary>
+        /// <returns>True for ascending, false for descending.</returns>
+        public bool GetSortDirection()
+        {
+            this._consoleHelper.WriteLine();
+            this._consoleHelper.WriteLine("Sort direction:");
+            this._consoleHelper.WriteLine("1. Ascending");
+            this._consoleHelper.WriteLine("2. Descending");
+
+            int choice = this._consoleHelper.ReadChoice(1, 2, "Choose direction (1-2): ");
+
+            return choice == 1;
+        }
+
+        /// <summary>
         /// Displays message on successfull product updation.
         /// </summary>
         /// <param name="id">Id of the updated product.</param>
@@ -317,7 +354,8 @@ namespace Assignment3InventoryManagement.View
                 "5. Delete Product",
                 "6. Add Stock",
                 "7. Remove Stock",
-                "8. Exit",
+                "8. Sort Products",
+                "9. Exit",
             };
 
             return this._consoleHelper.ReadSelection("Select an operation to run:", choices);

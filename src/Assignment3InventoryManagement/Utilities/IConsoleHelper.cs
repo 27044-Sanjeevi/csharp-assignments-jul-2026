@@ -64,8 +64,8 @@ namespace Assignment3InventoryManagement.Utilities
         /// <summary>
         /// Writes the message with a new line.
         /// </summary>
-        /// <param name="message">Message to be written on console.</param>
-        void WriteLine(string message);
+        /// <param name="message">Optional Message to be written on console.</param>
+        void WriteLine(string message = "");
 
         /// <summary>
         /// Reads the input from the user as string.

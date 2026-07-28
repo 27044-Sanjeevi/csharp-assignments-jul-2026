@@ -2,6 +2,7 @@ namespace Assignment3InventoryManagement.Services
 {
     using System.Collections.Generic;
     using Assignment3InventoryManagement.Models;
+    using Assignment3InventoryManagement.Models.Enum;
 
     /// <summary>
     /// Defines business logic operations for managing product inventories.
@@ -109,5 +110,14 @@ namespace Assignment3InventoryManagement.Services
         /// <param name="quantity">The quantity of stock to remove.</param>
         /// <returns>A validation error message if the quantity to remove is invalid or exceeds available stock; otherwise, null.</returns>
         string? RemoveStock(int id, int quantity);
+
+        /// <summary>
+        /// Gets all products sorted by the specified criteria and direction.
+        /// </summary>
+        /// <param name="sortField">The field option token to sort by (Id, Name, Price, Quantity).</param>
+        /// <param name="isAscending">True to sort in ascending order; false for descending.</param>
+        /// <returns>A sorted list of product models.</returns>
+        List<Product> GetSortedProducts(SortField sortField, bool isAscending);
+
     }
 }

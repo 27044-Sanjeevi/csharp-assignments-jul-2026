@@ -9,7 +9,7 @@
     internal class ApplicationRunner
     {
         private const int MinTaskChoice = 1;
-        private const int MaxTaskChoice = 8;
+        private const int MaxTaskChoice = 9;
 
         private readonly ConsoleView _view;
         private readonly MainController _mainController;

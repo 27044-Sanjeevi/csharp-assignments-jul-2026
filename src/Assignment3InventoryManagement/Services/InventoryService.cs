@@ -1,6 +1,7 @@
 namespace Assignment3InventoryManagement.Services
 {
     using Assignment3InventoryManagement.Models;
+    using Assignment3InventoryManagement.Models.Enum;
     using Assignment3InventoryManagement.Persistence;
     using Assignment3InventoryManagement.Validation;
     using Spectre.Console;
@@ -260,6 +261,59 @@ namespace Assignment3InventoryManagement.Services
             }
 
             return string.Empty;
+        }
+
+        /// <inheritdoc />
+        public List<Product> GetSortedProducts(SortField sortField, bool isAscending)
+        {
+            List<Product> products = this.GetAllProducts();
+
+            products.Sort((productX, productY) =>
+            {
+                if (productX == null && productY == null)
+                {
+                    return 0;
+                }
+
+                if (productX == null)
+                {
+                    return isAscending ? -1 : 1;
+                }
+
+                if (productY == null)
+                {
+                    return isAscending ? 1 : -1;
+                }
+
+                int comparisonResult = 0;
+
+                switch (sortField)
+                {
+                    case SortField.Id:
+                        comparisonResult = productX.Id.CompareTo(productY.Id);
+                        break;
+
+                    case SortField.Name:
+                        comparisonResult = string.Compare(productX.Name, productY.Name, StringComparison.OrdinalIgnoreCase);
+                        break;
+
+                    case SortField.Price:
+                        comparisonResult = productX.Price.CompareTo(productY.Price);
+                        break;
+
+                    case SortField.Quantity:
+                        comparisonResult = productX.Quantity.CompareTo(productY.Quantity);
+                        break;
+
+                    default:
+                        comparisonResult = productX.Id.CompareTo(productY.Id);
+                        break;
+                }
+
+                return isAscending ? comparisonResult : -comparisonResult;
+            });
+
+            return products;
         }
 
         /// <summary>

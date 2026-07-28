@@ -1,6 +1,7 @@
 namespace Assignment3InventoryManagement.Controller
 {
     using Assignment3InventoryManagement.Models;
+    using Assignment3InventoryManagement.Models.Enum;
     using Assignment3InventoryManagement.Services;
     using Assignment3InventoryManagement.View;
 
@@ -54,6 +55,9 @@ namespace Assignment3InventoryManagement.Controller
                     this.RemoveStock();
                     break;
                 case 8:
+                    this.SortProducts();
+                    break;
+                case 9:
                     this.PrintGoodBye();
                     return true;
             }
@@ -191,6 +195,17 @@ namespace Assignment3InventoryManagement.Controller
                 this._view.DisplayError(errorMessage);
                 this._view.PrintStockUpdation();
             }
+        }
+
+        /// <summary>
+        /// Sorts products and displays the results.
+        /// </summary>
+        public void SortProducts()
+        {
+            SortField sortField = this._view.GetSortField();
+            bool isAscending = this._view.GetSortDirection();
+            List<Product> products = this._inventoryService.GetSortedProducts(sortField, isAscending);
+            this._view.DisplayAsTable(products);
         }
 
         /// <summary>
