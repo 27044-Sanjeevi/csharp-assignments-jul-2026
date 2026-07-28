@@ -9,7 +9,7 @@
     internal class ApplicationRunner
     {
         private const int MinTaskChoice = 1;
-        private const int MaxTaskChoice = 7;
+        private const int MaxTaskChoice = 8;
 
         private readonly ConsoleView _view;
         private readonly MainController _mainController;
@@ -31,22 +31,36 @@
         public void RunApplication()
         {
             bool exit = false;
-
-            while (!exit)
+            try
             {
-                this._view.ClearScreen();
-                this._view.ShowMainMenu();
-
-                int choice = this._view.ReadChoice(MinTaskChoice, MaxTaskChoice);
-
-                this._view.ClearScreen();
-
-                exit = this._mainController.HandleMenu(choice);
-
-                if (!exit)
+                while (!exit)
                 {
-                    this._view.PauseAndReturn();
+                    this._view.ClearScreen();
+                    this._view.ShowMainMenu();
+
+                    int choice = this._view.ReadChoice(MinTaskChoice, MaxTaskChoice);
+
+                    this._view.ClearScreen();
+
+                    exit = this._mainController.HandleMenu(choice);
+
+                    if (!exit)
+                    {
+                        this._view.PauseAndReturn();
+                    }
                 }
+            }
+            catch (ArgumentException ex)
+            {
+                this._view.DisplayError(ex.Message);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                this._view.DisplayError(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                this._view.DisplayError(ex.Message);
             }
         }
     }

@@ -1,17 +1,13 @@
-﻿namespace Assignment3InventoryManagement.IO
+namespace Assignment3InventoryManagement.IO
 {
     using System;
 
     /// <summary>
     /// Provides concrete implementations of console input and output operations.
     /// </summary>
-    internal class ConsoleIO
+    internal class ConsoleIO : IConsoleIO
     {
-        /// <summary>
-        /// Reads the next line of characters from the standard input stream.
-        /// </summary>
-        /// <param name="prompt">Prompt to be displayed to the user.</param>
-        /// <returns>The next line of input from the console, or null if no lines are available.</returns>
+        /// <inheritdoc />
         public string? ReadLine(string? prompt)
         {
             if (prompt != null)
@@ -22,22 +18,14 @@
             return Console.ReadLine();
         }
 
-        /// <summary>
-        /// Clears the console and writes a colored message.
-        /// </summary>
-        /// <param name="message">The message to display.</param>
-        /// <param name="color">The color of the message.</param>
+        /// <inheritdoc />
         public void ClearAndWriteColored(string message, ConsoleColor color)
         {
             this.Clear();
             this.WriteColored(message, color);
         }
 
-        /// <summary>
-        /// Writes message to screen with custom color.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="color">The console color.</param>
+        /// <inheritdoc />
         public void WriteColored(string message, ConsoleColor color)
         {
             Console.ForegroundColor = color;
@@ -45,37 +33,25 @@
             Console.ResetColor();
         }
 
-        /// <summary>
-        /// Writes the specified string value to the standard output stream.
-        /// </summary>
-        /// <param name="message">The message to write.</param>
+        /// <inheritdoc />
         public void Write(string message)
         {
             Console.Write(message);
         }
 
-        /// <summary>
-        /// Writes the specified string value, followed by the current line terminator, to the standard output stream.
-        /// </summary>
-        /// <param name="message">The message to write.</param>
+        /// <inheritdoc />
         public void WriteLine(string message)
         {
             Console.WriteLine(message);
         }
 
-        /// <summary>
-        /// Clears the console window.
-        /// </summary>
+        /// <inheritdoc />
         public void Clear()
         {
             Console.Clear();
         }
 
-        /// <summary>
-        /// Obtains the next character or function key pressed by the user.
-        /// </summary>
-        /// <param name="intercept">Determines whether to display the pressed key in the console window.</param>
-        /// <returns>An object that describes the key that was pressed.</returns>
+        /// <inheritdoc />
         public ConsoleKeyInfo ReadKey(bool intercept)
         {
             return Console.ReadKey(intercept);

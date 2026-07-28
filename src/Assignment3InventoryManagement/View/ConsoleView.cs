@@ -1,7 +1,9 @@
-﻿namespace Assignment3InventoryManagement.View
+namespace Assignment3InventoryManagement.View
 {
-    using Assignment3InventoryManagement.IO;
+    using System;
+    using System.Collections.Generic;
     using Assignment3InventoryManagement.Models;
+    using Assignment3InventoryManagement.Utilities;
     using Spectre.Console;
 
     /// <summary>
@@ -9,16 +11,16 @@
     /// </summary>
     internal class ConsoleView
     {
-        private readonly ConsoleIO _consoleIo;
+        private readonly IConsoleHelper _consoleHelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleView"/> class.
         /// </summary>
-        /// <param name="consoleIo">The console view input output renderer.</param>
-        /// <exception cref="ArgumentNullException">Thrown when the Argument is null.</exception>
-        public ConsoleView(ConsoleIO consoleIo)
+        /// <param name="consoleHelper">The console helper for generic input, output, and formatting operations.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the consoleHelper is null.</exception>
+        public ConsoleView(IConsoleHelper consoleHelper)
         {
-            this._consoleIo = consoleIo ?? throw new ArgumentNullException(nameof(ConsoleIO));
+            this._consoleHelper = consoleHelper ?? throw new ArgumentNullException(nameof(consoleHelper));
         }
 
         /// <summary>
@@ -26,18 +28,27 @@
         /// </summary>
         public void ShowMainMenu()
         {
-            this.WriteColored(
-                "Available Operations:\n\n" +
-                "1. Add a Product\n" +
-                "2. View all Products\n" +
-                "3. Search Product\n" +
-                "4. Update a Product\n" +
-                "5. Delete Product\n" +
-                "6. Add stock\n" +
-                "7. Remove stock\n" +
-                "8. Exit Application\n\n",
-                ConsoleColor.Cyan);
-            this.Write("Choose the Task to run: ");
+            this._consoleHelper.PrintHeader("INVENTORY MANAGEMENT SYSTEM");
+
+            var table = new Table()
+                .Title("[bold cyan]Available Operations[/]")
+                .Border(TableBorder.Rounded);
+
+            table.AddColumn(new TableColumn("[yellow]Option[/]").Centered());
+            table.AddColumn(new TableColumn("[yellow]Operation[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[yellow]Description[/]").LeftAligned());
+
+            table.AddRow("1", "[bold]Add Product[/]", "Adds a new product with custom name, price, and initial quantity.");
+            table.AddRow("2", "[bold]View Products[/]", "Displays all currently stored products in a structured table.");
+            table.AddRow("3", "[bold]Search Product[/]", "Searches products by ID, name, price, or quantity keyword.");
+            table.AddRow("4", "[bold]Update Product[/]", "Updates the name and price details of an existing product.");
+            table.AddRow("5", "[bold]Delete Product[/]", "Removes a product completely from the inventory.");
+            table.AddRow("6", "[bold]Add Stock[/]", "Replenishes stock quantity of an existing product.");
+            table.AddRow("7", "[bold]Remove Stock[/]", "Deducts stock quantity of an existing product.");
+            table.AddRow("8", "[bold]Exit[/]", "Closes and exits the application.");
+
+            AnsiConsole.Write(table);
+            this._consoleHelper.WriteLine(string.Empty);
         }
 
         /// <summary>
@@ -46,7 +57,7 @@
         /// <returns>A string holding the name of the product.</returns>
         public string GetProductName()
         {
-            return this.ReadString("Name of the Product : ") ?? string.Empty;
+            return this._consoleHelper.ReadString("Name of the Product : ") ?? string.Empty;
         }
 
         /// <summary>
@@ -55,7 +66,7 @@
         /// <returns>An integer holding the intial quantity of the product.</returns>
         public int GetProductQuantity()
         {
-            return this.ReadInt("Initial quantity to add : ") ?? 0;
+            return this._consoleHelper.ReadInt("Initial quantity to add : ") ?? 0;
         }
 
         /// <summary>
@@ -64,34 +75,45 @@
         /// <returns>A decimal holding the price of the product.</returns>
         public decimal GetProductPrice()
         {
-            return this.ReadDecimal("Price of the Product : ") ?? 0.0M;
+            return this._consoleHelper.ReadDecimal("Price of the Product : ") ?? 0.0M;
         }
 
         /// <summary>
         /// Gets the name, allows empty or whitespace values.
         /// </summary>
-        /// <returns>The name of the product, or empty string</returns>
-        public string? GetOptionalName()
+        /// <param name="name">Existing name of the product.</param>
+        /// <returns>The new name of the product, or the existing name.</returns>
+        public string GetOptionalName(string name)
         {
-            return this.ReadString("Name of the Product : ", isOptional: true);
+            return this._consoleHelper.ReadString($"New Name of the Product [Existing: {name}] : ", isOptional: true) ?? name;
         }
 
         /// <summary>
         /// Gets an optional product price, validating the input numeric bounds if entered.
         /// </summary>
+        /// <param name="price">Existing price of the product.</param>
         /// <returns>The parsed decimal value if a valid amount was entered; null if skipped.</returns>
-        public decimal? GetOptionalPrice()
+        public decimal GetOptionalPrice(decimal price)
         {
-            return this.ReadDecimal("New Price of the Product (Leave blank to keep unchanged): ", isOptional: true);
+            return this._consoleHelper.ReadDecimal($"New Price of the Product [Existing: {price}] : ", isOptional: true) ?? price;
         }
 
         /// <summary>
-        /// Gets an optional product stock quantity, validating the integer bounds if entered.
+        /// Prompts the user to enter the quantity of stock to add.
         /// </summary>
-        /// <returns>The parsed integer value if a valid count was entered; null if skipped.</returns>
-        public int? GetOptionalQuantity()
+        /// <returns>The quantity to add.</returns>
+        public int GetProductQuantityToAdd()
         {
-            return this.ReadInt("New Stock Quantity (Leave blank to keep unchanged): ", isOptional: true);
+            return this._consoleHelper.ReadInt("Enter quantity to add to stock: ") ?? 0;
+        }
+
+        /// <summary>
+        /// Prompts the user to enter the quantity of stock to remove.
+        /// </summary>
+        /// <returns>The quantity to remove.</returns>
+        public int GetProductQuantityToRemove()
+        {
+            return this._consoleHelper.ReadInt("Enter quantity to remove from stock: ") ?? 0;
         }
 
         /// <summary>
@@ -100,7 +122,7 @@
         /// <param name="id">Id to be displayed.</param>
         public void DisplayId(int id)
         {
-            this.WriteColored($"\n[NOTE] Product ID = {id}\n", ConsoleColor.Green);
+            this._consoleHelper.WriteColored($"\n[NOTE] Product ID = {id}\n", ConsoleColor.Green);
         }
 
         /// <summary>
@@ -108,7 +130,7 @@
         /// </summary>
         public void DisplayAddHeader()
         {
-            this.PrintHeader("ADD A PRODUCT");
+            this._consoleHelper.PrintHeader("ADD A PRODUCT");
         }
 
         /// <summary>
@@ -116,7 +138,7 @@
         /// </summary>
         public void DisplayViewHeader()
         {
-            this.PrintHeader("ALL CONTACTS LIST");
+            this._consoleHelper.PrintHeader("ALL CONTACTS LIST");
         }
 
         /// <summary>
@@ -124,7 +146,7 @@
         /// </summary>
         public void DisplaySearchHeader()
         {
-            this.PrintHeader("SEARCH RESULTS");
+            this._consoleHelper.PrintHeader("SEARCH RESULTS");
         }
 
         /// <summary>
@@ -132,8 +154,24 @@
         /// </summary>
         public void DisplayUpdateHeader()
         {
-            this.PrintHeader("UPDATE THE CONTACT");
-            this.PrintSubHeader("Leave Blank Space for Unmodified Values.");
+            this._consoleHelper.PrintHeader("UPDATE THE CONTACT");
+            this._consoleHelper.PrintSubHeader("Leave Blank Space for Unmodified Values.");
+        }
+
+        /// <summary>
+        /// Displays a header indicating the add stock operation.
+        /// </summary>
+        public void DisplayAddStockHeader()
+        {
+            this._consoleHelper.PrintHeader("ADD STOCK TO A PRODUCT");
+        }
+
+        /// <summary>
+        /// Displays a header indicating the remove stock operation.
+        /// </summary>
+        public void DisplayRemoveStockHeader()
+        {
+            this._consoleHelper.PrintHeader("REMOVE STOCK FROM A PRODUCT");
         }
 
         /// <summary>
@@ -150,7 +188,7 @@
         /// <returns>The entered product ID as an integer, or 0 if no valid input is provided.</returns>
         public int GetIdFromUser()
         {
-            return this.ReadInt("Enter the existing product Id : ") ?? 0;
+            return this._consoleHelper.ReadInt("Enter the existing product Id : ") ?? 0;
         }
 
         /// <summary>
@@ -159,7 +197,7 @@
         /// <param name="id">Id of the updated product.</param>
         public void DisplayProductIsUpdated(int id)
         {
-            this.WriteColored($"\nProduct with ID = {id} is updated successfully.\n", ConsoleColor.DarkGreen);
+            this._consoleHelper.WriteColored($"\nProduct with ID = {id} is updated successfully.\n", ConsoleColor.DarkGreen);
         }
 
         /// <summary>
@@ -167,7 +205,7 @@
         /// </summary>
         public void DisplayDeleteHeader()
         {
-            this.PrintHeader("DELETION PAGE");
+            this._consoleHelper.PrintHeader("DELETION PAGE");
         }
 
         /// <summary>
@@ -176,7 +214,7 @@
         /// <param name="id">The identifier of the deleted product.</param>
         public void DisplayProductIsDeleted(int id)
         {
-            this.WriteColored($"\nProduct with ID = {id} is deleted successfully.\n", ConsoleColor.DarkGreen);
+            this._consoleHelper.WriteColored($"\nProduct with ID = {id} is deleted successfully.\n", ConsoleColor.DarkGreen);
         }
 
         /// <summary>
@@ -189,7 +227,7 @@
 
             if (products.Count == 0)
             {
-                this._consoleIo.WriteColored("\nNo products to display.\n", ConsoleColor.Red);
+                this._consoleHelper.WriteColored("\nNo products to display.\n", ConsoleColor.Red);
                 return;
             }
 
@@ -197,8 +235,8 @@
 
             table.AddColumn(new TableColumn("Id").Centered());
             table.AddColumn(new TableColumn("Name").LeftAligned());
-            table.AddColumn(new TableColumn("Price (Rs.)").RightAligned());
-            table.AddColumn(new TableColumn("Quantity").RightAligned());
+            table.AddColumn(new TableColumn("Price (Rs.)").LeftAligned());
+            table.AddColumn(new TableColumn("Quantity").LeftAligned());
 
             foreach (Product product in products)
             {
@@ -218,192 +256,7 @@
         /// <returns>The search term entered by the user.</returns>
         public string GetSearchKeyword()
         {
-            return this.ReadString("Enter search Keyword: ") ?? string.Empty;
-        }
-
-        /// <summary>
-        /// Reads an integer value from the console, optionally allowing an empty input to bypass validation.
-        /// </summary>
-        /// <param name="prompt">The prompt message to display.</param>
-        /// <param name="isOptional">If true, pressing Enter returns null instead of a validation error.</param>
-        /// <returns>The parsed integer value, or null if the field was skipped.</returns>
-        public int? ReadInt(string prompt, bool isOptional = false)
-        {
-            while (true)
-            {
-                string? input = this.ReadLine(prompt);
-                if (isOptional && string.IsNullOrWhiteSpace(input))
-                {
-                    return null;
-                }
-
-                if (int.TryParse(input, out int value) && value >= 0)
-                {
-                    return value;
-                }
-
-                this.WriteColored("[INPUT ERROR] Invalid number. Please enter a positive integer value.\n", ConsoleColor.Red);
-            }
-        }
-
-        /// <summary>
-        /// Reads a string value from the console, optionally allowing an empty input to bypass validation.
-        /// </summary>
-        /// <param name="prompt">The prompt message to display.</param>
-        /// <param name="isOptional">If true, pressing Enter returns null instead of a validation error.</param>
-        /// <returns>The trimmed string input, or null if skipped.</returns>
-        public string? ReadString(string prompt, bool isOptional = false)
-        {
-            while (true)
-            {
-                string? input = this.ReadLine(prompt);
-
-                if (isOptional && string.IsNullOrWhiteSpace(input))
-                {
-                    return null;
-                }
-
-                if (!string.IsNullOrWhiteSpace(input))
-                {
-                    return input.Trim();
-                }
-
-                this.WriteColored("[INPUT ERROR] Input cannot be empty. Please try again.\n", ConsoleColor.Red);
-            }
-        }
-
-        /// <summary>
-        /// Prompts the user for a valid positive double value.
-        /// </summary>
-        /// <param name="prompt">The prompt message.</param>
-        /// <returns>The parsed double value.</returns>
-        public double ReadDouble(string prompt)
-        {
-            double value;
-            while (true)
-            {
-                this.Write(prompt);
-                if (double.TryParse(this.ReadLine(), out value) && value >= 0.0)
-                {
-                    return value;
-                }
-
-                this.WriteColored("[INPUT ERROR] Invalid number. Please enter a positive numeric value.\n", ConsoleColor.Red);
-            }
-        }
-
-        /// <summary>
-        /// Reads a decimal value from the console, optionally allowing an empty input to bypass validation.
-        /// </summary>
-        /// <param name="prompt">The prompt message to display.</param>
-        /// <param name="isOptional">If true, pressing Enter returns null. If false, it loops until a valid decimal is entered.</param>
-        /// <returns>The parsed decimal value, or null if the field was skipped.</returns>
-        public decimal? ReadDecimal(string prompt, bool isOptional = false)
-        {
-            while (true)
-            {
-                string? input = this.ReadLine(prompt);
-
-                if (isOptional && string.IsNullOrWhiteSpace(input))
-                {
-                    return null;
-                }
-
-                if (decimal.TryParse(input, out decimal value) && value >= 0.0M)
-                {
-                    return value;
-                }
-
-                this.WriteColored("[INPUT ERROR] Invalid amount. Please enter a positive decimal value.\n", ConsoleColor.Red);
-            }
-        }
-
-        /// <summary>
-        /// Prompts the user continuously until they enter a valid choice in the specified range.
-        /// </summary>
-        /// <param name="min">The minimum valid choice.</param>
-        /// <param name="max">The maximum valid choice.</param>
-        /// <param name="message">Optional message to be displayed.</param>
-        /// <returns>A valid choice integer.</returns>
-        public int ReadChoice(int min, int max, string? message = null)
-        {
-            int result;
-
-            if (message != null)
-            {
-                this.Write(message);
-            }
-
-            while (!int.TryParse(this.ReadLine(), out result) || result < min || result > max)
-            {
-                this.WriteColored($"[INPUT ERROR] Invalid Choice. Choose an integer between {min} to {max}: ", ConsoleColor.Red);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Writes message in a custom console color.
-        /// </summary>
-        /// <param name="message">The text to write.</param>
-        /// <param name="color">The target console color.</param>
-        public void WriteColored(string message, ConsoleColor color)
-        {
-            this._consoleIo.WriteColored(message, color);
-        }
-
-        /// <summary>
-        /// Displays the message given.
-        /// </summary>
-        /// <param name="message">Message to be displayed.</param>
-        public void Write(string message)
-        {
-            this._consoleIo.Write(message);
-        }
-
-        /// <summary>
-        /// Writes the message with a new line.
-        /// </summary>
-        /// <param name="message">Message to be written on console.</param>
-        public void WriteLine(string message)
-        {
-            this._consoleIo.WriteLine(message);
-        }
-
-        /// <summary>
-        /// Reads a the input from the user as string.
-        /// </summary>
-        /// <param name="prompt">Optional prompt to be displayed.</param>
-        /// <returns>The read string value.</returns>
-        public string? ReadLine(string? prompt = "")
-        {
-            return this._consoleIo.ReadLine(prompt);
-        }
-
-        /// <summary>
-        /// Prints a colored task header.
-        /// </summary>
-        /// <param name="title">The task title.</param>
-        public void PrintHeader(string title)
-        {
-            this.WriteColored($"=== {title} ===\n\n", ConsoleColor.Blue);
-        }
-
-        /// <summary>
-        /// Prints a colored sub-header.
-        /// </summary>
-        /// <param name="text">The sub-header text.</param>
-        public void PrintSubHeader(string text)
-        {
-            this.WriteColored($"{text}\n", ConsoleColor.Yellow);
-        }
-
-        /// <summary>
-        /// Prints a divider line.
-        /// </summary>
-        public void PrintDivider()
-        {
-            this.Write("\n" + new string('-', 40) + "\n\n");
+            return this._consoleHelper.ReadString("Enter search Keyword: ") ?? string.Empty;
         }
 
         /// <summary>
@@ -412,24 +265,7 @@
         /// <param name="message">The error message to display.</param>
         public void DisplayError(string message)
         {
-            this.WriteColored(message, ConsoleColor.Red);
-        }
-
-        /// <summary>
-        /// Prints a goodbye message.
-        /// </summary>
-        public void PrintGoodbye()
-        {
-            this.WriteLine("Press any key to exit the application...");
-        }
-
-        /// <summary>
-        /// Prompts the user to return to the main menu page.
-        /// </summary>
-        public void PauseAndReturn()
-        {
-            this.Write("\nPress any key to return to Main Page...");
-            this._consoleIo.ReadKey(true);
+            this._consoleHelper.DisplayError(message);
         }
 
         /// <summary>
@@ -437,17 +273,54 @@
         /// </summary>
         public void ClearScreen()
         {
-            this._consoleIo.Clear();
+            this._consoleHelper.ClearScreen();
         }
 
         /// <summary>
-        /// A centralized method to ensure basic trimming.
+        /// Prompts the user to return to the main menu page.
         /// </summary>
-        private string? ReadCleanLine(string prompt)
+        public void PauseAndReturn()
         {
-            this._consoleIo.Write(prompt);
-            string? input = this.ReadLine();
-            return string.IsNullOrWhiteSpace(input) ? null : input.Trim();
+            this._consoleHelper.PauseAndReturn();
+        }
+
+        /// <summary>
+        /// Prints a goodbye message.
+        /// </summary>
+        public void PrintGoodbye()
+        {
+            this._consoleHelper.PrintGoodbye();
+        }
+
+        /// <summary>
+        /// Prints the stock updation message.
+        /// </summary>
+        public void PrintStockUpdation()
+        {
+            this._consoleHelper.WriteColored("Stock Updated Successfully.", ConsoleColor.Green);
+        }
+
+        /// <summary>
+        /// Prompts the user continuously using arrow keys to select a menu option.
+        /// </summary>
+        /// <param name="min">The minimum valid choice.</param>
+        /// <param name="max">The maximum valid choice.</param>
+        /// <returns>A valid choice integer corresponding to the selection index.</returns>
+        public int ReadChoice(int min, int max)
+        {
+            var choices = new List<string>
+            {
+                "1. Add Product",
+                "2. View Products",
+                "3. Search Product",
+                "4. Update Product",
+                "5. Delete Product",
+                "6. Add Stock",
+                "7. Remove Stock",
+                "8. Exit",
+            };
+
+            return this._consoleHelper.ReadSelection("Select an operation to run:", choices);
         }
     }
 }

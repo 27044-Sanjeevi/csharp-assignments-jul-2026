@@ -1,16 +1,17 @@
-﻿namespace Assignment3InventoryManagement.Services
+namespace Assignment3InventoryManagement.Services
 {
     using Assignment3InventoryManagement.Models;
     using Assignment3InventoryManagement.Persistence;
     using Assignment3InventoryManagement.Validation;
+    using Spectre.Console;
 
     /// <summary>
     /// Represents a manager for handling product-related operations in the inventory management system.
     /// </summary>
-    internal class InventoryService
+    internal class InventoryService : IInventoryService
     {
-        private readonly Repository _repository;
-        private readonly ProductValidation _validator;
+        private readonly IRepository _repository;
+        private readonly IProductValidation _validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InventoryService"/> class.
@@ -18,7 +19,7 @@
         /// <param name="repository">The repository to use for product operations.</param>
         /// <param name="validator">The validator to use for product validation.</param>
         /// <exception cref="ArgumentNullException">Thrown when the repository or validator is null.</exception>
-        public InventoryService(Repository repository, ProductValidation validator)
+        public InventoryService(IRepository repository, IProductValidation validator)
         {
             this._repository = repository ?? throw new ArgumentNullException(nameof(Repository));
             this._validator = validator ?? throw new ArgumentNullException(nameof(ProductValidation));
@@ -213,11 +214,7 @@
             return results;
         }
 
-        /// <summary>
-        /// Check if a product exists in the products list.
-        /// </summary>
-        /// <param name="id">Id of the product to be searched.</param>
-        /// <returns>true if product exists, else false.</returns>
+        /// <inheritdoc />
         public bool CheckExistance(int id)
         {
             List<Product> products = this._repository.GetAll();
@@ -231,6 +228,40 @@
             }
 
             return false;
+        }
+
+        /// <inheritdoc />
+        public void AddStock(int id, int quantity)
+        {
+            Product? product = this.GetProductById(id);
+
+            if (product is not null)
+            {
+                product.Quantity += quantity;
+                this.UpdateProduct(product);
+                return;
+            }
+
+            throw new ArgumentException(nameof(id));
+        }
+
+        /// <inheritdoc />
+        public string RemoveStock(int id, int quantity)
+        {
+            Product? product = this.GetProductById(id);
+
+            if (product is not null)
+            {
+                product.Quantity -= quantity;
+                string errorMessage = this.ValidateProduct(product);
+                if (errorMessage != string.Empty)
+                {
+                    this.UpdateProduct(product);
+                    return errorMessage;
+                }
+            }
+
+            return string.Empty;
         }
 
         /// <summary>

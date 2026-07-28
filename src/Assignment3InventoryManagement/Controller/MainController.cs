@@ -1,4 +1,4 @@
-﻿namespace Assignment3InventoryManagement.Controller
+namespace Assignment3InventoryManagement.Controller
 {
     using Assignment3InventoryManagement.Models;
     using Assignment3InventoryManagement.Services;
@@ -13,17 +13,17 @@
         private const int MaxTaskChoice = 4;
 
         private readonly ConsoleView _view;
-        private readonly InventoryService _inventoryService;
+        private readonly IInventoryService _inventoryService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainController"/> class.
         /// </summary>
         /// <param name="view">The console view renderer.</param>
         /// <param name="inventoryService">The service for inventory related operations.</param>
-        public MainController(ConsoleView view, InventoryService inventoryService)
+        public MainController(ConsoleView view, IInventoryService inventoryService)
         {
-            this._view = view ?? throw new ArgumentNullException(nameof(View));
-            this._inventoryService = inventoryService ?? throw new ArgumentNullException(nameof(InventoryService));
+            this._view = view ?? throw new ArgumentNullException(nameof(view));
+            this._inventoryService = inventoryService ?? throw new ArgumentNullException(nameof(inventoryService));
         }
 
         /// <summary>
@@ -54,10 +54,10 @@
                     this.AddStock();
                     break;
                 case 7:
-                    // this.RemoveStock();
+                    this.RemoveStock();
                     break;
                 case 8:
-                    // this._view.PrintGoodBye();
+                    this.PrintGoodBye();
                     return true;
             }
 
@@ -114,26 +114,24 @@
         public void UpdateProduct()
         {
             this._view.DisplayUpdateHeader();
-            int idToUpdate = this._view.GetIdFromUser();
+            int? idToUpdate = this.GetExistingProductId();
 
-            if (!this._inventoryService.CheckExistance(idToUpdate))
+            if (idToUpdate is null)
             {
-                this._view.DisplayProductNotFound();
                 return;
             }
 
-            Product? existingProduct = this._inventoryService.GetProductById(idToUpdate);
+            Product? existingProduct = this._inventoryService.GetProductById(idToUpdate.Value);
 
             if (existingProduct is not null)
             {
-                string name = this._view.GetOptionalName() ?? existingProduct.Name;
-                decimal price = this._view.GetOptionalPrice() ?? existingProduct.Price;
-                int quantity = this._view.GetOptionalQuantity() ?? existingProduct.Quantity;
-                Product updatedProduct = this._inventoryService.CreateUpdatedProduct(idToUpdate, name, price, quantity);
+                string name = this._view.GetOptionalName(existingProduct.Name);
+                decimal price = this._view.GetOptionalPrice(existingProduct.Price);
+                Product updatedProduct = this._inventoryService.CreateUpdatedProduct(idToUpdate.Value, name, price, existingProduct.Quantity);
 
                 this._inventoryService.UpdateProduct(updatedProduct);
 
-                this._view.DisplayProductIsUpdated(idToUpdate);
+                this._view.DisplayProductIsUpdated(idToUpdate.Value);
             }
 
             return;
@@ -145,33 +143,82 @@
         public void RemoveProduct()
         {
             this._view.DisplayDeleteHeader();
+            int? idToDelete = this.GetExistingProductId();
 
-            int idToDelete = this._view.GetIdFromUser();
-
-            if (!this._inventoryService.CheckExistance(idToDelete))
+            if (idToDelete is null)
             {
-                this._view.DisplayProductNotFound();
                 return;
             }
 
-            this._inventoryService.RemoveProduct(this._inventoryService.GetProductById(idToDelete));
-            this._view.DisplayProductIsDeleted(idToDelete);
+            this._inventoryService.RemoveProduct(this._inventoryService.GetProductById(idToDelete.Value));
+            this._view.DisplayProductIsDeleted(idToDelete.Value);
         }
 
+        /// <summary>
+        /// Adds stock to a product in the inventory.
+        /// </summary>
         public void AddStock()
         {
             this._view.DisplayAddStockHeader();
+            int? id = this.GetExistingProductId();
 
+            if (id is null)
+            {
+                return;
+            }
+
+            int quantity = this._view.GetProductQuantityToAdd();
+            this._inventoryService.AddStock(id.Value, quantity);
+
+            this._view.PrintStockUpdation();
+        }
+
+        /// <summary>
+        /// Removes stock from a product in the inventory.
+        /// </summary>
+        public void RemoveStock()
+        {
+            this._view.DisplayRemoveStockHeader();
+            int? id = this.GetExistingProductId();
+
+            if (id is null)
+            {
+                return;
+            }
+
+            int quantity = this._view.GetProductQuantityToRemove();
+            string? errorMessage = this._inventoryService.RemoveStock(id.Value, quantity);
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                this._view.DisplayError(errorMessage);
+                this._view.PrintStockUpdation();
+            }
+        }
+
+        /// <summary>
+        /// Prints a goodbye message.
+        /// </summary>
+        public void PrintGoodBye()
+        {
+            this._view.PrintGoodbye();
+        }
+
+        /// <summary>
+        /// Prompts the user for a product ID and validates its existence in the inventory.
+        /// </summary>
+        /// <returns>The validated product ID, or null if the product does not exist.</returns>
+        private int? GetExistingProductId()
+        {
             int id = this._view.GetIdFromUser();
 
             if (!this._inventoryService.CheckExistance(id))
             {
                 this._view.DisplayProductNotFound();
-                return;
+                return null;
             }
 
-            int quantity = this._view.GetProductQuantity();
-            this._inventoryService.AddStock(id, quantity);
+            return id;
         }
     }
 }

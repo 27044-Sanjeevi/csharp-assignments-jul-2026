@@ -1,13 +1,16 @@
-﻿using Assignment3InventoryManagement;
-using Assignment3InventoryManagement.Controller;
-using Assignment3InventoryManagement.IO;
-using Assignment3InventoryManagement.Persistence;
-using Assignment3InventoryManagement.Services;
-using Assignment3InventoryManagement.Validation;
-using Assignment3InventoryManagement.View;
-
 namespace Assignments
 {
+    using System.ComponentModel.Design;
+    using System.Runtime.CompilerServices;
+    using Assignment3InventoryManagement;
+    using Assignment3InventoryManagement.Controller;
+    using Assignment3InventoryManagement.IO;
+    using Assignment3InventoryManagement.Persistence;
+    using Assignment3InventoryManagement.Services;
+    using Assignment3InventoryManagement.Utilities;
+    using Assignment3InventoryManagement.Validation;
+    using Assignment3InventoryManagement.View;
+
     /// <summary>
     /// Contains the Main entry point of the project.
     /// </summary>
@@ -19,26 +22,34 @@ namespace Assignments
         /// <param name="args">Optional CLI arguments.</param>
         internal static void Main(string[] args)
         {
-            // Repository
-            Repository repository = new Repository();
+            try
+            {
+                // Repository
+                IRepository repository = new Repository();
 
-            // View
-            ConsoleIO consoleIo = new ConsoleIO();
-            ConsoleView view = new ConsoleView(consoleIo);
+                // View and Utilities
+                IConsoleIO consoleIo = new ConsoleIO();
+                IConsoleHelper consoleHelper = new ConsoleHelper(consoleIo);
+                ConsoleView view = new ConsoleView(consoleHelper);
 
-            // Validation
-            ProductValidation productValidator = new ProductValidation();
+                // Validation
+                IProductValidation productValidator = new ProductValidation();
 
-            // Service
-            InventoryService inventoryService = new InventoryService(repository, productValidator);
+                // Service
+                IInventoryService inventoryService = new InventoryService(repository, productValidator);
 
-            // Controller
-            MainController mainController = new MainController(view, inventoryService);
+                // Controller
+                MainController mainController = new MainController(view, inventoryService);
 
-            // Application Runner
-            ApplicationRunner applicationRunner = new ApplicationRunner(view, mainController);
+                // Application Runner
+                ApplicationRunner applicationRunner = new ApplicationRunner(view, mainController);
 
-            applicationRunner.RunApplication();
+                applicationRunner.RunApplication();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
