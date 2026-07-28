@@ -192,7 +192,7 @@ namespace Assignment3InventoryManagement.Utilities
         {
             var prompt = new SelectionPrompt<string>()
                 .Title(title)
-                .HighlightStyle(new Style(Color.Black, Color.Cyan))
+                .HighlightStyle(new Style(Color.Black, Color.Aqua))
                 .AddChoices(choices);
 
             string selected = AnsiConsole.Prompt(prompt);
