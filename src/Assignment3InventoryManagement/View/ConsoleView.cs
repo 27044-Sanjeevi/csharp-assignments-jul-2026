@@ -132,7 +132,7 @@ namespace Assignment3InventoryManagement.View
         /// Displays the details of a single product in a table format.
         /// </summary>
         /// <param name="product">The product to display.</param>
-        public void DisplaySingleProduct(Product product)
+        public void DisplaySingleProduct(Product? product)
         {
             ArgumentNullException.ThrowIfNull(product);
 
@@ -399,13 +399,9 @@ namespace Assignment3InventoryManagement.View
         /// </summary>
         /// <param name="id">Product Id.</param>
         /// <param name="quantity">Quantity changed.</param>
-        /// <param name="operation">Operation ("added" or "removed").</param>
-        /// <param name="newQuantity">The updated stock quantity.</param>
-        public void PrintStockUpdation(int id, int quantity, string operation, int newQuantity)
+        public void PrintStockUpdation(int id, int quantity)
         {
             this._consoleHelper.WriteColored($"\n[SUCCESS] Stock adjusted successfully for Product ID = {id}.\n", ConsoleColor.Green);
-            this._consoleHelper.WriteLine($"  Action: {quantity} unit(s) {operation}.");
-            this._consoleHelper.WriteLine($"  New Stock Level: {newQuantity} unit(s).\n");
         }
 
         /// <summary>

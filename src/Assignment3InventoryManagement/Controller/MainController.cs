@@ -196,6 +196,8 @@ namespace Assignment3InventoryManagement.Controller
                 return;
             }
 
+            this._view.DisplaySingleProduct(this._inventoryService.GetProductById(id.Value));
+
             Product? existingProduct = this._inventoryService.GetProductById(id.Value);
             int quantity = this._view.GetProductQuantityToAdd();
             string? errorMessage = this._inventoryService.AddStock(id.Value, quantity);
@@ -210,7 +212,8 @@ namespace Assignment3InventoryManagement.Controller
             else
             {
                 int newQty = (existingProduct?.Quantity ?? 0) + quantity;
-                this._view.PrintStockUpdation(id.Value, quantity, "added", newQty);
+                this._view.PrintStockUpdation(id.Value, quantity);
+                this._view.DisplaySingleProduct(this._inventoryService.GetProductById(id.Value));
             }
         }
 
@@ -241,7 +244,8 @@ namespace Assignment3InventoryManagement.Controller
             else
             {
                 int newQty = (existingProduct?.Quantity ?? 0) - quantity;
-                this._view.PrintStockUpdation(id.Value, quantity, "removed", newQty);
+                this._view.PrintStockUpdation(id.Value, quantity);
+                this._view.DisplaySingleProduct(this._inventoryService.GetProductById(id.Value));
             }
         }
 
