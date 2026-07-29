@@ -13,6 +13,7 @@ namespace Assignment3InventoryManagement.Persistence
         /// <inheritdoc />
         public void Add(Product product)
         {
+            product.Id = this._nextId++;
             this._products.Add(product);
         }
 
@@ -44,7 +45,7 @@ namespace Assignment3InventoryManagement.Persistence
         /// <inheritdoc />
         public int GetNextId()
         {
-            return this._nextId++;
+            return this._nextId;
         }
 
         /// <inheritdoc />

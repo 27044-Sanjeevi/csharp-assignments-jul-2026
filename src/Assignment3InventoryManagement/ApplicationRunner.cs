@@ -41,8 +41,15 @@
                     int choice = this._view.ReadChoice(MinTaskChoice, MaxTaskChoice);
 
                     this._view.ClearScreen();
+                    try
+                    {
+                        exit = this._mainController.HandleMenu(choice);
+                    }
 
-                    exit = this._mainController.HandleMenu(choice);
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
 
                     if (!exit)
                     {

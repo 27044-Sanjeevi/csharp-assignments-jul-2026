@@ -22,8 +22,8 @@ namespace Assignment3InventoryManagement.Services
         /// <exception cref="ArgumentNullException">Thrown when the repository or validator is null.</exception>
         public InventoryService(IRepository repository, IProductValidation validator)
         {
-            this._repository = repository ?? throw new ArgumentNullException(nameof(Repository));
-            this._validator = validator ?? throw new ArgumentNullException(nameof(ProductValidation));
+            this._repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            this._validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
         /// <summary>
@@ -110,21 +110,21 @@ namespace Assignment3InventoryManagement.Services
         {
             ArgumentNullException.ThrowIfNull(product);
 
-            string? validationError = this.ValidateProduct(product);
+            bool removed = this._repository.Remove(product.Id);
 
-            if (string.IsNullOrEmpty(validationError))
+            if (!removed)
             {
-                this._repository.Remove(product.Id);
+                throw new KeyNotFoundException($"Product with ID {product.Id} not found.");
             }
 
-            return validationError;
+            return string.Empty;
         }
 
         /// <summary>
         /// Gets the count of a specific product in the inventory.
         /// </summary>
         /// <param name="product">The product for which to get the count.</param>
-        /// <returns>The count of the product in the inventory, or -1 if the product is not found.</returns>
+        /// <returns>The count of the product in the inventory, or 0 if the product is not found.</returns>
         public int GetProductCount(Product product)
         {
             ArgumentNullException.ThrowIfNull(product);
@@ -163,15 +163,11 @@ namespace Assignment3InventoryManagement.Services
         {
             ArgumentNullException.ThrowIfNull(product);
 
-            Product? existingProduct = this._repository.GetById(product.Id);
-
             string validationError = this.ValidateProduct(product);
 
-            if (existingProduct != null && string.IsNullOrEmpty(validationError))
+            if (string.IsNullOrEmpty(validationError))
             {
-                existingProduct.Name = product.Name;
-                existingProduct.Price = product.Price;
-                existingProduct.Quantity = product.Quantity;
+                this._repository.Update(product);
             }
 
             return validationError;
@@ -198,8 +194,6 @@ namespace Assignment3InventoryManagement.Services
             ArgumentNullException.ThrowIfNull(keyword);
 
             List<Product> results = new List<Product>();
-
-            string lowerSearchTerm = keyword.ToLowerInvariant();
             List<Product> products = this._repository.GetAll();
 
             foreach (Product product in products)
@@ -230,37 +224,53 @@ namespace Assignment3InventoryManagement.Services
         }
 
         /// <inheritdoc />
-        public void AddStock(int id, int quantity)
+        public string? AddStock(int id, int quantity)
         {
             Product? product = this.GetProductById(id);
 
-            if (product is not null)
+            if (product is null)
             {
-                product.Quantity += quantity;
-                this.UpdateProduct(product);
-                return;
+                throw new KeyNotFoundException($"Product with ID {id} not found.");
             }
 
-            throw new ArgumentException(nameof(id));
+            product.Quantity += quantity;
+            string errorMessage = this.ValidateProduct(product);
+            if (string.IsNullOrEmpty(errorMessage))
+            {
+                this.UpdateProduct(product);
+            }
+
+            return errorMessage;
         }
 
         /// <inheritdoc />
-        public string RemoveStock(int id, int quantity)
+        public string? RemoveStock(int id, int quantity)
         {
             Product? product = this.GetProductById(id);
 
-            if (product is not null)
+            if (product is null)
             {
-                product.Quantity -= quantity;
-                string errorMessage = this.ValidateProduct(product);
-                if (errorMessage != string.Empty)
-                {
-                    this.UpdateProduct(product);
-                    return errorMessage;
-                }
+                throw new KeyNotFoundException($"Product with ID {id} not found.");
             }
 
-            return string.Empty;
+            if (quantity < 0)
+            {
+                throw new ArgumentException("Quantity to remove cannot be negative.");
+            }
+
+            if (product.Quantity < quantity)
+            {
+                throw new ArgumentException("Insufficient stock. Net product quantity cannot be negative.");
+            }
+
+            product.Quantity -= quantity;
+            string errorMessage = this.ValidateProduct(product);
+            if (string.IsNullOrEmpty(errorMessage))
+            {
+                this.UpdateProduct(product);
+            }
+
+            return errorMessage;
         }
 
         /// <inheritdoc />

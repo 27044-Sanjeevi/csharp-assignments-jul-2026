@@ -32,22 +32,21 @@ namespace Assignment3InventoryManagement.View
             this._consoleHelper.PrintHeader("INVENTORY MANAGEMENT SYSTEM");
 
             var table = new Table()
-                .Title("[bold cyan]Available Operations[/]")
-                .Border(TableBorder.Rounded);
+                .Title("[bold yellow]Available Operations[/]");
 
-            table.AddColumn(new TableColumn("[yellow]Option[/]").Centered());
-            table.AddColumn(new TableColumn("[yellow]Operation[/]").LeftAligned());
-            table.AddColumn(new TableColumn("[yellow]Description[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[bold yellow]Option[/]").Centered());
+            table.AddColumn(new TableColumn("[bold yellow]Operation[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[bold yellow]Description[/]").LeftAligned());
 
-            table.AddRow("1", "[bold]Add Product[/]", "Adds a new product with custom name, price, and initial quantity.");
-            table.AddRow("2", "[bold]View Products[/]", "Displays all currently stored products in a structured table.");
-            table.AddRow("3", "[bold]Search Product[/]", "Searches products by ID, name, price, or quantity keyword.");
-            table.AddRow("4", "[bold]Update Product[/]", "Updates the name and price details of an existing product.");
-            table.AddRow("5", "[bold]Delete Product[/]", "Removes a product completely from the inventory.");
-            table.AddRow("6", "[bold]Add Stock[/]", "Replenishes stock quantity of an existing product.");
-            table.AddRow("7", "[bold]Remove Stock[/]", "Deducts stock quantity of an existing product.");
-            table.AddRow("8", "[bold]Sort Products[/]", "Sorts the Products.");
-            table.AddRow("9", "[bold]Exit[/]", "Exits the Application.");
+            table.AddRow("1", "Add Product", "Adds a new product with custom name, price, and initial quantity.");
+            table.AddRow("2", "View Products", "Displays all currently stored products in a structured table.");
+            table.AddRow("3", "Search Product", "Searches products by ID, name, price, or quantity keyword.");
+            table.AddRow("4", "Update Product", "Updates the name and price details of an existing product.");
+            table.AddRow("5", "Delete Product", "Removes a product completely from the inventory.");
+            table.AddRow("6", "Add Stock", "Adds the mentioned stock quantity to an existing product.");
+            table.AddRow("7", "Remove Stock", "Deducts stock quantity of an existing product.");
+            table.AddRow("8", "Sort Products", "Sorts the Products.");
+            table.AddRow("9", "Exit", "Exits the Application.");
 
             AnsiConsole.Write(table);
             this._consoleHelper.WriteLine(string.Empty);
@@ -119,12 +118,41 @@ namespace Assignment3InventoryManagement.View
         }
 
         /// <summary>
-        /// Displays the Id of the product added.
+        /// Displays details of a newly added product.
         /// </summary>
-        /// <param name="id">Id to be displayed.</param>
-        public void DisplayId(int id)
+        /// <param name="product">The product that was added.</param>
+        public void DisplayProductIsAdded(Product product)
         {
-            this._consoleHelper.WriteColored($"\n[NOTE] Product ID = {id}\n", ConsoleColor.Green);
+            ArgumentNullException.ThrowIfNull(product);
+            this._consoleHelper.WriteColored($"\n[SUCCESS] Product '{product.Name}' added successfully.\n\n", ConsoleColor.Green);
+            this.DisplaySingleProduct(product);
+        }
+
+        /// <summary>
+        /// Displays the details of a single product in a table format.
+        /// </summary>
+        /// <param name="product">The product to display.</param>
+        public void DisplaySingleProduct(Product product)
+        {
+            ArgumentNullException.ThrowIfNull(product);
+
+            var table = new Table()
+                .Title("[bold yellow]Product Details[/]")
+                .Border(TableBorder.Rounded)
+                .BorderColor(Color.Grey35);
+
+            table.AddColumn(new TableColumn("[bold yellow]ID[/]").Centered());
+            table.AddColumn(new TableColumn("[bold yellow]Product Name[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[bold yellow]Price (Rs.)[/]").RightAligned());
+            table.AddColumn(new TableColumn("[bold yellow]Stock Status[/]").Centered());
+
+            table.AddRow(
+                product.Id.ToString(),
+                Markup.Escape(product.Name),
+                $"{product.Price:F2}",
+                product.Quantity.ToString());
+
+            AnsiConsole.Write(table);
         }
 
         /// <summary>
@@ -144,11 +172,30 @@ namespace Assignment3InventoryManagement.View
         }
 
         /// <summary>
-        /// Displays the header for Search operation.
+        /// Displays the header for Search operation, optionally specifying the keyword searched.
         /// </summary>
-        public void DisplaySearchHeader()
+        /// <param name="keyword">Optional search keyword.</param>
+        public void DisplaySearchHeader(string? keyword = null)
         {
-            this._consoleHelper.PrintHeader("SEARCH RESULTS");
+            if (string.IsNullOrEmpty(keyword))
+            {
+                this._consoleHelper.PrintHeader("SEARCH PRODUCTS");
+            }
+            else
+            {
+                this._consoleHelper.PrintHeader($"SEARCH RESULTS FOR: '{keyword.ToUpper()}'");
+            }
+        }
+
+        /// <summary>
+        /// Displays the sorted products header detailing field and direction.
+        /// </summary>
+        /// <param name="sortField">The field sorted by.</param>
+        /// <param name="isAscending">Whether order is ascending.</param>
+        public void DisplaySortHeader(SortField sortField, bool isAscending)
+        {
+            string direction = isAscending ? "Ascending" : "Descending";
+            this._consoleHelper.PrintHeader($"SORTED PRODUCTS [BY: {sortField.ToString().ToUpper()} ({direction.ToUpper()})]");
         }
 
         /// <summary>
@@ -199,17 +246,16 @@ namespace Assignment3InventoryManagement.View
         /// <returns>The selected sort field as a SortField enum.</returns>
         public SortField GetSortField()
         {
-            this._consoleHelper.PrintHeader("Sort Products");
+            var choices = new List<string>
+            {
+                "1. Id",
+                "2. Name",
+                "3. Price",
+                "4. Quantity",
+            };
 
-            this._consoleHelper.WriteLine("Sort by:");
-            this._consoleHelper.WriteLine("1. Id");
-            this._consoleHelper.WriteLine("2. Name");
-            this._consoleHelper.WriteLine("3. Price");
-            this._consoleHelper.WriteLine("4. Quantity");
-
-            int choice = this._consoleHelper.ReadChoice(1, 4, "Choose sort field (1-4): ");
-
-            return (SortField)choice;
+            int selectedIndex = this._consoleHelper.ReadSelection("Select sort field:", choices);
+            return (SortField)selectedIndex;
         }
 
         /// <summary>
@@ -218,23 +264,37 @@ namespace Assignment3InventoryManagement.View
         /// <returns>True for ascending, false for descending.</returns>
         public bool GetSortDirection()
         {
-            this._consoleHelper.WriteLine();
-            this._consoleHelper.WriteLine("Sort direction:");
-            this._consoleHelper.WriteLine("1. Ascending");
-            this._consoleHelper.WriteLine("2. Descending");
+            var choices = new List<string>
+            {
+                "1. Ascending",
+                "2. Descending",
+            };
 
-            int choice = this._consoleHelper.ReadChoice(1, 2, "Choose direction (1-2): ");
-
-            return choice == 1;
+            int selectedIndex = this._consoleHelper.ReadSelection("Select sort direction:", choices);
+            return selectedIndex == 1;
         }
 
         /// <summary>
-        /// Displays message on successfull product updation.
+        /// Displays details of an updated product, showing what changed.
         /// </summary>
-        /// <param name="id">Id of the updated product.</param>
-        public void DisplayProductIsUpdated(int id)
+        /// <param name="id">Id of the product.</param>
+        /// <param name="oldProduct">Old product details.</param>
+        /// <param name="newProduct">New product details.</param>
+        public void DisplayProductIsUpdated(int id, Product oldProduct, Product newProduct)
         {
-            this._consoleHelper.WriteColored($"\nProduct with ID = {id} is updated successfully.\n", ConsoleColor.DarkGreen);
+            ArgumentNullException.ThrowIfNull(oldProduct);
+            ArgumentNullException.ThrowIfNull(newProduct);
+
+            if (oldProduct.Name == newProduct.Name && oldProduct.Price == newProduct.Price)
+            {
+                this._consoleHelper.WriteColored($"\n[NOTE] No changes were made to Product with ID = {id}.\n", ConsoleColor.Yellow);
+            }
+            else
+            {
+                this._consoleHelper.WriteColored($"\n[SUCCESS] Product with ID = {id} is updated successfully.\n", ConsoleColor.Green);
+                this._consoleHelper.WriteLine($"  Old Details: Name = '{oldProduct.Name}', Price = Rs. {oldProduct.Price:F2}");
+                this._consoleHelper.WriteLine($"  New Details: Name = '{newProduct.Name}', Price = Rs. {newProduct.Price:F2}");
+            }
         }
 
         /// <summary>
@@ -246,40 +306,45 @@ namespace Assignment3InventoryManagement.View
         }
 
         /// <summary>
-        /// Displays a confirmation message indicating successful deletion of a product by its identifier.
+        /// Displays a confirmation message indicating successful deletion of a product.
         /// </summary>
-        /// <param name="id">The identifier of the deleted product.</param>
-        public void DisplayProductIsDeleted(int id)
+        /// <param name="id">Product Id.</param>
+        /// <param name="productName">Product name.</param>
+        public void DisplayProductIsDeleted(int id, string productName)
         {
-            this._consoleHelper.WriteColored($"\nProduct with ID = {id} is deleted successfully.\n", ConsoleColor.DarkGreen);
+            this._consoleHelper.WriteColored($"\n[SUCCESS] Product '{productName}' (ID = {id}) is deleted successfully.\n", ConsoleColor.Green);
         }
 
         /// <summary>
         /// Displays products in a table.
         /// </summary>
         /// <param name="products">List of products to display.</param>
-        public void DisplayAsTable(List<Product> products)
+        /// <param name="emptyMessage">Optional message if there are no products.</param>
+        public void DisplayAsTable(List<Product> products, string emptyMessage = "\nNo products to display.\n")
         {
             ArgumentNullException.ThrowIfNull(products);
 
             if (products.Count == 0)
             {
-                this._consoleHelper.WriteColored("\nNo products to display.\n", ConsoleColor.Red);
+                this._consoleHelper.WriteColored(emptyMessage, ConsoleColor.Red);
                 return;
             }
 
-            var table = new Table();
+            var table = new Table()
+                .Title("[bold yellow]Product Inventory List[/]")
+                .Border(TableBorder.Rounded)
+                .BorderColor(Color.Grey35);
 
-            table.AddColumn(new TableColumn("Id").Centered());
-            table.AddColumn(new TableColumn("Name").LeftAligned());
-            table.AddColumn(new TableColumn("Price (Rs.)").LeftAligned());
-            table.AddColumn(new TableColumn("Quantity").LeftAligned());
+            table.AddColumn(new TableColumn("[bold yellow]ID[/]").Centered());
+            table.AddColumn(new TableColumn("[bold yellow]Product Name[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[bold yellow]Price (Rs.)[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[bold yellow]Stock Status[/]").Centered());
 
             foreach (Product product in products)
             {
                 table.AddRow(
                     product.Id.ToString(),
-                    product.Name,
+                    Markup.Escape(product.Name),
                     $"{product.Price:F2}",
                     product.Quantity.ToString());
             }
@@ -330,11 +395,17 @@ namespace Assignment3InventoryManagement.View
         }
 
         /// <summary>
-        /// Prints the stock updation message.
+        /// Prints details of a successful stock update.
         /// </summary>
-        public void PrintStockUpdation()
+        /// <param name="id">Product Id.</param>
+        /// <param name="quantity">Quantity changed.</param>
+        /// <param name="operation">Operation ("added" or "removed").</param>
+        /// <param name="newQuantity">The updated stock quantity.</param>
+        public void PrintStockUpdation(int id, int quantity, string operation, int newQuantity)
         {
-            this._consoleHelper.WriteColored("Stock Updated Successfully.", ConsoleColor.Green);
+            this._consoleHelper.WriteColored($"\n[SUCCESS] Stock adjusted successfully for Product ID = {id}.\n", ConsoleColor.Green);
+            this._consoleHelper.WriteLine($"  Action: {quantity} unit(s) {operation}.");
+            this._consoleHelper.WriteLine($"  New Stock Level: {newQuantity} unit(s).\n");
         }
 
         /// <summary>

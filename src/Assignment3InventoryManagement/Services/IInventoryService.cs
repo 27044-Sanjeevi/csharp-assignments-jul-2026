@@ -101,14 +101,15 @@ namespace Assignment3InventoryManagement.Services
         /// </summary>
         /// <param name="id">The identifier of the product.</param>
         /// <param name="quantity">The quantity of stock to add.</param>
-        void AddStock(int id, int quantity);
+        /// <returns>A validation error message if the quantity to add is invalid or causes overflow; otherwise, an empty string.</returns>
+        string? AddStock(int id, int quantity);
 
         /// <summary>
         /// Removes stock from an existing product.
         /// </summary>
         /// <param name="id">The product identifier.</param>
         /// <param name="quantity">The quantity of stock to remove.</param>
-        /// <returns>A validation error message if the quantity to remove is invalid or exceeds available stock; otherwise, null.</returns>
+        /// <returns>A validation error message if the quantity to remove is invalid or exceeds available stock; otherwise, an empty string.</returns>
         string? RemoveStock(int id, int quantity);
 
         /// <summary>
@@ -118,6 +119,5 @@ namespace Assignment3InventoryManagement.Services
         /// <param name="isAscending">True to sort in ascending order; false for descending.</param>
         /// <returns>A sorted list of product models.</returns>
         List<Product> GetSortedProducts(SortField sortField, bool isAscending);
-
     }
 }

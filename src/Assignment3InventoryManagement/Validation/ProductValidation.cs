@@ -17,12 +17,16 @@ namespace Assignment3InventoryManagement.Validation
         {
             ArgumentNullException.ThrowIfNull(product);
 
+            if (product.Name == null || string.IsNullOrWhiteSpace(product.Name))
+            {
+                return "Product name cannot be empty.";
+            }
+
             return product switch
             {
-                { Name: null } => "Product name cannot be empty.",
                 { Name: { Length: < 3 or > 50 } } => "Product name must contain between 3 and 50 characters.",
                 { Price: <= 0 } => "Product price must be greater than 0.",
-                { Quantity: <= 0 } => "The net Product quantity must be greater than 0.",
+                { Quantity: < 0 } => "The net Product quantity must be greater than or equal to 0.",
                 { Id: <= 0 } => "Product ID must be greater than 0.",
                 _ => null
             };

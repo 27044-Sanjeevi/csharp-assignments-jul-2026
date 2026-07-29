@@ -145,14 +145,14 @@ namespace Assignment3InventoryManagement.Utilities
         /// <inheritdoc />
         public void PrintHeader(string title)
         {
-            AnsiConsole.Write(new Rule($"[bold cyan]{title}[/]") { Justification = Justify.Center });
+            AnsiConsole.Write(new Rule($"[bold cyan]{Markup.Escape(title)}[/]") { Justification = Justify.Center });
             AnsiConsole.WriteLine();
         }
 
         /// <inheritdoc />
         public void PrintSubHeader(string text)
         {
-            AnsiConsole.MarkupLine($"  [yellow]» {text}[/]");
+            AnsiConsole.MarkupLine($"  [yellow]» {Markup.Escape(text)}[/]");
             AnsiConsole.WriteLine();
         }
 

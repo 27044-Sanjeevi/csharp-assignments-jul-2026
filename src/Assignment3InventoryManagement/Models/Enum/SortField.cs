@@ -1,7 +1,7 @@
-﻿namespace Assignment3InventoryManagement.Models.Enum
+namespace Assignment3InventoryManagement.Models.Enum
 {
     /// <summary>
-    /// Represents the available fields that contacts can be sorted by.
+    /// Represents the available fields that products can be sorted by.
     /// </summary>
     internal enum SortField
     {

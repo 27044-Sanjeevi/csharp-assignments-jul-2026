@@ -79,13 +79,16 @@ namespace Assignment3InventoryManagement.Controller
 
             string? errorMessage = this._inventoryService.AddProduct(product);
 
+            this._view.ClearScreen();
+            this._view.DisplayAddHeader();
+
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 this._view.DisplayError(errorMessage);
                 return;
             }
 
-            this._view.DisplayId(product.Id);
+            this._view.DisplayProductIsAdded(product);
         }
 
         /// <summary>
@@ -106,7 +109,10 @@ namespace Assignment3InventoryManagement.Controller
             this._view.DisplaySearchHeader();
             string keyword = this._view.GetSearchKeyword();
             List<Product> results = this._inventoryService.SearchProducts(keyword);
-            this._view.DisplayAsTable(results);
+
+            this._view.ClearScreen();
+            this._view.DisplaySearchHeader(keyword);
+            this._view.DisplayAsTable(results, $"\nNo products found matching the keyword '{keyword}'.\n");
         }
 
         /// <summary>
@@ -130,9 +136,19 @@ namespace Assignment3InventoryManagement.Controller
                 decimal price = this._view.GetOptionalPrice(existingProduct.Price);
                 Product updatedProduct = this._inventoryService.CreateUpdatedProduct(idToUpdate.Value, name, price, existingProduct.Quantity);
 
-                this._inventoryService.UpdateProduct(updatedProduct);
+                string errorMessage = this._inventoryService.UpdateProduct(updatedProduct);
 
-                this._view.DisplayProductIsUpdated(idToUpdate.Value);
+                this._view.ClearScreen();
+                this._view.DisplayUpdateHeader();
+
+                if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    this._view.DisplayError(errorMessage);
+                }
+                else
+                {
+                    this._view.DisplayProductIsUpdated(idToUpdate.Value, existingProduct, updatedProduct);
+                }
             }
 
             return;
@@ -151,8 +167,20 @@ namespace Assignment3InventoryManagement.Controller
                 return;
             }
 
-            this._inventoryService.RemoveProduct(this._inventoryService.GetProductById(idToDelete.Value));
-            this._view.DisplayProductIsDeleted(idToDelete.Value);
+            Product? existingProduct = this._inventoryService.GetProductById(idToDelete.Value);
+            string? errorMessage = this._inventoryService.RemoveProduct(existingProduct);
+
+            this._view.ClearScreen();
+            this._view.DisplayDeleteHeader();
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                this._view.DisplayError(errorMessage);
+            }
+            else
+            {
+                this._view.DisplayProductIsDeleted(idToDelete.Value, existingProduct?.Name ?? string.Empty);
+            }
         }
 
         /// <summary>
@@ -168,10 +196,22 @@ namespace Assignment3InventoryManagement.Controller
                 return;
             }
 
+            Product? existingProduct = this._inventoryService.GetProductById(id.Value);
             int quantity = this._view.GetProductQuantityToAdd();
-            this._inventoryService.AddStock(id.Value, quantity);
+            string? errorMessage = this._inventoryService.AddStock(id.Value, quantity);
 
-            this._view.PrintStockUpdation();
+            this._view.ClearScreen();
+            this._view.DisplayAddStockHeader();
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                this._view.DisplayError(errorMessage);
+            }
+            else
+            {
+                int newQty = (existingProduct?.Quantity ?? 0) + quantity;
+                this._view.PrintStockUpdation(id.Value, quantity, "added", newQty);
+            }
         }
 
         /// <summary>
@@ -187,13 +227,21 @@ namespace Assignment3InventoryManagement.Controller
                 return;
             }
 
+            Product? existingProduct = this._inventoryService.GetProductById(id.Value);
             int quantity = this._view.GetProductQuantityToRemove();
             string? errorMessage = this._inventoryService.RemoveStock(id.Value, quantity);
+
+            this._view.ClearScreen();
+            this._view.DisplayRemoveStockHeader();
 
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 this._view.DisplayError(errorMessage);
-                this._view.PrintStockUpdation();
+            }
+            else
+            {
+                int newQty = (existingProduct?.Quantity ?? 0) - quantity;
+                this._view.PrintStockUpdation(id.Value, quantity, "removed", newQty);
             }
         }
 
@@ -205,6 +253,9 @@ namespace Assignment3InventoryManagement.Controller
             SortField sortField = this._view.GetSortField();
             bool isAscending = this._view.GetSortDirection();
             List<Product> products = this._inventoryService.GetSortedProducts(sortField, isAscending);
+
+            this._view.ClearScreen();
+            this._view.DisplaySortHeader(sortField, isAscending);
             this._view.DisplayAsTable(products);
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Assignment3InventoryManagement.Models
+namespace Assignment3InventoryManagement.Models
 {
     /// <summary>
     /// Represents a product in the inventory management system.
@@ -20,13 +20,13 @@
         /// <summary>
         /// Gets or sets the price of the product.
         /// </summary>
-        /// <value>A decimal holding the price of the prouct.</value>
+        /// <value>A decimal holding the price of the product.</value>
         public decimal Price { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity of the product in stock.
         /// </summary>
-        /// <value>An integer holdoing the quantity of the product in stock.</value>
+        /// <value>An integer holding the quantity of the product in stock.</value>
         public int Quantity { get; set; }
     }
 }
