@@ -44,6 +44,11 @@ namespace Assignment2BasicsOfOOPs.Models
         /// <param name="amount">Amount to be deposited to the account.</param>
         public void Deposit(decimal amount)
         {
+            if (amount <= 0.0M)
+            {
+                throw new ArgumentException("Deposit amount must be a positive value.", nameof(amount));
+            }
+
             this.Balance += amount;
         }
 
