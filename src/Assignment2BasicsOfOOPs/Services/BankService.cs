@@ -79,7 +79,7 @@
 
             ArgumentNullException.ThrowIfNull(account);
 
-            if (account.AccountType == BankAccountType.Savings && this._bankValidator.IsValidAmount(amount))
+            if (account.AccountType == BankAccountType.Savings && !this._bankValidator.IsValidAmount(amount))
             {
                 errorMessage = "Withdrawal amount must be a positive value.";
                 return false;

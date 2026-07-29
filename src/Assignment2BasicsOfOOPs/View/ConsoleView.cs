@@ -103,7 +103,7 @@
             while (true)
             {
                 this.Write(prompt);
-                if (double.TryParse(this.ReadLine(), out value) && value >= 0.0)
+                if (double.TryParse(this.ReadLine(), out value) && value > 0.0)
                 {
                     return value;
                 }
@@ -122,7 +122,7 @@
             decimal value;
             while (true)
             {
-                if (decimal.TryParse(this.ReadLine(prompt), out value) && value >= 0.0M)
+                if (decimal.TryParse(this.ReadLine(prompt), out value) && value > 0.0M)
                 {
                     return value;
                 }
