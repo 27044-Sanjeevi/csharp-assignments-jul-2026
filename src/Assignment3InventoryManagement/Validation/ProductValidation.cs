@@ -40,11 +40,6 @@ namespace Assignment3InventoryManagement.Validation
                 return "Net Stock quantity cannot be negative.";
             }
 
-            if (quantity > 10000)
-            {
-                return "Stock quantity exceeds maximum allowable warehouse capacity.";
-            }
-
             return null;
         }
     }
