@@ -278,21 +278,21 @@ namespace Assignment3InventoryManagement.View
         /// Displays details of an updated product, showing what changed.
         /// </summary>
         /// <param name="id">Id of the product.</param>
-        /// <param name="oldProduct">Old product details.</param>
+        /// <param name="oldName">Old product name.</param>
+        /// <param name="oldPrice">Old product price.</param>
         /// <param name="newProduct">New product details.</param>
-        public void DisplayProductIsUpdated(int id, Product oldProduct, Product newProduct)
+        public void DisplayProductIsUpdated(int id, string oldName, decimal oldPrice, Product newProduct)
         {
-            ArgumentNullException.ThrowIfNull(oldProduct);
             ArgumentNullException.ThrowIfNull(newProduct);
 
-            if (oldProduct.Name == newProduct.Name && oldProduct.Price == newProduct.Price)
+            if (oldName == newProduct.Name && oldPrice == newProduct.Price)
             {
                 this._consoleHelper.WriteColored($"\n[NOTE] No changes were made to Product with ID = {id}.\n", ConsoleColor.Yellow);
             }
             else
             {
                 this._consoleHelper.WriteColored($"\n[SUCCESS] Product with ID = {id} is updated successfully.\n", ConsoleColor.Green);
-                this._consoleHelper.WriteLine($"  Old Details: Name = '{oldProduct.Name}', Price = Rs. {oldProduct.Price:F2}");
+                this._consoleHelper.WriteLine($"  Old Details: Name = '{oldName}', Price = Rs. {oldPrice:F2}");
                 this._consoleHelper.WriteLine($"  New Details: Name = '{newProduct.Name}', Price = Rs. {newProduct.Price:F2}");
             }
         }
@@ -333,6 +333,7 @@ namespace Assignment3InventoryManagement.View
             var table = new Table()
                 .Title("[bold yellow]Product Inventory List[/]")
                 .Border(TableBorder.Rounded)
+                .ShowRowSeparators()
                 .BorderColor(Color.Grey35);
 
             table.AddColumn(new TableColumn("[bold yellow]ID[/]").Centered());

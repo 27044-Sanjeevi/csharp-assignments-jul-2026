@@ -26,10 +26,26 @@ namespace Assignment3InventoryManagement.Validation
             {
                 { Name: { Length: < 3 or > 50 } } => "Product name must contain between 3 and 50 characters.",
                 { Price: <= 0 } => "Product price must be greater than 0.",
-                { Quantity: < 0 } => "The net Product quantity must be greater than or equal to 0.",
+                { Quantity: < 0 or > 1000 } => this.ValidateQuantity(product.Quantity),
                 { Id: <= 0 } => "Product ID must be greater than 0.",
                 _ => null
             };
+        }
+
+        /// <inheritdoc />
+        public string? ValidateQuantity(int quantity)
+        {
+            if (quantity < 0)
+            {
+                return "Net Stock quantity cannot be negative.";
+            }
+
+            if (quantity > 10000)
+            {
+                return "Stock quantity exceeds maximum allowable warehouse capacity.";
+            }
+
+            return null;
         }
     }
 }

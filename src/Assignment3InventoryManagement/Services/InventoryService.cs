@@ -176,22 +176,6 @@ namespace Assignment3InventoryManagement.Services
         }
 
         /// <inheritdoc />
-        public bool CheckExistence(int id)
-        {
-            List<Product> products = this._repository.GetAll().ToList();
-
-            foreach (Product product in products)
-            {
-                if (id == product.Id)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <inheritdoc />
         public string? AddStock(int id, int quantity)
         {
             Product? product = this.GetProductById(id);
@@ -202,7 +186,7 @@ namespace Assignment3InventoryManagement.Services
             }
 
             product.Quantity += quantity;
-            string errorMessage = this.ValidateProduct(product);
+            string? errorMessage = this._validator.ValidateQuantity(quantity);
             if (string.IsNullOrEmpty(errorMessage))
             {
                 this.UpdateProduct(product);
@@ -232,7 +216,7 @@ namespace Assignment3InventoryManagement.Services
             }
 
             product.Quantity -= quantity;
-            string errorMessage = this.ValidateProduct(product);
+            string? errorMessage = this._validator.ValidateQuantity(quantity);
             if (string.IsNullOrEmpty(errorMessage))
             {
                 this.UpdateProduct(product);

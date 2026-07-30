@@ -122,7 +122,6 @@ namespace Assignment3InventoryManagement.Utilities
             AnsiConsole.WriteLine();
         }
 
-
         /// <inheritdoc />
         public void DisplayError(string message)
         {

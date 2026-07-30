@@ -137,7 +137,8 @@ namespace Assignment3InventoryManagement.Controller
                 string name = this._view.GetOptionalName(existingProduct.Name);
                 decimal price = this._view.GetOptionalPrice(existingProduct.Price);
                 Product updatedProduct = this._inventoryService.CreateUpdatedProduct(idToUpdate.Value, name, price, existingProduct.Quantity);
-
+                string oldName = existingProduct.Name;
+                decimal oldPrice = existingProduct.Price;
                 string errorMessage = this._inventoryService.UpdateProduct(updatedProduct);
 
                 this._view.ClearScreen();
@@ -149,7 +150,7 @@ namespace Assignment3InventoryManagement.Controller
                 }
                 else
                 {
-                    this._view.DisplayProductIsUpdated(idToUpdate.Value, existingProduct, updatedProduct);
+                    this._view.DisplayProductIsUpdated(idToUpdate.Value, oldName, oldPrice, updatedProduct);
                 }
             }
 

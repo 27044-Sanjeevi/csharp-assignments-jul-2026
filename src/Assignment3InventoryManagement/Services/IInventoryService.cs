@@ -77,13 +77,6 @@ namespace Assignment3InventoryManagement.Services
         List<Product> SearchProducts(string keyword);
 
         /// <summary>
-        /// Check if a product exists in the products list.
-        /// </summary>
-        /// <param name="id">Id of the product to be searched.</param>
-        /// <returns>true if product exists, else false.</returns>
-        bool CheckExistence(int id);
-
-        /// <summary>
         /// Adds stock to an existing product in the inventory.
         /// </summary>
         /// <param name="id">The identifier of the product.</param>
