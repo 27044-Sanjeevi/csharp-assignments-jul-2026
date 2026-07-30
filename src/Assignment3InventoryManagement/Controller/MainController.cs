@@ -130,6 +130,8 @@ namespace Assignment3InventoryManagement.Controller
 
             Product? existingProduct = this._inventoryService.GetProductById(idToUpdate.Value);
 
+            this._view.DisplaySingleProduct(existingProduct);
+
             if (existingProduct is not null)
             {
                 string name = this._view.GetOptionalName(existingProduct.Name);
@@ -279,7 +281,7 @@ namespace Assignment3InventoryManagement.Controller
         {
             int id = this._view.GetIdFromUser();
 
-            if (!this._inventoryService.CheckExistence(id))
+            if (this._inventoryService.GetProductById(id) is null)
             {
                 this._view.DisplayProductNotFound();
                 return null;

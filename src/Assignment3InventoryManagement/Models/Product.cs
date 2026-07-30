@@ -9,7 +9,7 @@ namespace Assignment3InventoryManagement.Models
         /// Gets or sets the unique identifier for the product.
         /// </summary>
         /// <value>The unique Id of the product as an integer.</value>
-        public int Id { get; set; }
+        public int Id { get; internal set; }
 
         /// <summary>
         /// Gets or sets the name of the product.

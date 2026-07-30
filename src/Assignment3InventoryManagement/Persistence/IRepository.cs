@@ -25,7 +25,7 @@ namespace Assignment3InventoryManagement.Persistence
         /// Retrieves all products from the repository.
         /// </summary>
         /// <returns>The list of all products.</returns>
-        List<Product> GetAll();
+        IReadOnlyList<Product> GetAll();
 
         /// <summary>
         /// Retrieves the Id to be used next.

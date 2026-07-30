@@ -88,7 +88,7 @@ namespace Assignment3InventoryManagement.Services
         /// <returns>A list of all products in repository.</returns>
         public List<Product> GetAllProducts()
         {
-            List<Product> products = this._repository.GetAll();
+            List<Product> products = this._repository.GetAll().ToList();
             return products;
         }
 
@@ -118,17 +118,7 @@ namespace Assignment3InventoryManagement.Services
         /// <returns>The matched product object, else null.</returns>
         public Product? GetProductById(int id)
         {
-            List<Product> products = this.GetAllProducts();
-
-            foreach (Product product in products)
-            {
-                if (product.Id == id)
-                {
-                    return product;
-                }
-            }
-
-            return null;
+            return this._repository.GetById(id);
         }
 
         /// <summary>
@@ -172,7 +162,7 @@ namespace Assignment3InventoryManagement.Services
             ArgumentNullException.ThrowIfNull(keyword);
 
             List<Product> results = new List<Product>();
-            List<Product> products = this._repository.GetAll();
+            List<Product> products = this._repository.GetAll().ToList();
 
             foreach (Product product in products)
             {
@@ -188,7 +178,7 @@ namespace Assignment3InventoryManagement.Services
         /// <inheritdoc />
         public bool CheckExistence(int id)
         {
-            List<Product> products = this._repository.GetAll();
+            List<Product> products = this._repository.GetAll().ToList();
 
             foreach (Product product in products)
             {

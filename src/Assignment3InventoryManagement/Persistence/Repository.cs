@@ -31,15 +31,9 @@ namespace Assignment3InventoryManagement.Persistence
         }
 
         /// <inheritdoc />
-        public List<Product> GetAll()
+        public IReadOnlyList<Product> GetAll()
         {
-            List<Product> clonedProducts = new List<Product>();
-            foreach (var product in this._products)
-            {
-                clonedProducts.Add(this.Clone(product));
-            }
-
-            return clonedProducts;
+            return this._products.ToList();
         }
 
         /// <inheritdoc />
