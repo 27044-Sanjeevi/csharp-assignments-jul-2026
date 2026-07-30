@@ -19,13 +19,6 @@ namespace Assignment3InventoryManagement.IO
         }
 
         /// <inheritdoc />
-        public void ClearAndWriteColored(string message, ConsoleColor color)
-        {
-            this.Clear();
-            this.WriteColored(message, color);
-        }
-
-        /// <inheritdoc />
         public void WriteColored(string message, ConsoleColor color)
         {
             Console.ForegroundColor = color;

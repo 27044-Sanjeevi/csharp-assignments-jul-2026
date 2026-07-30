@@ -83,15 +83,6 @@ namespace Assignment3InventoryManagement.Services
         }
 
         /// <summary>
-        /// Retrieves the Id to be used next.
-        /// </summary>
-        /// <returns>The next product Id.</returns>
-        public int GetNextId()
-        {
-            return this._repository.GetNextId();
-        }
-
-        /// <summary>
         /// Retrieves the products list from the repository.
         /// </summary>
         /// <returns>A list of all products in repository.</returns>
@@ -118,19 +109,6 @@ namespace Assignment3InventoryManagement.Services
             }
 
             return string.Empty;
-        }
-
-        /// <summary>
-        /// Gets the count of a specific product in the inventory.
-        /// </summary>
-        /// <param name="product">The product for which to get the count.</param>
-        /// <returns>The count of the product in the inventory, or 0 if the product is not found.</returns>
-        public int GetProductCount(Product product)
-        {
-            ArgumentNullException.ThrowIfNull(product);
-
-            Product? existingProduct = this._repository.GetById(product.Id);
-            return existingProduct?.Quantity ?? 0;
         }
 
         /// <summary>

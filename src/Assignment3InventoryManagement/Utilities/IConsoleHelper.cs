@@ -25,28 +25,12 @@ namespace Assignment3InventoryManagement.Utilities
         string? ReadString(string prompt, bool isOptional = false);
 
         /// <summary>
-        /// Prompts the user for a valid positive double value.
-        /// </summary>
-        /// <param name="prompt">The prompt message.</param>
-        /// <returns>The parsed double value.</returns>
-        double ReadDouble(string prompt);
-
-        /// <summary>
         /// Reads a decimal value from the console, optionally allowing an empty input to bypass validation.
         /// </summary>
         /// <param name="prompt">The prompt message to display.</param>
         /// <param name="isOptional">If true, pressing Enter returns null. If false, it loops until a valid decimal is entered.</param>
         /// <returns>The parsed decimal value, or null if the field was skipped.</returns>
         decimal? ReadDecimal(string prompt, bool isOptional = false);
-
-        /// <summary>
-        /// Prompts the user continuously until they enter a valid choice in the specified range.
-        /// </summary>
-        /// <param name="min">The minimum valid choice.</param>
-        /// <param name="max">The maximum valid choice.</param>
-        /// <param name="message">Optional message to be displayed.</param>
-        /// <returns>A valid choice integer.</returns>
-        int ReadChoice(int min, int max, string? message = null);
 
         /// <summary>
         /// Writes message in a custom console color.
@@ -85,11 +69,6 @@ namespace Assignment3InventoryManagement.Utilities
         /// </summary>
         /// <param name="text">The sub-header text.</param>
         void PrintSubHeader(string text);
-
-        /// <summary>
-        /// Prints a divider line.
-        /// </summary>
-        void PrintDivider();
 
         /// <summary>
         /// Displays an error message in red.

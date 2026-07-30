@@ -36,12 +36,6 @@ namespace Assignment3InventoryManagement.Services
         string? AddProduct(Product product);
 
         /// <summary>
-        /// Retrieves the Id to be used next.
-        /// </summary>
-        /// <returns>The next product Id.</returns>
-        int GetNextId();
-
-        /// <summary>
         /// Retrieves the products list.
         /// </summary>
         /// <returns>A list of all products in repository.</returns>
@@ -53,13 +47,6 @@ namespace Assignment3InventoryManagement.Services
         /// <param name="product">The product to remove.</param>
         /// <returns>A string containing the validation error message, or an empty string if the product is valid.</returns>
         string? RemoveProduct(Product? product);
-
-        /// <summary>
-        /// Gets the count of a specific product in the inventory.
-        /// </summary>
-        /// <param name="product">The product for which to get the count.</param>
-        /// <returns>The count of the product in the inventory, or 0 if the product is not found.</returns>
-        int GetProductCount(Product product);
 
         /// <summary>
         /// Retrieves the product based on the Id provided.

@@ -15,13 +15,6 @@ namespace Assignment3InventoryManagement.IO
         string? ReadLine(string? prompt);
 
         /// <summary>
-        /// Clears the console and writes a colored message.
-        /// </summary>
-        /// <param name="message">The message to display.</param>
-        /// <param name="color">The color of the message.</param>
-        void ClearAndWriteColored(string message, ConsoleColor color);
-
-        /// <summary>
         /// Writes message to screen with custom color.
         /// </summary>
         /// <param name="message">The message.</param>

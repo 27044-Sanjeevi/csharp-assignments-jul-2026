@@ -64,22 +64,6 @@ namespace Assignment3InventoryManagement.Utilities
         }
 
         /// <inheritdoc />
-        public double ReadDouble(string prompt)
-        {
-            double value;
-            while (true)
-            {
-                this.Write(prompt);
-                if (double.TryParse(this.ReadLine(), out value) && value >= 0.0)
-                {
-                    return value;
-                }
-
-                this.WriteColored("[INPUT ERROR] Invalid number. Please enter a positive numeric value.\n", ConsoleColor.Red);
-            }
-        }
-
-        /// <inheritdoc />
         public decimal? ReadDecimal(string prompt, bool isOptional = false)
         {
             while (true)
@@ -98,24 +82,6 @@ namespace Assignment3InventoryManagement.Utilities
 
                 this.WriteColored("[INPUT ERROR] Invalid amount. Please enter a positive decimal value.\n", ConsoleColor.Red);
             }
-        }
-
-        /// <inheritdoc />
-        public int ReadChoice(int min, int max, string? message = null)
-        {
-            int result;
-
-            if (message != null)
-            {
-                this.Write(message);
-            }
-
-            while (!int.TryParse(this.ReadLine(), out result) || result < min || result > max)
-            {
-                this.WriteColored($"[INPUT ERROR] Invalid Choice. Choose an integer between {min} to {max}: ", ConsoleColor.Red);
-            }
-
-            return result;
         }
 
         /// <inheritdoc />
@@ -156,11 +122,6 @@ namespace Assignment3InventoryManagement.Utilities
             AnsiConsole.WriteLine();
         }
 
-        /// <inheritdoc />
-        public void PrintDivider()
-        {
-            this.Write("\n" + new string('-', 40) + "\n\n");
-        }
 
         /// <inheritdoc />
         public void DisplayError(string message)
