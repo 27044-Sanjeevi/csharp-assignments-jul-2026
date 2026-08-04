@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.DTOs;
+    using Assignment4ExpenseTracker.Models.Enums;
     using Assignment4ExpenseTracker.Services.Validation;
 
     /// <summary>
@@ -30,7 +31,21 @@
         /// </summary>
         /// <param name="transaction">The transaction object containing the updated records.</param>
         /// <returns>A validation result object containing the outcome and explanation.</returns>
-        ValidationResult UpdateTransaction(Transaction transaction);
+        ValidationResult UpdateTransaction(TransactionUpdateDto transaction);
+
+        /// <summary>
+        /// Filters transactions based on the specified flow type.
+        /// </summary>
+        /// <param name="type">The type to filter.</param>
+        /// <returns>An enumerable collection of transactions that match the flow type criteria.</returns>
+        IReadOnlyList<Transaction> FilterByFlowType(FlowType type);
+
+        /// <summary>
+        /// Filters transactions based on the specified category.
+        /// </summary>
+        /// <param name="category">The category to filter.</param>
+        /// <returns>An enumerable collection of transactions that match the category criteria.</returns>
+        IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category);
 
         /// <summary>
         /// Extracts all transaction records currently stored in the system.

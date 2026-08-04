@@ -28,6 +28,21 @@
         decimal GetTransactionAmountToUpdate(decimal existingAmount);
 
         /// <summary>
+        /// Displays a message indicating that no transactions are available.
+        /// </summary>
+        void DisplayTransactionsNotFound();
+
+        /// <summary>
+        /// Displays a success message indicating that the transaction was updated successfully.
+        /// </summary>
+        void DisplayUpdateSuccessful();
+
+        /// <summary>
+        /// Displays the header for the deletion operation.
+        /// </summary>
+        void DisplayDeleteHeader();
+
+        /// <summary>
         /// Reads the flow type of the transaction.
         /// </summary>
         /// <returns>The flow type chosen by the user.</returns>
@@ -52,6 +67,12 @@
         TransactionCategory GetExpenseCategory();
 
         /// <summary>
+        /// Retrieves the parameter for filtering the transactions.
+        /// </summary>
+        /// <returns>The parameter to be filtered by.</returns>
+        FilterType GetFilterTypeChoice();
+
+        /// <summary>
         /// Reads the optional description of the transaction from user input.
         /// </summary>
         /// <returns>The description of the transaction as a string.</returns>
@@ -65,23 +86,29 @@
         string? GetTransactionDescriptionToUpdate(string? existingDescription);
 
         /// <summary>
-        /// Prompts the user to update an existing transaction.
-        /// </summary>
-        /// <param name="existing">The existing transaction record.</param>
-        /// <returns>A modified or preserved transaction object.</returns>
-        Transaction GetTransactionDetailsToUpdate(Transaction existing);
-
-        /// <summary>
         /// Prints validation errors to the output display window if any exist.
         /// </summary>
         /// <param name="result">The validation result object to process.</param>
         void DisplayValidationResult(ValidationResult result);
 
         /// <summary>
+        /// Prompts the user to select a row number within the specified range.
+        /// index.
+        /// </summary>
+        /// <param name="maxIndex">The maximum valid row number for selection.</param>
+        /// <returns>The zero-based index of the selected row.</returns>
+        int GetIndexFromTable(int maxIndex);
+
+        /// <summary>
+        /// Displays a table of transactions after applying filters.
+        /// </summary>
+        /// <param name="transactions">The filtered list of transactions to display.</param>
+        void DisplayFilteredTable(IReadOnlyList<Transaction> transactions);
+
+        /// <summary>
         /// Renders a collection of transaction records as a formatted table grid.
         /// </summary>
         /// <param name="transactions">The collection of transaction data objects to display.</param>
-        void DisplayAsTable(List<Transaction> transactions);
-
+        void DisplayAsTable(IReadOnlyList<Transaction> transactions);
     }
 }

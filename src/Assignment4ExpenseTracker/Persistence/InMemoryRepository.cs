@@ -1,6 +1,7 @@
 ﻿namespace Assignment4ExpenseTracker.Persistence
 {
     using Assignment4ExpenseTracker.Models;
+    using Assignment4ExpenseTracker.Models.Enums;
 
     /// <summary>
     /// Provides an in-memory repository for storing and managing transactions.
@@ -65,7 +66,37 @@
         }
 
         /// <inheritdoc />
-        public IEnumerable<Transaction> CloneAll()
+        public IReadOnlyList<Transaction> FilterByFlowType(FlowType type)
+        {
+            List<Transaction> transactions = new List<Transaction>();
+            foreach (var transaction in this.GetAll())
+            {
+                if (transaction.Type == type)
+                {
+                    transactions.Add(transaction);
+                }
+            }
+
+            return transactions;
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category)
+        {
+            List<Transaction> transactions = new List<Transaction>();
+            foreach (var transaction in this.GetAll())
+            {
+                if (transaction.Category == category)
+                {
+                    transactions.Add(transaction);
+                }
+            }
+
+            return transactions;
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> CloneAll()
         {
             List<Transaction> clonedTransactions = new List<Transaction>();
             foreach (Transaction transaction in this._transactions)

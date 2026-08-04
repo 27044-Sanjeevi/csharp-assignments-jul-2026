@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Assignment4ExpenseTracker.Models;
+    using Assignment4ExpenseTracker.Models.Enums;
 
     /// <summary>
     /// Defines data access contracts for financial transactions.
@@ -46,6 +47,20 @@
         /// Creates a deep copy of the specified transaction.
         /// </summary>
         /// <returns>An enumerable collection containing the cloned transaction.</returns>
-        IEnumerable<Transaction> CloneAll();
+        IReadOnlyList<Transaction> CloneAll();
+
+        /// <summary>
+        /// Filters transactions based on the specified flow type.
+        /// </summary>
+        /// <param name="type">The type to filter.</param>
+        /// <returns>An enumerable collection of transactions that match the flow type criteria.</returns>
+        IReadOnlyList<Transaction> FilterByFlowType(FlowType type);
+
+        /// <summary>
+        /// Filters transactions based on the specified category.
+        /// </summary>
+        /// <param name="category">The category to filter.</param>
+        /// <returns>An enumerable collection of transactions that match the category criteria.</returns>
+        IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category);
     }
 }

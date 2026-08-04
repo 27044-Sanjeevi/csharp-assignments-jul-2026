@@ -42,7 +42,7 @@
         public decimal GetTransactionAmount() => this._consoleHelper.ReadDecimal("Enter the transaction amount: ") ?? 0.0M;
 
         /// <inheritdoc />
-        public decimal GetTransactionAmountToUpdate(decimal existingAmount) => this._consoleHelper.ReadDecimal($"Enter the transaction amount: [Existing: {existingAmount}") ?? 0.0M;
+        public decimal GetTransactionAmountToUpdate(decimal existingAmount) => this._consoleHelper.ReadDecimal($"Enter the transaction amount [Existing: {existingAmount}] : ") ?? 0.0M;
 
         /// <inheritdoc />
         public FlowType GetFlowChoice()
@@ -54,6 +54,18 @@
             };
             int flowIndex = this._consoleHelper.ReadSelection("Select the flow type:", flowChoices);
             return (FlowType)flowIndex;
+        }
+
+        /// <inheritdoc />
+        public FilterType GetFilterTypeChoice()
+        {
+            List<string> filterChoices = new List<string>
+            {
+                "Flow Type",
+                "Category",
+            };
+            int filterIndex = this._consoleHelper.ReadSelection("Select the filtering parameter:", filterChoices);
+            return (FilterType)filterIndex;
         }
 
         /// <inheritdoc />
@@ -101,40 +113,21 @@
         }
 
         /// <inheritdoc />
-        public string? GetTransactionDescription() => this._consoleHelper.ReadString("Enter a description for the transaction (optional): ");
+        public string? GetTransactionDescription() => this._consoleHelper.ReadString("Enter a description for the transaction (optional): ", isOptional: true);
 
         /// <inheritdoc />
         public string? GetTransactionDescriptionToUpdate(string? existingDescription) => this._consoleHelper.ReadString($"Enter a description for the transaction [Current: {existingDescription ?? "None"}] (Press Enter to skip): ", isOptional: true);
 
         /// <inheritdoc />
-        public Transaction GetTransactionDetailsToUpdate(Transaction existing)
+        public void DisplayTransactionsNotFound()
         {
-            ArgumentNullException.ThrowIfNull(existing, nameof(existing));
+            this._consoleHelper.WriteColored("\nNo transactions found.\n", ConsoleColor.Yellow);
+        }
 
-            this._consoleHelper.PrintHeader($"Editing Transaction: {existing.Id}");
-
-            decimal amount = this._consoleHelper.ReadDecimal($"Enter the transaction amount [Current: Rs. {existing.Amount}] (Press Enter to skip): ", isOptional: true) ?? existing.Amount;
-
-            FlowType flowType = this.GetFlowChoice();
-            PaymentMethod paymentMethod = this.GetPaymentMethod();
-            TransactionCategory category;
-            category = flowType == FlowType.Income
-                    ? this.GetIncomeCategory()
-                    : this.GetExpenseCategory();
-
-            string? inputDescription = this._consoleHelper.ReadString($"Enter a description [Current: {existing.Description ?? "None"}] (Press Enter to skip): ", isOptional: true);
-
-            string? description = string.IsNullOrWhiteSpace(inputDescription) ? existing.Description : inputDescription;
-
-            return new Transaction(existing.Id)
-            {
-                Amount = amount,
-                TimeStamp = existing.TimeStamp,
-                Category = category,
-                Type = flowType,
-                Method = paymentMethod,
-                Description = description,
-            };
+        /// <inheritdoc />
+        public void DisplayUpdateSuccessful()
+        {
+            this._consoleHelper.WriteColored("\n[SUCCESS] Transaction updated successfully.\n", ConsoleColor.Green);
         }
 
         /// <inheritdoc />
@@ -150,6 +143,28 @@
                 }
 
                 this._consoleHelper.WriteLine(string.Empty);
+            }
+        }
+
+        /// <inheritdoc />
+        public void DisplayDeleteHeader()
+        {
+            this._consoleHelper.PrintHeader("DELETE TRANSACTION");
+        }
+
+        /// <inheritdoc />
+        public int GetIndexFromTable(int maxIndex)
+        {
+            while (true)
+            {
+                int choice = this._consoleHelper.ReadInt($"Enter Row Number to select (1 to {maxIndex}): ") ?? 0;
+
+                if (choice >= 1 && choice <= maxIndex)
+                {
+                    return choice - 1;
+                }
+
+                this._consoleHelper.DisplayError($"Invalid selection. Please choose a row between 1 and {maxIndex}.\n");
             }
         }
 
@@ -169,7 +184,14 @@
         }
 
         /// <inheritdoc />
-        public void DisplayAsTable(List<Transaction> transactions)
+        public void DisplayFilteredTable(IReadOnlyList<Transaction> transactions)
+        {
+            this._consoleHelper.PrintSubHeader("Filtered Transactions");
+            this.DisplayAsTable(transactions);
+        }
+
+        /// <inheritdoc />
+        public void DisplayAsTable(IReadOnlyList<Transaction> transactions)
         {
             if (transactions == null || transactions.Count == 0)
             {
@@ -179,7 +201,7 @@
 
             var table = new Table()
                 .Border(TableBorder.Rounded)
-                .Title("[bold cyan]TRANSACTION LEDGER DASHBOARD[/]")
+                .Title("[bold cyan]TRANSACTION DASHBOARD[/]")
                 .Caption($"Total Records: {transactions.Count}");
 
             table.AddColumn(new TableColumn("[bold]ID[/]").Centered());
@@ -231,6 +253,71 @@
 
             AnsiConsole.Write(table);
             AnsiConsole.WriteLine();
+        }
+
+        /// <summary>
+        /// Displays an error message in red.
+        /// </summary>
+        /// <param name="message">The error message to display.</param>
+        public void DisplayError(string message)
+        {
+            this._consoleHelper.DisplayError(message);
+        }
+
+        /// <summary>
+        /// Clears the console window.
+        /// </summary>
+        public void ClearScreen()
+        {
+            this._consoleHelper.ClearScreen();
+        }
+
+        /// <summary>
+        /// Prompts the user to return to the main menu page.
+        /// </summary>
+        public void PauseAndReturn()
+        {
+            this._consoleHelper.PauseAndReturn();
+        }
+
+        /// <summary>
+        /// Prints a goodbye message.
+        /// </summary>
+        public void PrintGoodbye()
+        {
+            this._consoleHelper.PrintGoodbye();
+        }
+
+        /// <summary>
+        /// Prints details of a successful stock update.
+        /// </summary>
+        /// <param name="id">Product Id.</param>
+        /// <param name="quantity">Quantity changed.</param>
+        public void PrintStockUpdation(int id, int quantity)
+        {
+            this._consoleHelper.WriteColored($"\n[SUCCESS] Stock adjusted successfully for Product ID = {id}.\n", ConsoleColor.Green);
+        }
+
+        /// <summary>
+        /// Prompts the user continuously using arrow keys to select a menu option.
+        /// </summary>
+        /// <param name="min">The minimum valid choice.</param>
+        /// <param name="max">The maximum valid choice.</param>
+        /// <returns>A valid choice integer corresponding to the selection index.</returns>
+        public int ReadChoice(int min, int max)
+        {
+            var choices = new List<string>
+            {
+                "1. Add a new transaction",
+                "2. View all transactions",
+                "3. Update an existing transaction",
+                "4. Delete a transaction",
+                "5. Filter transactions",
+                "6. Generate Insights and Report",
+                "5. Exit the application",
+            };
+
+            return this._consoleHelper.ReadSelection("Select an operation to run:", choices);
         }
     }
 }

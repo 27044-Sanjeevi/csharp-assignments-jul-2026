@@ -24,7 +24,6 @@
         public Transaction(Guid id)
         {
             this.Id = id;
-            this.Description = string.Empty;
         }
 
         /// <summary>

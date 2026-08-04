@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.DTOs;
+    using Assignment4ExpenseTracker.Models.Enums;
     using Assignment4ExpenseTracker.Persistence;
     using Assignment4ExpenseTracker.Services.Validation;
 
@@ -70,21 +71,45 @@
         }
 
         /// <inheritdoc />
-        public ValidationResult UpdateTransaction(Transaction transaction)
+        public ValidationResult UpdateTransaction(TransactionUpdateDto updateDto)
         {
-            ArgumentNullException.ThrowIfNull(transaction, nameof(transaction));
-            ValidationResult validationResult = this._validator.ValidateTransaction(transaction);
+            ArgumentNullException.ThrowIfNull(updateDto, nameof(updateDto));
+
+            ValidationResult validationResult = new ValidationResult();
+
+            Transaction updatedModel = new Transaction(updateDto.Id)
+            {
+                Amount = updateDto.Amount,
+                Type = updateDto.Type,
+                Category = updateDto.Category,
+                Method = updateDto.Method,
+                Description = updateDto.Description,
+            };
+
+            validationResult = this._validator.ValidateTransaction(updatedModel);
             if (!validationResult.IsValid)
             {
                 return validationResult;
             }
 
-            if (!this._repository.Update(transaction))
+            if (!this._repository.Update(updatedModel))
             {
                 this._validator.AppendIdNotFoundError(validationResult);
             }
 
             return validationResult;
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByFlowType(FlowType type)
+        {
+           return this._repository.FilterByFlowType(type);
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category)
+        {
+            return this._repository.FilterByCategory(category);
         }
 
         /// <inheritdoc />
