@@ -8,11 +8,10 @@
     /// </summary>
     internal class TransactionValidation : ITransactionValidation
     {
-        private const string IdNotFoundMessage = "Transaction with the specified identifier does not exist.";
         private const string NullTransactionMessage = "Transaction data cannot be null.";
         private const string InvalidAmountMessage = "Amount must be greater than zero.";
         private const string FutureDateMessage = "Date cannot be in the future.";
-        private const string InvalidDescriptionLength = "Description cannot be empty.";
+        private const string InvalidDescriptionLength = "Description cannot exceed 50 characters.";
         private const string InvalidCategoryMessage = "Invalid category for the given flow type.";
         private const string InvalidDeletionIdMessage = "A valid transaction identifier must be provided for deletion.";
         private const int MaxDescriptionLength = 50;
@@ -62,13 +61,6 @@
             }
 
             return validationResult;
-        }
-
-        /// <inheritdoc />
-        public void AppendIdNotFoundError(ValidationResult validationResult)
-        {
-            ArgumentNullException.ThrowIfNull(validationResult, nameof(validationResult));
-            validationResult.AddError(IdNotFoundMessage);
         }
 
         private bool IsValidCategoryCombination(FlowType type, TransactionCategory category)

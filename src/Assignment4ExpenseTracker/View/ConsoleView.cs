@@ -1,7 +1,9 @@
 ﻿namespace Assignment4ExpenseTracker.View
 {
+    using System.Linq;
     using Assignment4ExpenseTracker.IO;
     using Assignment4ExpenseTracker.Models;
+    using Assignment4ExpenseTracker.Models.DTOs;
     using Assignment4ExpenseTracker.Models.Enums;
     using Assignment4ExpenseTracker.Services.Validation;
     using Assignment4ExpenseTracker.Utilities;
@@ -12,7 +14,6 @@
     /// </summary>
     internal class ConsoleView : IView
     {
-        private const int OffsetForExpenseList = 3; // Offset to align expense categories with the enum values
         private readonly IIo _consoleIo;
         private readonly ConsoleHelper _consoleHelper;
 
@@ -29,30 +30,35 @@
         }
 
         /// <inheritdoc />
-        public void DisplayMenu()
-        {
-            Console.WriteLine("Welcome to the Expense Tracker!");
-            Console.WriteLine("Please select an option:");
-            Console.WriteLine("1. Add Transaction");
-            Console.WriteLine("2. View Transactions");
-            Console.WriteLine("3. Exit");
-        }
-
-        /// <inheritdoc />
         public decimal GetTransactionAmount() => this._consoleHelper.ReadDecimal("Enter the transaction amount: ") ?? 0.0M;
 
         /// <inheritdoc />
-        public decimal GetTransactionAmountToUpdate(decimal existingAmount) => this._consoleHelper.ReadDecimal($"Enter the transaction amount [Existing: {existingAmount}] : ") ?? 0.0M;
+        public decimal GetTransactionAmountToUpdate(decimal existingAmount) => this._consoleHelper.ReadDecimal($"Enter the transaction amount [Existing: {existingAmount}] (Press Enter to keep current): ", isOptional: true) ?? existingAmount;
 
         /// <inheritdoc />
-        public FlowType GetFlowChoice()
+        public FlowType GetFlowChoice(FlowType? existingFlow = null)
         {
             List<string> flowChoices = new List<string>
             {
                 "Income",
                 "Expense",
             };
+            if (existingFlow.HasValue)
+            {
+                flowChoices.Insert(0, $"Keep current ({existingFlow.Value})");
+            }
+
             int flowIndex = this._consoleHelper.ReadSelection("Select the flow type:", flowChoices);
+            if (existingFlow.HasValue)
+            {
+                if (flowIndex == 1)
+                {
+                    return existingFlow.Value;
+                }
+
+                return (FlowType)(flowIndex - 1);
+            }
+
             return (FlowType)flowIndex;
         }
 
@@ -69,7 +75,7 @@
         }
 
         /// <inheritdoc />
-        public PaymentMethod GetPaymentMethod()
+        public PaymentMethod GetPaymentMethod(PaymentMethod? existingMethod = null)
         {
             List<string> paymentChoices = new List<string>
             {
@@ -78,45 +84,92 @@
                 "Debit Card",
                 "Bank Transfer",
             };
+            if (existingMethod.HasValue)
+            {
+                paymentChoices.Insert(0, $"Keep current ({existingMethod.Value})");
+            }
+
             int paymentIndex = this._consoleHelper.ReadSelection("Select the payment method:", paymentChoices);
+            if (existingMethod.HasValue)
+            {
+                if (paymentIndex == 1)
+                {
+                    return existingMethod.Value;
+                }
+
+                return (PaymentMethod)(paymentIndex - 1);
+            }
+
             return (PaymentMethod)paymentIndex;
         }
 
         /// <inheritdoc />
-        public TransactionCategory GetIncomeCategory()
+        public TransactionCategory GetIncomeCategory(TransactionCategory? existingCategory = null)
         {
-            List<string> incomeCategories = new List<string>
+            IReadOnlyList<TransactionCategory> incomeCategories = new List<TransactionCategory>()
             {
-                "Salary",
-                "Investments",
-                "Others",
+                TransactionCategory.Salary,
+                TransactionCategory.Investment,
+                TransactionCategory.MiscellaneousIncome,
             };
-            int categoryIndex = this._consoleHelper.ReadSelection("Select the income category:", incomeCategories);
-            return (TransactionCategory)categoryIndex;
+            List<string> choices = incomeCategories.Select(c => c.ToString()).ToList();
+            if (existingCategory.HasValue)
+            {
+                choices.Insert(0, $"Keep current ({existingCategory.Value})");
+            }
+
+            int categoryIndex = this._consoleHelper.ReadSelection("Select the income category:", choices);
+            if (existingCategory.HasValue)
+            {
+                if (categoryIndex == 1)
+                {
+                    return existingCategory.Value;
+                }
+
+                return incomeCategories[categoryIndex - 2];
+            }
+
+            return incomeCategories[categoryIndex - 1];
         }
 
         /// <inheritdoc />
-        public TransactionCategory GetExpenseCategory()
+        public TransactionCategory GetExpenseCategory(TransactionCategory? existingCategory = null)
         {
-            List<string> expenseCategories = new List<string>
+            IReadOnlyList<TransactionCategory> expenseCategories = new List<TransactionCategory>()
             {
-                "Transport",
-                "Utilities",
-                "Groceries",
-                "Rent",
-                "Food",
-                "Shopping",
-                "Others",
+                TransactionCategory.Transport,
+                TransactionCategory.Utilities,
+                TransactionCategory.Groceries,
+                TransactionCategory.Rent,
+                TransactionCategory.Food,
+                TransactionCategory.Shopping,
+                TransactionCategory.MiscellaneousExpense,
             };
-            int categoryIndex = this._consoleHelper.ReadSelection("Select the expense category:", expenseCategories);
-            return (TransactionCategory)(categoryIndex + OffsetForExpenseList);
+            List<string> choices = expenseCategories.Select(c => c.ToString()).ToList();
+            if (existingCategory.HasValue)
+            {
+                choices.Insert(0, $"Keep current ({existingCategory.Value})");
+            }
+
+            int categoryIndex = this._consoleHelper.ReadSelection("Select the expense category:", choices);
+            if (existingCategory.HasValue)
+            {
+                if (categoryIndex == 1)
+                {
+                    return existingCategory.Value;
+                }
+
+                return expenseCategories[categoryIndex - 2];
+            }
+
+            return expenseCategories[categoryIndex - 1];
         }
 
         /// <inheritdoc />
         public string? GetTransactionDescription() => this._consoleHelper.ReadString("Enter a description for the transaction (optional): ", isOptional: true);
 
         /// <inheritdoc />
-        public string? GetTransactionDescriptionToUpdate(string? existingDescription) => this._consoleHelper.ReadString($"Enter a description for the transaction [Current: {existingDescription ?? "None"}] (Press Enter to skip): ", isOptional: true);
+        public string? GetTransactionDescriptionToUpdate(string? existingDescription) => this._consoleHelper.ReadString($"Enter a description for the transaction [Current: {existingDescription ?? "None"}] (Press Enter to keep current): ", isOptional: true) ?? existingDescription;
 
         /// <inheritdoc />
         public void DisplayTransactionsNotFound()
@@ -128,6 +181,18 @@
         public void DisplayUpdateSuccessful()
         {
             this._consoleHelper.WriteColored("\n[SUCCESS] Transaction updated successfully.\n", ConsoleColor.Green);
+        }
+
+        /// <inheritdoc />
+        public void DisplaySuccessfulAdd()
+        {
+            this._consoleHelper.WriteColored("\n[SUCCESS] Transaction Added Successfully.", ConsoleColor.Green);
+        }
+
+        /// <inheritdoc />
+        public void DisplayDeleteSuccessful()
+        {
+            this._consoleHelper.WriteColored("\n [SUCCESS] Contact Deleted Successfully.", ConsoleColor.Green);
         }
 
         /// <inheritdoc />
@@ -153,6 +218,36 @@
         }
 
         /// <inheritdoc />
+        public void DisplayAddHeader()
+        {
+            this._consoleHelper.PrintHeader("ADD NEW TRANSACTION");
+        }
+
+        /// <inheritdoc />
+        public void DisplayUpdateHeader()
+        {
+            this._consoleHelper.PrintHeader("UPDATE TRANSACTION");
+        }
+
+        /// <inheritdoc />
+        public void DisplayFilterHeader()
+        {
+            this._consoleHelper.PrintHeader("FILTER TRANSACTIONS");
+        }
+
+        /// <inheritdoc />
+        public void DisplayReportHeader()
+        {
+            this._consoleHelper.PrintHeader("FINANCIAL INSIGHTS & REPORT");
+        }
+
+        /// <inheritdoc />
+        public void DisplayAllTransactionsHeader()
+        {
+            this._consoleHelper.PrintHeader("TRANSACTION DASHBOARD");
+        }
+
+        /// <inheritdoc />
         public int GetIndexFromTable(int maxIndex)
         {
             while (true)
@@ -172,15 +267,18 @@
         /// Displays the details of a given transaction.
         /// </summary>
         /// <param name="transaction">The transaction object containing the details to be displayed.</param>
+        /// <inheritdoc />
         public void DisplayTransactionDetails(Transaction transaction)
         {
-            Console.WriteLine("Transaction Details:");
-            Console.WriteLine($"ID: {transaction.Id}");
-            Console.WriteLine($"Amount: {transaction.Amount}");
-            Console.WriteLine($"Date: {transaction.TimeStamp}");
-            Console.WriteLine($"Flow Type: {transaction.Type}");
-            Console.WriteLine($"Payment Method: {transaction.Method}");
-            Console.WriteLine($"Source Category: {transaction.Category}");
+            ArgumentNullException.ThrowIfNull(transaction, nameof(transaction));
+            this._consoleIo.WriteLine("Transaction Details:");
+            this._consoleIo.WriteLine($"ID: {transaction.Id}");
+            this._consoleIo.WriteLine($"Amount: {transaction.Amount:C}");
+            this._consoleIo.WriteLine($"Date: {transaction.TimeStamp:yyyy-MM-dd HH:mm}");
+            this._consoleIo.WriteLine($"Flow Type: {transaction.Type}");
+            this._consoleIo.WriteLine($"Payment Method: {transaction.Method}");
+            this._consoleIo.WriteLine($"Category: {transaction.Category}");
+            this._consoleIo.WriteLine($"Description: {Markup.Escape(transaction.Description ?? "N/A")}");
         }
 
         /// <inheritdoc />
@@ -201,7 +299,7 @@
 
             var table = new Table()
                 .Border(TableBorder.Rounded)
-                .Title("[bold cyan]TRANSACTION DASHBOARD[/]")
+                .Title("[bold cyan]ALL TRANSACTIONS [/]")
                 .Caption($"Total Records: {transactions.Count}");
 
             table.AddColumn(new TableColumn("[bold]ID[/]").Centered());
@@ -288,14 +386,24 @@
             this._consoleHelper.PrintGoodbye();
         }
 
-        /// <summary>
-        /// Prints details of a successful stock update.
-        /// </summary>
-        /// <param name="id">Product Id.</param>
-        /// <param name="quantity">Quantity changed.</param>
-        public void PrintStockUpdation(int id, int quantity)
+        /// <inheritdoc />
+        public void DisplayInsights(decimal totalIncome, decimal totalExpense, decimal netBalance, int totalTransactions)
         {
-            this._consoleHelper.WriteColored($"\n[SUCCESS] Stock adjusted successfully for Product ID = {id}.\n", ConsoleColor.Green);
+            this._consoleHelper.PrintSubHeader("FINANCIAL INSIGHTS & REPORT");
+
+            var panel = new Panel(new Markup(
+                $"[bold]Total Transactions:[/] {totalTransactions}\n" +
+                $"[bold green]Total Income:[/] {totalIncome:C}\n" +
+                $"[bold red]Total Expenses:[/] {totalExpense:C}\n" +
+                $"[bold]Net Balance:[/] {(netBalance >= 0 ? $"[green]+{netBalance:C}[/]" : $"[red]{netBalance:C}[/]")}"))
+            {
+                Header = new PanelHeader("[bold yellow]Report Summary[/]"),
+                Border = BoxBorder.Rounded,
+                Padding = new Padding(2, 1, 2, 1),
+            };
+
+            AnsiConsole.Write(panel);
+            AnsiConsole.WriteLine();
         }
 
         /// <summary>
@@ -314,10 +422,34 @@
                 "4. Delete a transaction",
                 "5. Filter transactions",
                 "6. Generate Insights and Report",
-                "5. Exit the application",
+                "7. Exit the application",
             };
 
             return this._consoleHelper.ReadSelection("Select an operation to run:", choices);
+        }
+
+        /// <inheritdoc />
+        public void ShowMainMenu()
+        {
+            this._consoleHelper.PrintHeader("EXPENSE TRACKER SYSTEM");
+
+            var table = new Table()
+                .Title("[bold yellow]Available Operations[/]");
+
+            table.AddColumn(new TableColumn("[bold yellow]Option[/]").Centered());
+            table.AddColumn(new TableColumn("[bold yellow]Operation[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[bold yellow]Description[/]").LeftAligned());
+
+            table.AddRow("1", "Add Transaction", "Adds a new income or expense transaction with details.");
+            table.AddRow("2", "View Transactions", "Displays all recorded transactions in a dashboard.");
+            table.AddRow("3", "Update Transaction", "Modifies the details of an existing transaction.");
+            table.AddRow("4", "Delete Transaction", "Permanently removes a transaction record.");
+            table.AddRow("5", "Filter Transactions", "Filters transactions by flow type or category.");
+            table.AddRow("6", "Generate Report", "Displays financial insights and net balance summary.");
+            table.AddRow("7", "Exit", "Exits the Application.");
+
+            AnsiConsole.Write(table);
+            this._consoleHelper.WriteLine(string.Empty);
         }
     }
 }

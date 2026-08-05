@@ -64,7 +64,7 @@
 
             if (!this._repository.Delete(id))
             {
-                this._validator.AppendIdNotFoundError(validationResult);
+                validationResult.AddError("Transaction with the specified identifier does not exist.");
             }
 
             return validationResult;
@@ -84,6 +84,7 @@
                 Category = updateDto.Category,
                 Method = updateDto.Method,
                 Description = updateDto.Description,
+                TimeStamp = updateDto.TimeStamp,
             };
 
             validationResult = this._validator.ValidateTransaction(updatedModel);
@@ -94,7 +95,7 @@
 
             if (!this._repository.Update(updatedModel))
             {
-                this._validator.AppendIdNotFoundError(validationResult);
+                validationResult.AddError("Transaction with the specified identifier does not exist.");
             }
 
             return validationResult;
@@ -103,7 +104,7 @@
         /// <inheritdoc />
         public IReadOnlyList<Transaction> FilterByFlowType(FlowType type)
         {
-           return this._repository.FilterByFlowType(type);
+            return this._repository.FilterByFlowType(type);
         }
 
         /// <inheritdoc />
@@ -113,9 +114,37 @@
         }
 
         /// <inheritdoc />
-        public List<Transaction> GetAllTransactions()
+        public IReadOnlyList<Transaction> GetAllTransactions()
         {
             return this._repository.GetAll().ToList();
+        }
+
+        /// <inheritdoc />
+        public ReportDto GenerateFinancialReport()
+        {
+            IReadOnlyList<Transaction> transactions = this._repository.GetAll().ToList();
+            decimal totalIncome = 0;
+            decimal totalExpense = 0;
+
+            foreach (Transaction transaction in transactions)
+            {
+                if (transaction.Type == FlowType.Income)
+                {
+                    totalIncome += transaction.Amount;
+                }
+                else if (transaction.Type == FlowType.Expense)
+                {
+                    totalExpense += transaction.Amount;
+                }
+            }
+
+            return new ReportDto
+            {
+                TotalIncome = totalIncome,
+                TotalExpense = totalExpense,
+                NetBalance = totalIncome - totalExpense,
+                TransactionCount = transactions.Count,
+            };
         }
     }
 }

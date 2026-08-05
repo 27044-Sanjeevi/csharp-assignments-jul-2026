@@ -1,7 +1,5 @@
 ﻿namespace Assignment4ExpenseTracker.Controller
 {
-    using System.ComponentModel;
-    using System.Reflection;
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.DTOs;
     using Assignment4ExpenseTracker.Models.Enums;
@@ -12,7 +10,7 @@
     /// <summary>
     /// Coordinates operations between the View and the Service layer.
     /// </summary>
-    internal class FinanceController
+    internal class FinanceController : IFinanceController
     {
         private readonly ITransactionService _transactionService;
         private readonly IView _consoleView;
@@ -29,11 +27,7 @@
             this._consoleView = consoleView ?? throw new ArgumentNullException(nameof(consoleView));
         }
 
-        /// <summary>
-        /// Processes a transaction menu selection and invokes the corresponding operation.
-        /// </summary>
-        /// <param name="choice">The menu option selected for transaction operations.</param>
-        /// <returns>true if the user chose to exit; otherwise, false.</returns>
+        /// <inheritdoc />
         public bool HandleTransactionMenu(int choice)
         {
             switch (choice)
@@ -52,26 +46,23 @@
                     break;
                 case 5:
                     this.FilterTransactions();
-                    return true;
+                    break;
                 case 6:
-                    // this.GenerateReport();
+                    this.GenerateReport();
                     break;
                 case 7:
-                    // this.ExitApplication();
                     return true;
                 default:
-                    // this.DisplayInvalidChoiceMessage();
                     break;
             }
 
             return false;
         }
 
-        /// <summary>
-        /// Adds a transaction using user-provided details and displays the validation result.
-        /// </summary>
+        /// <inheritdoc />
         public void AddTransaction()
         {
+            this._consoleView.DisplayAddHeader();
             decimal amount = this._consoleView.GetTransactionAmount();
             FlowType flowType = this._consoleView.GetFlowChoice();
             PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod();
@@ -90,14 +81,21 @@
             };
 
             ValidationResult result = this._transactionService.CreateTransaction(transactionDto);
-            this._consoleView.DisplayValidationResult(result);
+
+            if (!result.IsValid)
+            {
+                this._consoleView.DisplayValidationResult(result);
+            }
+            else
+            {
+                this._consoleView.DisplaySuccessfulAdd();
+            }
         }
 
-        /// <summary>
-        /// Updates an existing transaction based on user input choices mapped through a DTO.
-        /// </summary>
+        /// <inheritdoc />
         public void UpdateTransaction()
         {
+            this._consoleView.DisplayUpdateHeader();
             Transaction? selectedRecord = this.GetTransactionByIndex();
             if (selectedRecord == null)
             {
@@ -105,17 +103,29 @@
             }
 
             decimal amount = this._consoleView.GetTransactionAmountToUpdate(selectedRecord.Amount);
-            FlowType flowType = this._consoleView.GetFlowChoice();
-            PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod();
-            TransactionCategory category = flowType == FlowType.Income ?
-                                           this._consoleView.GetIncomeCategory() :
-                                           this._consoleView.GetExpenseCategory();
+            FlowType flowType = this._consoleView.GetFlowChoice(selectedRecord.Type);
+            PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod(selectedRecord.Method);
+            TransactionCategory category;
+            if (flowType == selectedRecord.Type)
+            {
+                category = flowType == FlowType.Income ?
+                           this._consoleView.GetIncomeCategory(selectedRecord.Category) :
+                           this._consoleView.GetExpenseCategory(selectedRecord.Category);
+            }
+            else
+            {
+                category = flowType == FlowType.Income ?
+                           this._consoleView.GetIncomeCategory() :
+                           this._consoleView.GetExpenseCategory();
+            }
+
             string? description = this._consoleView.GetTransactionDescriptionToUpdate(selectedRecord.Description);
 
             TransactionUpdateDto updatedTransaction = new TransactionUpdateDto
             {
                 Id = selectedRecord.Id,
                 Amount = amount,
+                TimeStamp = selectedRecord.TimeStamp,
                 Type = flowType,
                 Category = category,
                 Method = paymentMethod,
@@ -131,13 +141,18 @@
             }
         }
 
-        /// <summary>
-        /// Filters transactions based on the selected filter type and flow type.
-        /// </summary>
+        /// <inheritdoc />
         public void FilterTransactions()
         {
+            this._consoleView.DisplayFilterHeader();
+            IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
+            if (transactions.Count <= 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
+
             FilterType filterType = this._consoleView.GetFilterTypeChoice();
-            IReadOnlyList<Transaction> transactions = new List<Transaction>();
             FlowType flowType = this._consoleView.GetFlowChoice();
             if (filterType == FilterType.FlowType)
             {
@@ -155,23 +170,19 @@
             this._consoleView.DisplayFilteredTable(transactions);
         }
 
-        /// <summary>
-        /// Displays all the transactions as table.
-        /// </summary>
+        /// <inheritdoc />
         public void ViewAllTransactions()
         {
+            this._consoleView.DisplayAllTransactionsHeader();
             IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
 
             this._consoleView.DisplayAsTable(transactions);
         }
 
-        /// <summary>
-        /// Deletes an existing transaction from the repository.
-        /// </summary>
+        /// <inheritdoc />
         public void DeleteTransaction()
         {
             this._consoleView.DisplayDeleteHeader();
-            this.ViewAllTransactions();
 
             Transaction? selectedRecord = this.GetTransactionByIndex();
 
@@ -181,6 +192,19 @@
             }
 
             this._transactionService.DeleteTransaction(selectedRecord.Id);
+            this._consoleView.DisplayDeleteSuccessful();
+        }
+
+        /// <inheritdoc />
+        public void GenerateReport()
+        {
+            this._consoleView.DisplayReportHeader();
+            ReportDto report = this._transactionService.GenerateFinancialReport();
+            this._consoleView.DisplayInsights(
+                report.TotalIncome,
+                report.TotalExpense,
+                report.NetBalance,
+                report.TransactionCount);
         }
 
         /// <summary>
@@ -190,7 +214,7 @@
         /// <returns>The index of the selected transaction.</returns>
         private Transaction? GetTransactionByIndex()
         {
-            List<Transaction> transactions = this._transactionService.GetAllTransactions();
+            IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
 
             if (transactions == null || transactions.Count == 0)
             {

@@ -20,11 +20,5 @@
         /// <param name="id">The transaction identifier to evaluate.</param>
         /// <returns>A validation result container.</returns>
         ValidationResult ValidateDeletion(Guid id);
-
-        /// <summary>
-        /// Appends an error message indicating that the specified ID was not found.
-        /// </summary>
-        /// <param name="validationResult">The validation result to which the error message is added.</param>
-        void AppendIdNotFoundError(ValidationResult validationResult);
     }
 }

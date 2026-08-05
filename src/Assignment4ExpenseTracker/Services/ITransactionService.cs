@@ -51,6 +51,12 @@
         /// Extracts all transaction records currently stored in the system.
         /// </summary>
         /// <returns>A validation result object containing the outcome and explanation.</returns>
-        List<Transaction> GetAllTransactions();
+        IReadOnlyList<Transaction> GetAllTransactions();
+
+        /// <summary>
+        /// Generates a financial report DTO containing summary metrics.
+        /// </summary>
+        /// <returns>A ReportDto containing consolidated statistics.</returns>
+        ReportDto GenerateFinancialReport();
     }
 }

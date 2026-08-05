@@ -95,8 +95,11 @@
             return transactions;
         }
 
-        /// <inheritdoc />
-        public IReadOnlyList<Transaction> CloneAll()
+        /// <summary>
+        /// Creates a deep copy of all transactions.
+        /// </summary>
+        /// <returns>A list of cloned transactions.</returns>
+        private IReadOnlyList<Transaction> CloneAll()
         {
             List<Transaction> clonedTransactions = new List<Transaction>();
             foreach (Transaction transaction in this._transactions)

@@ -152,7 +152,7 @@
         /// <param name="text">The sub-header text.</param>
         public void PrintSubHeader(string text)
         {
-            AnsiConsole.MarkupLine($"  [yellow]» {Markup.Escape(text)}[/]");
+            AnsiConsole.MarkupLine($"  [yellow] => {Markup.Escape(text)}[/]");
             AnsiConsole.WriteLine();
         }
 

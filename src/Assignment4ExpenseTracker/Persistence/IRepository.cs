@@ -44,12 +44,6 @@
         bool Delete(Guid id);
 
         /// <summary>
-        /// Creates a deep copy of the specified transaction.
-        /// </summary>
-        /// <returns>An enumerable collection containing the cloned transaction.</returns>
-        IReadOnlyList<Transaction> CloneAll();
-
-        /// <summary>
         /// Filters transactions based on the specified flow type.
         /// </summary>
         /// <param name="type">The type to filter.</param>

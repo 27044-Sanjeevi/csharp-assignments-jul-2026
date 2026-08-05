@@ -15,20 +15,20 @@
     internal class ApplicationRunner
     {
         private const int MinMenuChoice = 1;
-        private const int MaxMenuChoice = 5;
+        private const int MaxMenuChoice = 7;
 
-        private readonly ConsoleView _view;
-        private readonly FinanceController _controller;
+        private readonly IView _view;
+        private readonly IFinanceController _controller;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationRunner"/> class.
         /// </summary>
         /// <param name="view">The console view for displaying information to the user.</param>
         /// <param name="controller">The main controller responsible for managing application logic.</param>
-        public ApplicationRunner(ConsoleView view, FinanceController controller)
+        public ApplicationRunner(IView view, IFinanceController controller)
         {
-            this._view = view ?? throw new ArgumentException(nameof(view));
-            this._controller = controller ?? throw new ArgumentException(nameof(controller));
+            this._view = view ?? throw new ArgumentNullException(nameof(view));
+            this._controller = controller ?? throw new ArgumentNullException(nameof(controller));
         }
 
         /// <summary>
@@ -37,41 +37,37 @@
         public void RunApplication()
         {
             bool exit = false;
-            try
+            while (!exit)
             {
-                while (!exit)
+                try
                 {
                     this._view.ClearScreen();
-
+                    this._view.ShowMainMenu();
                     int choice = this._view.ReadChoice(MinMenuChoice, MaxMenuChoice);
-
                     this._view.ClearScreen();
-                    try
-                    {
-                        exit = this._controller.HandleTransactionMenu(choice);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
+
+                    exit = this._controller.HandleTransactionMenu(choice);
 
                     if (!exit)
                     {
                         this._view.PauseAndReturn();
                     }
                 }
-            }
-            catch (ArgumentException ex)
-            {
-                this._view.DisplayError(ex.Message);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                this._view.DisplayError(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                this._view.DisplayError(ex.Message);
+                catch (ArgumentException ex)
+                {
+                    this._view.DisplayError(ex.Message);
+                    this._view.PauseAndReturn();
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    this._view.DisplayError(ex.Message);
+                    this._view.PauseAndReturn();
+                }
+                catch (Exception ex)
+                {
+                    this._view.DisplayError($"Unexpected error: {ex.Message}");
+                    this._view.PauseAndReturn();
+                }
             }
         }
     }

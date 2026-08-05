@@ -21,6 +21,12 @@
         public decimal Amount { get; init; }
 
         /// <summary>
+        /// Gets the timestamp of when the transaction occurred.
+        /// </summary>
+        /// <value name="TimeStamp">Timestamp of the transaction.</value>
+        public DateTime TimeStamp { get; init; }
+
+        /// <summary>
         /// Gets the flow type of the transaction.
         /// </summary>
         /// <value name="Type">Type of the flow involved in transaction.</value>

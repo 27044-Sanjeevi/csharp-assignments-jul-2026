@@ -1,6 +1,5 @@
-﻿namespace Assignments
+﻿namespace Assignment4ExpenseTracker
 {
-    using Assignment4ExpenseTracker;
     using Assignment4ExpenseTracker.Controller;
     using Assignment4ExpenseTracker.IO;
     using Assignment4ExpenseTracker.Persistence;
@@ -20,36 +19,29 @@
         /// <param name="args">Optional CLI arguments.</param>
         public static void Main(string[] args)
         {
-            System.Console.OutputEncoding = System.Text.Encoding.UTF8;
+            System.Console.OutputEncoding = System.Text.Encoding.UTF8; // Used for rendering the Rupees symbol.
 
-            try
-            {
-                // Repository
-                IRepository repository = new InMemoryRepository();
+            // Repository
+            IRepository repository = new InMemoryRepository();
 
-                // View and Utilities
-                IIo consoleIo = new ConsoleIO();
-                ConsoleHelper consoleHelper = new ConsoleHelper(consoleIo);
-                ConsoleView view = new ConsoleView(consoleIo, consoleHelper);
+            // View and Utilities
+            IIo consoleIo = new ConsoleIO();
+            ConsoleHelper consoleHelper = new ConsoleHelper(consoleIo);
+            IView view = new ConsoleView(consoleIo, consoleHelper);
 
-                // Validation
-                ITransactionValidation validator = new TransactionValidation();
+            // Validation
+            ITransactionValidation validator = new TransactionValidation();
 
-                // Service
-                ITransactionService service = new TransactionService(repository, validator);
+            // Service
+            ITransactionService service = new TransactionService(repository, validator);
 
-                // Controller
-                FinanceController controller = new FinanceController(service, view);
+            // Controller
+            IFinanceController controller = new FinanceController(service, view);
 
-                // Application Runner
-                ApplicationRunner applicationRunner = new ApplicationRunner(view, controller);
+            // Application Runner
+            ApplicationRunner applicationRunner = new ApplicationRunner(view, controller);
 
-                applicationRunner.RunApplication();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            applicationRunner.RunApplication();
         }
     }
 }
