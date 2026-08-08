@@ -102,18 +102,6 @@
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<Transaction> FilterByFlowType(FlowType type)
-        {
-            return this._repository.FilterByFlowType(type);
-        }
-
-        /// <inheritdoc />
-        public IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category)
-        {
-            return this._repository.FilterByCategory(category);
-        }
-
-        /// <inheritdoc />
         public IReadOnlyList<Transaction> GetAllTransactions()
         {
             return this._repository.GetAll().ToList();

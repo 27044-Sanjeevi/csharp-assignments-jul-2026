@@ -45,12 +45,9 @@
                     this.DeleteTransaction();
                     break;
                 case 5:
-                    this.FilterTransactions();
-                    break;
-                case 6:
                     this.GenerateReport();
                     break;
-                case 7:
+                case 6:
                     return true;
                 default:
                     break;
@@ -139,35 +136,6 @@
             {
                 this._consoleView.DisplayUpdateSuccessful();
             }
-        }
-
-        /// <inheritdoc />
-        public void FilterTransactions()
-        {
-            this._consoleView.DisplayFilterHeader();
-            IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
-            if (transactions.Count <= 0)
-            {
-                this._consoleView.DisplayTransactionsNotFound();
-                return;
-            }
-
-            FilterType filterType = this._consoleView.GetFilterTypeChoice();
-            FlowType flowType = this._consoleView.GetFlowChoice();
-            if (filterType == FilterType.FlowType)
-            {
-                transactions = this._transactionService.FilterByFlowType(flowType);
-            }
-
-            if (filterType == FilterType.Category)
-            {
-                TransactionCategory category = flowType == FlowType.Income ?
-                                           this._consoleView.GetIncomeCategory() :
-                                           this._consoleView.GetExpenseCategory();
-                transactions = this._transactionService.FilterByCategory(category);
-            }
-
-            this._consoleView.DisplayFilteredTable(transactions);
         }
 
         /// <inheritdoc />

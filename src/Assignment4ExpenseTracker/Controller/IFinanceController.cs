@@ -23,11 +23,6 @@
         void UpdateTransaction();
 
         /// <summary>
-        /// Filters transactions based on the selected filter type.
-        /// </summary>
-        void FilterTransactions();
-
-        /// <summary>
         /// Displays all the transactions in a table.
         /// </summary>
         void ViewAllTransactions();

@@ -63,18 +63,6 @@
         }
 
         /// <inheritdoc />
-        public FilterType GetFilterTypeChoice()
-        {
-            List<string> filterChoices = new List<string>
-            {
-                "Flow Type",
-                "Category",
-            };
-            int filterIndex = this._consoleHelper.ReadSelection("Select the filtering parameter:", filterChoices);
-            return (FilterType)filterIndex;
-        }
-
-        /// <inheritdoc />
         public PaymentMethod GetPaymentMethod(PaymentMethod? existingMethod = null)
         {
             List<string> paymentChoices = new List<string>
@@ -230,12 +218,6 @@
         }
 
         /// <inheritdoc />
-        public void DisplayFilterHeader()
-        {
-            this._consoleHelper.PrintHeader("FILTER TRANSACTIONS");
-        }
-
-        /// <inheritdoc />
         public void DisplayReportHeader()
         {
             this._consoleHelper.PrintHeader("FINANCIAL INSIGHTS & REPORT");
@@ -279,13 +261,6 @@
             this._consoleIo.WriteLine($"Payment Method: {transaction.Method}");
             this._consoleIo.WriteLine($"Category: {transaction.Category}");
             this._consoleIo.WriteLine($"Description: {Markup.Escape(transaction.Description ?? "N/A")}");
-        }
-
-        /// <inheritdoc />
-        public void DisplayFilteredTable(IReadOnlyList<Transaction> transactions)
-        {
-            this._consoleHelper.PrintSubHeader("Filtered Transactions");
-            this.DisplayAsTable(transactions);
         }
 
         /// <inheritdoc />
@@ -420,9 +395,8 @@
                 "2. View all transactions",
                 "3. Update an existing transaction",
                 "4. Delete a transaction",
-                "5. Filter transactions",
-                "6. Generate Insights and Report",
-                "7. Exit the application",
+                "5. Generate Insights and Report",
+                "6. Exit the application",
             };
 
             return this._consoleHelper.ReadSelection("Select an operation to run:", choices);
@@ -444,9 +418,8 @@
             table.AddRow("2", "View Transactions", "Displays all recorded transactions in a dashboard.");
             table.AddRow("3", "Update Transaction", "Modifies the details of an existing transaction.");
             table.AddRow("4", "Delete Transaction", "Permanently removes a transaction record.");
-            table.AddRow("5", "Filter Transactions", "Filters transactions by flow type or category.");
-            table.AddRow("6", "Generate Report", "Displays financial insights and net balance summary.");
-            table.AddRow("7", "Exit", "Exits the Application.");
+            table.AddRow("5", "Generate Report", "Displays financial insights and net balance summary.");
+            table.AddRow("6", "Exit", "Exits the Application.");
 
             AnsiConsole.Write(table);
             this._consoleHelper.WriteLine(string.Empty);

@@ -54,11 +54,6 @@
         void DisplayUpdateHeader();
 
         /// <summary>
-        /// Displays the header for the filter operation.
-        /// </summary>
-        void DisplayFilterHeader();
-
-        /// <summary>
         /// Displays the header for the report operation.
         /// </summary>
         void DisplayReportHeader();
@@ -97,12 +92,6 @@
         TransactionCategory GetExpenseCategory(TransactionCategory? existingCategory = null);
 
         /// <summary>
-        /// Retrieves the parameter for filtering the transactions.
-        /// </summary>
-        /// <returns>The parameter to be filtered by.</returns>
-        FilterType GetFilterTypeChoice();
-
-        /// <summary>
         /// Reads the optional description of the transaction from user input.
         /// </summary>
         /// <returns>The description of the transaction as a string.</returns>
@@ -133,12 +122,6 @@
         /// <param name="maxIndex">The maximum valid row number for selection.</param>
         /// <returns>The zero-based index of the selected row.</returns>
         int GetIndexFromTable(int maxIndex);
-
-        /// <summary>
-        /// Displays a table of transactions after applying filters.
-        /// </summary>
-        /// <param name="transactions">The filtered list of transactions to display.</param>
-        void DisplayFilteredTable(IReadOnlyList<Transaction> transactions);
 
         /// <summary>
         /// Renders a collection of transaction records as a formatted table grid.
