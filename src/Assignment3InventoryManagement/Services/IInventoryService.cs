@@ -77,6 +77,12 @@ namespace Assignment3InventoryManagement.Services
         List<Product> SearchProducts(string keyword);
 
         /// <summary>
+        /// Retrieves the total product count.
+        /// </summary>
+        /// <returns>An integer specifying the product count.</returns>
+        public int GetProductCount();
+
+        /// <summary>
         /// Adds stock to an existing product in the inventory.
         /// </summary>
         /// <param name="id">The identifier of the product.</param>

@@ -137,7 +137,7 @@ namespace Assignment3InventoryManagement.View
             ArgumentNullException.ThrowIfNull(product);
 
             var table = new Table()
-                .Title("[bold yellow]Product Details[/]")
+                .Title("[bold yellow]\nProduct Details[/]")
                 .Border(TableBorder.Rounded)
                 .BorderColor(Color.Grey35);
 
@@ -232,12 +232,28 @@ namespace Assignment3InventoryManagement.View
         }
 
         /// <summary>
+        /// Displays when no product exists in the repository.
+        /// </summary>
+        public void DisplayNoProductsFound()
+        {
+            this._consoleHelper.WriteColored("No products added.\n", ConsoleColor.Red);
+        }
+
+        /// <summary>
         /// Prompts the user to enter an existing product ID.
         /// </summary>
         /// <returns>The entered product ID as an integer, or 0 if no valid input is provided.</returns>
         public int GetIdFromUser()
         {
             return this._consoleHelper.ReadInt("Enter the existing product Id : ") ?? 0;
+        }
+
+        /// <summary>
+        /// Displays the header for sort products operation.
+        /// </summary>
+        public void SortProductsHeader()
+        {
+            this._consoleHelper.PrintHeader("SORT PRODUCTS");
         }
 
         /// <summary>

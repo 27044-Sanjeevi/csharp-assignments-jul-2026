@@ -74,5 +74,11 @@ namespace Assignment3InventoryManagement.Persistence
 
             return false;
         }
+
+        /// <inheritdoc />
+        public int GetCount()
+        {
+            return this._products.Count;
+        }
     }
 }

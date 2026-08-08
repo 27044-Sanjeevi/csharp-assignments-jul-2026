@@ -53,5 +53,11 @@ namespace Assignment3InventoryManagement.Persistence
         /// <param name="product">The product to clone.</param>
         /// <returns>A new instance of the product with the same properties.</returns>
         Product Clone(Product product);
+
+        /// <summary>
+        /// Retrieves the product count from the repository.
+        /// </summary>
+        /// <returns>An integer specifying the count of the products available in the list.</returns>
+        int GetCount();
     }
 }

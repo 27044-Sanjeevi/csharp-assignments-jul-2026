@@ -97,8 +97,7 @@ namespace Assignment3InventoryManagement.Controller
         public void ViewProducts()
         {
             this._view.DisplayViewHeader();
-            List<Product> products = this._inventoryService.GetAllProducts();
-            this._view.DisplayAsTable(products);
+            this.DisplayAllProductsTable();
         }
 
         /// <summary>
@@ -107,6 +106,11 @@ namespace Assignment3InventoryManagement.Controller
         public void SearchProduct()
         {
             this._view.DisplaySearchHeader();
+            if (!this.TryDisplayInventory())
+            {
+                return;
+            }
+
             string keyword = this._view.GetSearchKeyword();
             List<Product> results = this._inventoryService.SearchProducts(keyword);
 
@@ -121,6 +125,11 @@ namespace Assignment3InventoryManagement.Controller
         public void UpdateProduct()
         {
             this._view.DisplayUpdateHeader();
+            if (!this.TryDisplayInventory())
+            {
+                return;
+            }
+
             int? idToUpdate = this.GetExistingProductId();
 
             if (idToUpdate is null)
@@ -163,6 +172,11 @@ namespace Assignment3InventoryManagement.Controller
         public void RemoveProduct()
         {
             this._view.DisplayDeleteHeader();
+            if (!this.TryDisplayInventory())
+            {
+                return;
+            }
+
             int? idToDelete = this.GetExistingProductId();
 
             if (idToDelete is null)
@@ -192,6 +206,11 @@ namespace Assignment3InventoryManagement.Controller
         public void AddStock()
         {
             this._view.DisplayAddStockHeader();
+            if (!this.TryDisplayInventory())
+            {
+                return;
+            }
+
             int? id = this.GetExistingProductId();
 
             if (id is null)
@@ -226,6 +245,11 @@ namespace Assignment3InventoryManagement.Controller
         public void RemoveStock()
         {
             this._view.DisplayRemoveStockHeader();
+            if (!this.TryDisplayInventory())
+            {
+                return;
+            }
+
             int? id = this.GetExistingProductId();
 
             if (id is null)
@@ -257,6 +281,12 @@ namespace Assignment3InventoryManagement.Controller
         /// </summary>
         public void SortProducts()
         {
+            this._view.SortProductsHeader();
+            if (!this.TryDisplayInventory())
+            {
+                return;
+            }
+
             SortField sortField = this._view.GetSortField();
             bool isAscending = this._view.GetSortDirection();
             List<Product> products = this._inventoryService.GetSortedProducts(sortField, isAscending);
@@ -272,6 +302,24 @@ namespace Assignment3InventoryManagement.Controller
         public void PrintGoodBye()
         {
             this._view.PrintGoodbye();
+        }
+
+        private bool TryDisplayInventory()
+        {
+            if (this._inventoryService.GetProductCount() <= 0)
+            {
+                this._view.DisplayNoProductsFound();
+                return false;
+            }
+
+            this.DisplayAllProductsTable();
+            return true;
+        }
+
+        private void DisplayAllProductsTable()
+        {
+            List<Product> products = this._inventoryService.GetAllProducts();
+            this._view.DisplayAsTable(products);
         }
 
         /// <summary>

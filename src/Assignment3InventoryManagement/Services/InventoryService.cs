@@ -135,7 +135,10 @@ namespace Assignment3InventoryManagement.Services
 
             if (string.IsNullOrEmpty(validationError))
             {
-                this._repository.Update(product);
+                if (!this._repository.Update(product))
+                {
+                    throw new KeyNotFoundException($"Product with ID {product.Id} not found.");
+                }
             }
 
             return validationError;
@@ -161,18 +164,9 @@ namespace Assignment3InventoryManagement.Services
         {
             ArgumentNullException.ThrowIfNull(keyword);
 
-            List<Product> results = new List<Product>();
-            List<Product> products = this._repository.GetAll().ToList();
-
-            foreach (Product product in products)
-            {
-                if (this.IsMatch(product, keyword))
-                {
-                    results.Add(product);
-                }
-            }
-
-            return results;
+            return this._repository.GetAll()
+                .Where(product => this.IsMatch(product, keyword))
+                .ToList();
         }
 
         /// <inheritdoc />
@@ -185,10 +179,10 @@ namespace Assignment3InventoryManagement.Services
                 throw new KeyNotFoundException($"Product with ID {id} not found.");
             }
 
-            product.Quantity += quantity;
             string? errorMessage = this._validator.ValidateQuantity(quantity);
             if (string.IsNullOrEmpty(errorMessage))
             {
+                product.Quantity += quantity;
                 this.UpdateProduct(product);
             }
 
@@ -276,6 +270,12 @@ namespace Assignment3InventoryManagement.Services
             });
 
             return products;
+        }
+
+        /// <inheritdoc />
+        public int GetProductCount()
+        {
+            return this._repository.GetCount();
         }
 
         /// <summary>
