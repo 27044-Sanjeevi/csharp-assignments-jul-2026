@@ -64,7 +64,7 @@
         /// Gets or sets the flow type of the transaction.
         /// </summary>
         /// <value name="Type">Type of the flow involved in transaction.</value>
-        public FlowType Type { get; set; }
+        public TransactionType Type { get; set; }
 
         /// <summary>
         /// Gets or sets the category of the transaction.

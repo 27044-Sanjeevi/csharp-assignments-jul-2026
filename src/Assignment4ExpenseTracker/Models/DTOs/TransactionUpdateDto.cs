@@ -9,7 +9,7 @@
     internal class TransactionUpdateDto
     {
         /// <summary>
-        /// Gets the target unique identifier of the transaction record being modified.
+        /// Gets the unique identifier of the transaction record being modified.
         /// </summary>
         /// <value name="Id">Unique identifier of the transaction.</value>
         public Guid Id { get; init; }
@@ -30,7 +30,7 @@
         /// Gets the flow type of the transaction.
         /// </summary>
         /// <value name="Type">Type of the flow involved in transaction.</value>
-        public FlowType Type { get; init; }
+        public TransactionType Type { get; init; }
 
         /// <summary>
         /// Gets the category of the transaction.

@@ -3,10 +3,10 @@
     /// <summary>
     /// Specifies the flow of cash in a Transaction.
     /// </summary>
-    internal enum FlowType
+    internal enum TransactionType
     {
         /// <summary>
-        /// Specifies the Income of cash.
+        /// Specifies an inflow of cash or revenue.
         /// </summary>
         Income = 1,
 

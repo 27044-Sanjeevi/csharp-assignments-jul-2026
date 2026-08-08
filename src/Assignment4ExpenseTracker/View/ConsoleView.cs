@@ -30,36 +30,36 @@
         }
 
         /// <inheritdoc />
-        public decimal GetTransactionAmount() => this._consoleHelper.ReadDecimal("Enter the transaction amount: ") ?? 0.0M;
+        public decimal GetTransactionAmount() => this._consoleHelper.ReadPositiveDecimal("Enter the transaction amount: ") ?? 0.0M;
 
         /// <inheritdoc />
-        public decimal GetTransactionAmountToUpdate(decimal existingAmount) => this._consoleHelper.ReadDecimal($"Enter the transaction amount [Existing: {existingAmount}] (Press Enter to keep current): ", isOptional: true) ?? existingAmount;
+        public decimal GetTransactionAmountToUpdate(decimal existingAmount) => this._consoleHelper.ReadPositiveDecimal($"Enter the transaction amount [Existing: {existingAmount}] (Press Enter to keep current): ", isOptional: true) ?? existingAmount;
 
         /// <inheritdoc />
-        public FlowType GetFlowChoice(FlowType? existingFlow = null)
+        public TransactionType GetTransactionTypeChoice(TransactionType? existingType = null)
         {
-            List<string> flowChoices = new List<string>
+            List<string> typeChoices = new List<string>
             {
                 "Income",
                 "Expense",
             };
-            if (existingFlow.HasValue)
+            if (existingType.HasValue)
             {
-                flowChoices.Insert(0, $"Keep current ({existingFlow.Value})");
+                typeChoices.Insert(0, $"Keep current ({existingType.Value})");
             }
 
-            int flowIndex = this._consoleHelper.ReadSelection("Select the flow type:", flowChoices);
-            if (existingFlow.HasValue)
+            int index = this._consoleHelper.ReadSelection("Select the cash flow type:", typeChoices);
+            if (existingType.HasValue)
             {
-                if (flowIndex == 1)
+                if (index == 1)
                 {
-                    return existingFlow.Value;
+                    return existingType.Value;
                 }
 
-                return (FlowType)(flowIndex - 1);
+                return (TransactionType)(index - 1);
             }
 
-            return (FlowType)flowIndex;
+            return (TransactionType)index;
         }
 
         /// <inheritdoc />
@@ -234,7 +234,7 @@
         {
             while (true)
             {
-                int choice = this._consoleHelper.ReadInt($"Enter Row Number to select (1 to {maxIndex}): ") ?? 0;
+                int choice = this._consoleHelper.ReadPositiveInt($"Enter Row Number to select (1 to {maxIndex}): ") ?? 0;
 
                 if (choice >= 1 && choice <= maxIndex)
                 {
@@ -257,7 +257,7 @@
             this._consoleIo.WriteLine($"ID: {transaction.Id}");
             this._consoleIo.WriteLine($"Amount: {transaction.Amount:C}");
             this._consoleIo.WriteLine($"Date: {transaction.TimeStamp:yyyy-MM-dd HH:mm}");
-            this._consoleIo.WriteLine($"Flow Type: {transaction.Type}");
+            this._consoleIo.WriteLine($"Transaction Type: {transaction.Type}");
             this._consoleIo.WriteLine($"Payment Method: {transaction.Method}");
             this._consoleIo.WriteLine($"Category: {transaction.Category}");
             this._consoleIo.WriteLine($"Description: {Markup.Escape(transaction.Description ?? "N/A")}");
@@ -299,7 +299,7 @@
                 string amountDisplay;
                 string typeDisplay;
 
-                if (transaction.Type == FlowType.Income)
+                if (transaction.Type == TransactionType.Income)
                 {
                     typeDisplay = "[green]INCOME[/]";
                     amountDisplay = $"[green]+{transaction.Amount:C}[/]";

@@ -9,7 +9,7 @@
     using Assignment4ExpenseTracker.Services.Validation;
 
     /// <summary>
-    /// Represents the service layer of the transactions in the expense tracker application.
+    /// Provides the business logic for the transactions in the expense tracker application.
     /// </summary>
     internal class TransactionService : ITransactionService
     {
@@ -116,11 +116,11 @@
 
             foreach (Transaction transaction in transactions)
             {
-                if (transaction.Type == FlowType.Income)
+                if (transaction.Type == TransactionType.Income)
                 {
                     totalIncome += transaction.Amount;
                 }
-                else if (transaction.Type == FlowType.Expense)
+                else if (transaction.Type == TransactionType.Expense)
                 {
                     totalExpense += transaction.Amount;
                 }

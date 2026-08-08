@@ -22,12 +22,12 @@
         }
 
         /// <summary>
-        /// Reads an integer value from the console, optionally allowing an empty input to bypass validation.
+        /// Reads a positive integer value from the console, optionally allowing an empty input to bypass validation.
         /// </summary>
         /// <param name="prompt">The prompt message to display.</param>
         /// <param name="isOptional">If true, pressing Enter returns null instead of a validation error.</param>
         /// <returns>The parsed integer value, or null if the field was skipped.</returns>
-        public int? ReadInt(string prompt, bool isOptional = false)
+        public int? ReadPositiveInt(string prompt, bool isOptional = false)
         {
             while (true)
             {
@@ -56,29 +56,30 @@
         {
             while (true)
             {
-                string? input = this.ReadLine(prompt);
+                string? input = this.ReadLine(prompt)?.Trim();
 
-                if (isOptional && string.IsNullOrWhiteSpace(input))
+                if (string.IsNullOrWhiteSpace(input))
                 {
-                    return null;
+                    if (isOptional)
+                    {
+                        return null;
+                    }
+
+                    this.WriteColored("[INPUT ERROR] Input cannot be empty. Please try again.\n", ConsoleColor.Red);
+                    continue;
                 }
 
-                if (!string.IsNullOrWhiteSpace(input))
-                {
-                    return input.Trim();
-                }
-
-                this.WriteColored("[INPUT ERROR] Input cannot be empty. Please try again.\n", ConsoleColor.Red);
+                return input;
             }
         }
 
         /// <summary>
-        /// Reads a decimal value from the console, optionally allowing an empty input to bypass validation.
+        /// Reads a oositive decimal value from the console, optionally allowing an empty input to bypass validation.
         /// </summary>
         /// <param name="prompt">The prompt message to display.</param>
         /// <param name="isOptional">If true, pressing Enter returns null. If false, it loops until a valid decimal is entered.</param>
         /// <returns>The parsed decimal value, or null if the field was skipped.</returns>
-        public decimal? ReadDecimal(string prompt, bool isOptional = false)
+        public decimal? ReadPositiveDecimal(string prompt, bool isOptional = false)
         {
             while (true)
             {

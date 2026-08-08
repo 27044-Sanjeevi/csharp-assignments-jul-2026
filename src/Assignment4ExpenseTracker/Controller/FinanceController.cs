@@ -61,9 +61,9 @@
         {
             this._consoleView.DisplayAddHeader();
             decimal amount = this._consoleView.GetTransactionAmount();
-            FlowType flowType = this._consoleView.GetFlowChoice();
+            TransactionType transactionType = this._consoleView.GetTransactionTypeChoice();
             PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod();
-            TransactionCategory category = flowType == FlowType.Income ?
+            TransactionCategory category = transactionType == TransactionType.Income ?
                                            this._consoleView.GetIncomeCategory() :
                                            this._consoleView.GetExpenseCategory();
             string? description = this._consoleView.GetTransactionDescription();
@@ -71,7 +71,7 @@
             TransactionInputDto transactionDto = new TransactionInputDto
             {
                 Amount = amount,
-                Type = flowType,
+                Type = transactionType,
                 Category = category,
                 Method = paymentMethod,
                 Description = description,
@@ -100,18 +100,18 @@
             }
 
             decimal amount = this._consoleView.GetTransactionAmountToUpdate(selectedRecord.Amount);
-            FlowType flowType = this._consoleView.GetFlowChoice(selectedRecord.Type);
+            TransactionType transactionType = this._consoleView.GetTransactionTypeChoice(selectedRecord.Type);
             PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod(selectedRecord.Method);
             TransactionCategory category;
-            if (flowType == selectedRecord.Type)
+            if (transactionType == selectedRecord.Type)
             {
-                category = flowType == FlowType.Income ?
+                category = transactionType == TransactionType.Income ?
                            this._consoleView.GetIncomeCategory(selectedRecord.Category) :
                            this._consoleView.GetExpenseCategory(selectedRecord.Category);
             }
             else
             {
-                category = flowType == FlowType.Income ?
+                category = transactionType == TransactionType.Income ?
                            this._consoleView.GetIncomeCategory() :
                            this._consoleView.GetExpenseCategory();
             }
@@ -123,7 +123,7 @@
                 Id = selectedRecord.Id,
                 Amount = amount,
                 TimeStamp = selectedRecord.TimeStamp,
-                Type = flowType,
+                Type = transactionType,
                 Category = category,
                 Method = paymentMethod,
                 Description = description,

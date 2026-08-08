@@ -68,7 +68,7 @@
         /// </summary>
         /// <param name="existingFlow">Holds the existing Flow type of the transaction.</param>
         /// <returns>The flow type chosen by the user.</returns>
-        FlowType GetFlowChoice(FlowType? existingFlow = null);
+        TransactionType GetTransactionTypeChoice(TransactionType? existingFlow = null);
 
         /// <summary>
         /// Reads the current payment method.

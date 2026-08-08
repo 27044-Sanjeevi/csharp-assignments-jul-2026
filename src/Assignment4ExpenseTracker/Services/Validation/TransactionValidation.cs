@@ -63,16 +63,16 @@
             return validationResult;
         }
 
-        private bool IsValidCategoryCombination(FlowType type, TransactionCategory category)
+        private bool IsValidCategoryCombination(TransactionType type, TransactionCategory category)
         {
-            if (type == FlowType.Income)
+            if (type == TransactionType.Income)
             {
                 return category == TransactionCategory.Salary ||
                        category == TransactionCategory.Investment ||
                        category == TransactionCategory.MiscellaneousIncome;
             }
 
-            if (type == FlowType.Expense)
+            if (type == TransactionType.Expense)
             {
                 return category == TransactionCategory.Transport ||
                        category == TransactionCategory.Utilities ||
