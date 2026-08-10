@@ -14,7 +14,7 @@
     /// </summary>
     internal class ConsoleView : IView
     {
-        private readonly IIo _consoleIo;
+        private readonly IConsoleIO _consoleIo;
         private readonly ConsoleHelper _consoleHelper;
 
         /// <summary>
@@ -23,7 +23,7 @@
         /// <param name="consoleIo">The IIo implementation used for console input and output.</param>
         /// <param name="consoleHelper">The console helper for generic input, output, and formatting operations.</param>
         /// <exception cref="ArgumentNullException">Thrown when consoleIo is null.</exception>
-        public ConsoleView(IIo consoleIo, ConsoleHelper consoleHelper)
+        public ConsoleView(IConsoleIO consoleIo, ConsoleHelper consoleHelper)
         {
             this._consoleIo = consoleIo ?? throw new ArgumentNullException(nameof(consoleIo));
             this._consoleHelper = consoleHelper ?? throw new ArgumentNullException(nameof(consoleHelper));

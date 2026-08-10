@@ -25,7 +25,7 @@
             IRepository repository = new InMemoryRepository();
 
             // View and Utilities
-            IIo consoleIo = new ConsoleIO();
+            IConsoleIO consoleIo = new ConsoleIO();
             ConsoleHelper consoleHelper = new ConsoleHelper(consoleIo);
             IView view = new ConsoleView(consoleIo, consoleHelper);
 
