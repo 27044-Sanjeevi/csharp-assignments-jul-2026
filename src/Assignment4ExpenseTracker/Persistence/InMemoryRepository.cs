@@ -1,7 +1,6 @@
 ﻿namespace Assignment4ExpenseTracker.Persistence
 {
     using Assignment4ExpenseTracker.Models;
-    using Assignment4ExpenseTracker.Models.Enums;
 
     /// <summary>
     /// Provides an in-memory repository for storing and managing transactions.

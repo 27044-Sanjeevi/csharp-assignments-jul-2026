@@ -1,7 +1,6 @@
 ﻿namespace Assignment4ExpenseTracker.View
 {
     using Assignment4ExpenseTracker.Models;
-    using Assignment4ExpenseTracker.Models.DTOs;
     using Assignment4ExpenseTracker.Models.Enums;
     using Assignment4ExpenseTracker.Services.Validation;
 
@@ -171,6 +170,6 @@
         /// Displays an error message.
         /// </summary>
         /// <param name="message">The error message.</param>
-        void DisplayError(string message);
+        void HandleError(string message);
     }
 }

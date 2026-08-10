@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines contracts for the main application controller.
     /// </summary>
-    internal interface IFinanceController
+    internal interface ITransactionController
     {
         /// <summary>
         /// Processes a transaction menu selection and invokes the corresponding operation.

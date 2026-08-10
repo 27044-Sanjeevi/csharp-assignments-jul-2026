@@ -36,7 +36,7 @@
             ITransactionService service = new TransactionService(repository, validator);
 
             // Controller
-            IFinanceController controller = new FinanceController(service, view);
+            ITransactionController controller = new TransactionController(service, view);
 
             // Application Runner
             ApplicationRunner applicationRunner = new ApplicationRunner(view, controller);

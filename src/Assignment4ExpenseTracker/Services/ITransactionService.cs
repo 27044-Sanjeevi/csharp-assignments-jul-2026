@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.DTOs;
-    using Assignment4ExpenseTracker.Models.Enums;
     using Assignment4ExpenseTracker.Services.Validation;
 
     /// <summary>

@@ -10,18 +10,18 @@
     /// <summary>
     /// Coordinates operations between the View and the Service layer.
     /// </summary>
-    internal class FinanceController : IFinanceController
+    internal class TransactionController : ITransactionController
     {
         private readonly ITransactionService _transactionService;
         private readonly IView _consoleView;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FinanceController"/> class.
+        /// Initializes a new instance of the <see cref="TransactionController"/> class.
         /// </summary>
         /// <param name="transactionService">The service for transaction related operations.</param>
         /// <param name="consoleView">The console view renderer.</param>
         /// <exception cref="ArgumentNullException">Thrown when the argument is null.</exception>
-        public FinanceController(ITransactionService transactionService, IView consoleView)
+        public TransactionController(ITransactionService transactionService, IView consoleView)
         {
             this._transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
             this._consoleView = consoleView ?? throw new ArgumentNullException(nameof(consoleView));

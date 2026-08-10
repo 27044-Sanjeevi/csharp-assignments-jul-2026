@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using Assignment4ExpenseTracker.Models;
-    using Assignment4ExpenseTracker.Models.Enums;
 
     /// <summary>
     /// Defines data access contracts for financial transactions.

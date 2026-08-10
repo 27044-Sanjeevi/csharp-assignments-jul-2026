@@ -3,9 +3,7 @@
     using System.Linq;
     using Assignment4ExpenseTracker.IO;
     using Assignment4ExpenseTracker.Models;
-    using Assignment4ExpenseTracker.Models.DTOs;
     using Assignment4ExpenseTracker.Models.Enums;
-    using Assignment4ExpenseTracker.Services.Validation;
     using Assignment4ExpenseTracker.Utilities;
     using Spectre.Console;
 
@@ -332,9 +330,10 @@
         /// Displays an error message in red.
         /// </summary>
         /// <param name="message">The error message to display.</param>
-        public void DisplayError(string message)
+        public void HandleError(string message)
         {
             this._consoleHelper.DisplayError(message);
+            this.PauseAndReturn();
         }
 
         /// <summary>
