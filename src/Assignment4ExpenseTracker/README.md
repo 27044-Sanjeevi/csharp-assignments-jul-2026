@@ -10,10 +10,6 @@ A console-based finance application for tracking income and expenses and generat
 - Update existing transaction details with partial update support (leave fields blank to retain current values)
 - Delete transaction records permanently
 
-### Filtering and Search
-- Filter transactions by flow type (Income or Expense)
-- Filter transactions by category (Salary, Investment, Transport, Utilities, Groceries, Rent, Food, Shopping, etc.)
-
 ### Financial Reporting
 - Generate financial insights including total income, total expenses, net balance, and transaction count
 - Color-coded display distinguishing income (green) from expenses (red)
@@ -34,9 +30,8 @@ Available operations:
 2. View Transactions
 3. Update Transaction
 4. Delete Transaction
-5. Filter Transactions
-6. Generate Report
-7. Exit
+5. Generate Report
+6. Exit
 
 ### Adding a Transaction
 1. Select "Add Transaction" from the main menu.
@@ -60,13 +55,6 @@ Select "View Transactions" to display all recorded transactions in a formatted t
 1. Select "Delete Transaction" from the main menu.
 2. A table of all transactions is displayed. Enter the row number of the transaction to delete.
 3. The transaction is permanently removed from the system.
-
-### Filtering Transactions
-1. Select "Filter Transactions" from the main menu.
-2. Choose the filter parameter: Flow Type or Category.
-3. If filtering by Flow Type, select Income or Expense.
-4. If filtering by Category, first select the flow type, then select the specific category.
-5. Matching transactions are displayed in a filtered table.
 
 ### Generating Reports
 Select "Generate Report" to view a summary panel displaying:
