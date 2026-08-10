@@ -14,14 +14,14 @@
     internal class TransactionService : ITransactionService
     {
         private readonly IRepository _repository;
-        private readonly ITransactionValidation _validator;
+        private readonly TransactionValidation _validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionService"/> class.
         /// </summary>
         /// <param name="repository">The data persistence repository access tier.</param>
         /// <param name="validator">The engine used to enforce data rules.</param>
-        public TransactionService(IRepository repository, ITransactionValidation validator)
+        public TransactionService(IRepository repository, TransactionValidation validator)
         {
             this._repository = repository ?? throw new ArgumentNullException(nameof(repository));
             this._validator = validator ?? throw new ArgumentNullException(nameof(validator));

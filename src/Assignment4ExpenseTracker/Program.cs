@@ -30,7 +30,7 @@
             IView view = new ConsoleView(consoleIo, consoleHelper);
 
             // Validation
-            ITransactionValidation validator = new TransactionValidation();
+            TransactionValidation validator = new TransactionValidation();
 
             // Service
             ITransactionService service = new TransactionService(repository, validator);
