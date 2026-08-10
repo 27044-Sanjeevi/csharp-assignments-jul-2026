@@ -34,6 +34,26 @@
         ValidationResult UpdateTransaction(TransactionUpdateDto transaction);
 
         /// <summary>
+        /// Sorts transactions in ascending order by amount.
+        /// </summary>
+        /// <returns>A read-only list containing the sorted transactions.</returns>
+        IReadOnlyList<Transaction> SortTransactionsByAmount();
+
+        /// <summary>
+        /// Filters transactions based on the specified flow type.
+        /// </summary>
+        /// <param name="type">The type to filter.</param>
+        /// <returns>An enumerable collection of transactions that match the flow type criteria.</returns>
+        IReadOnlyList<Transaction> FilterByTransactionType(TransactionType type);
+
+        /// <summary>
+        /// Filters transactions based on the specified category.
+        /// </summary>
+        /// <param name="category">The category to filter.</param>
+        /// <returns>An enumerable collection of transactions that match the category criteria.</returns>
+        IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category);
+
+        /// <summary>
         /// Extracts all transaction records currently stored in the system.
         /// </summary>
         /// <returns>A validation result object containing the outcome and explanation.</returns>

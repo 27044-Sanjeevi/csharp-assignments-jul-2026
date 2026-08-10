@@ -23,6 +23,11 @@
         void UpdateTransaction();
 
         /// <summary>
+        /// Filters transactions based on the selected filter type.
+        /// </summary>
+        void FilterTransactions();
+
+        /// <summary>
         /// Displays all the transactions in a table.
         /// </summary>
         void ViewAllTransactions();
@@ -31,6 +36,11 @@
         /// Deletes an existing transaction from the repository.
         /// </summary>
         void DeleteTransaction();
+
+        /// <summary>
+        /// Sorts the transactions by amount or by transaction date.
+        /// </summary>
+        void SortTransactions();
 
         /// <summary>
         /// Generates and displays financial insights and reports.

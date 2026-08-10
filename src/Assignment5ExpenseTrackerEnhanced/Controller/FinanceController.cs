@@ -45,9 +45,21 @@
                     this.DeleteTransaction();
                     break;
                 case 5:
-                    this.GenerateReport();
+                    this.FilterTransactions();
                     break;
                 case 6:
+                    this.SortTransactions();
+                    break;
+                case 7:
+                    // this.SearchTransactions();
+                    break;
+                case 8:
+                    // this.DisplayReport();
+                    break;
+                case 9:
+                    // this.GenerateReportFile();
+                    break;
+                case 10:
                     return true;
                 default:
                     break;
@@ -61,7 +73,7 @@
         {
             this._consoleView.DisplayAddHeader();
             decimal amount = this._consoleView.GetTransactionAmount();
-            TransactionType transactionType = this._consoleView.GetTransactionTypeChoice();
+            TransactionType transactionType = this._consoleView.GetTransactionType();
             PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod();
             TransactionCategory category = transactionType == TransactionType.Income ?
                                            this._consoleView.GetIncomeCategory() :
@@ -100,7 +112,7 @@
             }
 
             decimal amount = this._consoleView.GetTransactionAmountToUpdate(selectedRecord.Amount);
-            TransactionType transactionType = this._consoleView.GetTransactionTypeChoice(selectedRecord.Type);
+            TransactionType transactionType = this._consoleView.GetTransactionType(selectedRecord.Type);
             PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod(selectedRecord.Method);
             TransactionCategory category;
             if (transactionType == selectedRecord.Type)
@@ -139,6 +151,35 @@
         }
 
         /// <inheritdoc />
+        public void FilterTransactions()
+        {
+            this._consoleView.DisplayFilterHeader();
+            IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
+            if (transactions.Count <= 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
+
+            FilterType filterType = this._consoleView.GetFilterTypeChoice();
+            TransactionType transactionType = this._consoleView.GetTransactionType();
+            if (filterType == FilterType.TransactionType)
+            {
+                transactions = this._transactionService.FilterByTransactionType(transactionType);
+            }
+
+            if (filterType == FilterType.Category)
+            {
+                TransactionCategory category = transactionType == TransactionType.Income ?
+                                           this._consoleView.GetIncomeCategory() :
+                                           this._consoleView.GetExpenseCategory();
+                transactions = this._transactionService.FilterByCategory(category);
+            }
+
+            this._consoleView.DisplayFilteredTable(transactions);
+        }
+
+        /// <inheritdoc />
         public void ViewAllTransactions()
         {
             this._consoleView.DisplayAllTransactionsHeader();
@@ -161,6 +202,33 @@
 
             this._transactionService.DeleteTransaction(selectedRecord.Id);
             this._consoleView.DisplayDeleteSuccessful();
+        }
+
+        /// <inheritdoc />
+        public void SortTransactions()
+        {
+            this._consoleView.DisplaySortHeader();
+            IReadOnlyList<Transaction> sortedTransactions;
+
+            SortField sortField = this._consoleView.GetSortField();
+
+            if (sortField == SortField.Amount)
+            {
+                sortedTransactions = this._transactionService.SortTransactionsByAmount();
+            }
+
+            else if (sortField == SortField.Date)
+            {
+                sortedTransactions = this._transactionService.SortTransactionsByDate();
+            }
+
+            if (sortedTransactions.Count <= 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
+
+            this._consoleView.DisplayAsTable(sortedTransactions);
         }
 
         /// <inheritdoc />

@@ -1,7 +1,7 @@
-﻿namespace Assignment4ExpenseTracker.Models.DTOs
+﻿namespace Assignment5ExpenseTrackerEnhanced.Models.DTOs
 {
     using System;
-    using Assignment4ExpenseTracker.Models.Enums;
+    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
 
     /// <summary>
     /// Serves as a data transfer object carrying modification constraints for a transaction record.

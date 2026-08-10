@@ -102,9 +102,27 @@
         }
 
         /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByTransactionType(TransactionType type)
+        {
+            return this._repository.FilterByTransactionType(type);
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category)
+        {
+            return this._repository.FilterByCategory(category);
+        }
+
+        /// <inheritdoc />
         public IReadOnlyList<Transaction> GetAllTransactions()
         {
             return this._repository.GetAll().ToList();
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> SortTransactionsByAmount()
+        {
+            return this._repository.SortByAmount();
         }
 
         /// <inheritdoc />

@@ -54,9 +54,19 @@
         void DisplayUpdateHeader();
 
         /// <summary>
+        /// Displays the header for the filter operation.
+        /// </summary>
+        void DisplayFilterHeader();
+
+        /// <summary>
         /// Displays the header for the report operation.
         /// </summary>
         void DisplayReportHeader();
+
+        /// <summary>
+        /// Displayes the header for the sort operation.
+        /// </summary>
+        void DisplaySortHeader();
 
         /// <summary>
         /// Displays the header for the view all operation.
@@ -64,11 +74,17 @@
         void DisplayAllTransactionsHeader();
 
         /// <summary>
+        /// Retrieves the sort field for the current context.
+        /// </summary>
+        /// <returns>A SortField object representing the sort criteria.</returns>
+        SortField GetSortField();
+
+        /// <summary>
         /// Reads the flow type of the transaction.
         /// </summary>
-        /// <param name="existingFlow">Holds the existing Flow type of the transaction.</param>
+        /// <param name="existingType">Holds the existing Flow type of the transaction.</param>
         /// <returns>The flow type chosen by the user.</returns>
-        TransactionType GetTransactionTypeChoice(TransactionType? existingFlow = null);
+        TransactionType GetTransactionType(TransactionType? existingType = null);
 
         /// <summary>
         /// Reads the current payment method.
@@ -90,6 +106,12 @@
         /// <param name="existingCategory">Holds the exiting category of the transaction.</param>
         /// <returns>The transaction category for the expense.</returns>
         TransactionCategory GetExpenseCategory(TransactionCategory? existingCategory = null);
+
+        /// <summary>
+        /// Retrieves the parameter for filtering the transactions.
+        /// </summary>
+        /// <returns>The parameter to be filtered by.</returns>
+        FilterType GetFilterTypeChoice();
 
         /// <summary>
         /// Reads the optional description of the transaction from user input.
@@ -122,6 +144,12 @@
         /// <param name="maxIndex">The maximum valid row number for selection.</param>
         /// <returns>The zero-based index of the selected row.</returns>
         int GetIndexFromTable(int maxIndex);
+
+        /// <summary>
+        /// Displays a table of transactions after applying filters.
+        /// </summary>
+        /// <param name="transactions">The filtered list of transactions to display.</param>
+        void DisplayFilteredTable(IReadOnlyList<Transaction> transactions);
 
         /// <summary>
         /// Renders a collection of transaction records as a formatted table grid.

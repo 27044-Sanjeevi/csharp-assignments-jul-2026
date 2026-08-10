@@ -36,7 +36,7 @@
         public decimal GetTransactionAmountToUpdate(decimal existingAmount) => this._consoleHelper.ReadPositiveDecimal($"Enter the transaction amount [Existing: {existingAmount}] (Press Enter to keep current): ", isOptional: true) ?? existingAmount;
 
         /// <inheritdoc />
-        public TransactionType GetTransactionTypeChoice(TransactionType? existingType = null)
+        public TransactionType GetTransactionType(TransactionType? existingType = null)
         {
             List<string> typeChoices = new List<string>
             {
@@ -48,7 +48,7 @@
                 typeChoices.Insert(0, $"Keep current ({existingType.Value})");
             }
 
-            int index = this._consoleHelper.ReadSelection("Select the cash flow type:", typeChoices);
+            int index = this._consoleHelper.ReadSelection("Select the transaction type:", typeChoices);
             if (existingType.HasValue)
             {
                 if (index == 1)
@@ -60,6 +60,18 @@
             }
 
             return (TransactionType)index;
+        }
+
+        /// <inheritdoc />
+        public FilterType GetFilterTypeChoice()
+        {
+            List<string> filterChoices = new List<string>
+            {
+                "Transaction Type",
+                "Category",
+            };
+            int filterIndex = this._consoleHelper.ReadSelection("Select the filtering parameter:", filterChoices);
+            return (FilterType)filterIndex;
         }
 
         /// <inheritdoc />
@@ -218,9 +230,21 @@
         }
 
         /// <inheritdoc />
+        public void DisplayFilterHeader()
+        {
+            this._consoleHelper.PrintHeader("FILTER TRANSACTIONS");
+        }
+
+        /// <inheritdoc />
         public void DisplayReportHeader()
         {
             this._consoleHelper.PrintHeader("FINANCIAL INSIGHTS & REPORT");
+        }
+
+        /// <inheritdoc />
+        public void DisplaySortHeader()
+        {
+            this._consoleHelper.PrintHeader("SORT TRANSACTIONS");
         }
 
         /// <inheritdoc />
@@ -263,6 +287,30 @@
             this._consoleIo.WriteLine($"Description: {Markup.Escape(transaction.Description ?? "N/A")}");
         }
 
+        /// <summary>
+        /// Retrieves the field for sorting from the user.
+        /// </summary>
+        /// <returns>The selected SortField based on user input.</returns>
+        public SortField GetSortField()
+        {
+            List<string> choices = new List<string>()
+            {
+                "Amount",
+                "Date",
+            };
+
+            int index = this._consoleHelper.ReadSelection("Select the field to Sort By: ", choices);
+
+            return (SortField)(index + 1);
+        }
+
+        /// <inheritdoc />
+        public void DisplayFilteredTable(IReadOnlyList<Transaction> transactions)
+        {
+            this._consoleHelper.PrintSubHeader("Filtered Transactions");
+            this.DisplayAsTable(transactions);
+        }
+
         /// <inheritdoc />
         public void DisplayAsTable(IReadOnlyList<Transaction> transactions)
         {
@@ -275,6 +323,7 @@
             var table = new Table()
                 .Border(TableBorder.Rounded)
                 .Title("[bold cyan]ALL TRANSACTIONS [/]")
+                .ShowRowSeparators()
                 .Caption($"Total Records: {transactions.Count}");
 
             table.AddColumn(new TableColumn("[bold]ID[/]").Centered());
@@ -395,8 +444,12 @@
                 "2. View all transactions",
                 "3. Update an existing transaction",
                 "4. Delete a transaction",
-                "5. Generate Insights and Report",
-                "6. Exit the application",
+                "5. Filter transactions",
+                "6. Sort Transactions",
+                "7. Search Transactions",
+                "8. Display Report",
+                "9. Generate Report File",
+                "10. Exit the application",
             };
 
             return this._consoleHelper.ReadSelection("Select an operation to run:", choices);
@@ -418,8 +471,12 @@
             table.AddRow("2", "View Transactions", "Displays all recorded transactions in a dashboard.");
             table.AddRow("3", "Update Transaction", "Modifies the details of an existing transaction.");
             table.AddRow("4", "Delete Transaction", "Permanently removes a transaction record.");
-            table.AddRow("5", "Generate Report", "Displays financial insights and net balance summary.");
-            table.AddRow("6", "Exit", "Exits the Application.");
+            table.AddRow("5", "Filter Transactions", "Filters transactions by transaction type or category.");
+            table.AddRow("6", "Sort Transactions", "Sort transactions by amount, date or category.");
+            table.AddRow("7", "Search Transactions", "Search by any fields of the transaction.");
+            table.AddRow("8", "Display Report", "Displays financial insights and net balance summary.");
+            table.AddRow("9", "Generate Report File", "Generates financial insights and net balance summary as a file.");
+            table.AddRow("10", "Exit", "Exits the Application.");
 
             AnsiConsole.Write(table);
             this._consoleHelper.WriteLine(string.Empty);

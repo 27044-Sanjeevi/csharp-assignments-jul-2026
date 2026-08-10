@@ -1,12 +1,19 @@
 ﻿namespace Assignment5ExpenseTrackerEnhanced.Models.DTOs
 {
+    using System;
     using Assignment5ExpenseTrackerEnhanced.Models.Enums;
 
     /// <summary>
-    /// Serves as a data transfer object for handling transaction inputs across application tiers.
+    /// Serves as a data transfer object carrying modification constraints for a transaction record.
     /// </summary>
-    internal class TransactionInputDto
+    internal class TransactionUpdateDto
     {
+        /// <summary>
+        /// Gets the unique identifier of the transaction record being modified.
+        /// </summary>
+        /// <value name="Id">Unique identifier of the transaction.</value>
+        public Guid Id { get; init; }
+
         /// <summary>
         /// Gets the amount involved in the transaction.
         /// </summary>
@@ -14,7 +21,13 @@
         public decimal Amount { get; init; }
 
         /// <summary>
-        /// Gets the flow type of the transaction.
+        /// Gets the timestamp of when the transaction occurred.
+        /// </summary>
+        /// <value name="TimeStamp">Timestamp of the transaction.</value>
+        public DateTime TimeStamp { get; init; }
+
+        /// <summary>
+        /// Gets the cash flow type of the transaction.
         /// </summary>
         /// <value name="Type">Type of the flow involved in transaction.</value>
         public TransactionType Type { get; init; }

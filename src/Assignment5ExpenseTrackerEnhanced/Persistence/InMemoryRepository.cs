@@ -65,6 +65,42 @@
             return true;
         }
 
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> SortByAmount()
+        {
+            return this._transactions.OrderBy(t => t.Amount).ToList();
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByTransactionType(TransactionType type)
+        {
+            List<Transaction> transactions = new List<Transaction>();
+            foreach (var transaction in this.GetAll())
+            {
+                if (transaction.Type == type)
+                {
+                    transactions.Add(transaction);
+                }
+            }
+
+            return transactions;
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category)
+        {
+            List<Transaction> transactions = new List<Transaction>();
+            foreach (var transaction in this.GetAll())
+            {
+                if (transaction.Category == category)
+                {
+                    transactions.Add(transaction);
+                }
+            }
+
+            return transactions;
+        }
+
         /// <summary>
         /// Creates a deep copy of all transactions.
         /// </summary>
