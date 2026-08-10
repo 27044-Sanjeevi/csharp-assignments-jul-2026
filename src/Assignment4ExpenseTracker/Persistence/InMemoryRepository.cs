@@ -41,7 +41,7 @@
         public bool Update(Transaction transaction)
         {
             ArgumentNullException.ThrowIfNull(transaction, nameof(transaction));
-            int index = this._transactions.FindIndex(t => t.Id == transaction.Id);
+            int index = this.GetIndexById(transaction.Id);
             if (index == -1)
             {
                 return false;
@@ -54,7 +54,7 @@
         /// <inheritdoc />
         public bool Delete(Guid id)
         {
-            int index = this._transactions.FindIndex(t => t.Id == id);
+            int index = this.GetIndexById(id);
             if (index == -1)
             {
                 return false;
@@ -62,6 +62,16 @@
 
             this._transactions.RemoveAt(index);
             return true;
+        }
+
+        /// <summary>
+        /// Centralised single-source lookup helper to find an internal array index by Guid.
+        /// </summary>
+        /// <param name="id">The unique identifier of the transaction.</param>
+        /// <returns>An integer representing the index of the transaction in the List.</returns>
+        private int GetIndexById(Guid id)
+        {
+            return this._transactions.FindIndex(t => t.Id == id);
         }
 
         /// <summary>
