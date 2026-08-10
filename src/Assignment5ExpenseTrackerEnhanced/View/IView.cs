@@ -74,6 +74,12 @@
         void DisplayAllTransactionsHeader();
 
         /// <summary>
+        /// Retrieves the keyword to be searched across all the transactions from the user.
+        /// </summary>
+        /// <returns>The string containing the keyword to be searched.</returns>
+        public string GetSearchKeyword();
+
+        /// <summary>
         /// Retrieves the sort field for the current context.
         /// </summary>
         /// <returns>A SortField object representing the sort criteria.</returns>

@@ -50,6 +50,18 @@
         IReadOnlyList<Transaction> SortByAmount();
 
         /// <summary>
+        /// Sorts transactions in chronological order.
+        /// </summary>
+        /// <returns>A read-only list of transactions sorted by date.</returns>
+        IReadOnlyList<Transaction> SortByDate();
+
+        /// <summary>
+        /// Retrieves the count of transactions in the repository.
+        /// </summary>
+        /// <returns>An integer representing the count of transactions in the repository.</returns>
+        int GetTransactionCount();
+
+        /// <summary>
         /// Filters transactions based on the specified flow type.
         /// </summary>
         /// <param name="type">The type to filter.</param>

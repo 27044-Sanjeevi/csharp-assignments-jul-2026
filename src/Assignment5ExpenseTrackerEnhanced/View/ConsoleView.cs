@@ -269,6 +269,12 @@
             }
         }
 
+        /// <inheritdoc />
+        public string GetSearchKeyword()
+        {
+            return this._consoleHelper.ReadString("Enter the keyword to search across all your transactions : ")?.Trim().ToLower() ?? string.Empty;
+        }
+
         /// <summary>
         /// Displays the details of a given transaction.
         /// </summary>

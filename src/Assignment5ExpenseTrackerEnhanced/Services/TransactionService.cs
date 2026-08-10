@@ -126,6 +126,18 @@
         }
 
         /// <inheritdoc />
+        public IReadOnlyList<Transaction> SortTransactionsByDate()
+        {
+            return this._repository.SortByDate();
+        }
+
+        /// <inheritdoc />
+        public int GetTransactionCount()
+        {
+            return this._repository.GetTransactionCount();
+        }
+
+        /// <inheritdoc />
         public ReportDto GenerateFinancialReport()
         {
             IReadOnlyList<Transaction> transactions = this._repository.GetAll().ToList();

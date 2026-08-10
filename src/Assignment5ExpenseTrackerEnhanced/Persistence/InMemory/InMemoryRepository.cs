@@ -1,7 +1,8 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Persistence
+﻿namespace Assignment5ExpenseTrackerEnhanced.Persistence.InMemory
 {
     using Assignment5ExpenseTrackerEnhanced.Models;
     using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+    using Assignment5ExpenseTrackerEnhanced.Persistence;
 
     /// <summary>
     /// Provides an in-memory repository for storing and managing transactions.
@@ -69,6 +70,18 @@
         public IReadOnlyList<Transaction> SortByAmount()
         {
             return this._transactions.OrderBy(t => t.Amount).ToList();
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> SortByDate()
+        {
+            return this._transactions.OrderBy(t => t.TimeStamp).ToList();
+        }
+
+        /// <inheritdoc />
+        public int GetTransactionCount()
+        {
+            return this._transactions.Count;
         }
 
         /// <inheritdoc />

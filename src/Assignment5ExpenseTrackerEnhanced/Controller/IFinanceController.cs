@@ -43,6 +43,11 @@
         void SortTransactions();
 
         /// <summary>
+        /// Searches for a keyword across all the transaction records.
+        /// </summary>
+        void SearchTransactions();
+
+        /// <summary>
         /// Generates and displays financial insights and reports.
         /// </summary>
         void GenerateReport();

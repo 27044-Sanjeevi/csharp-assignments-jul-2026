@@ -51,7 +51,7 @@
                     this.SortTransactions();
                     break;
                 case 7:
-                    // this.SearchTransactions();
+                    this.SearchTransactions();
                     break;
                 case 8:
                     // this.DisplayReport();
@@ -208,7 +208,7 @@
         public void SortTransactions()
         {
             this._consoleView.DisplaySortHeader();
-            IReadOnlyList<Transaction> sortedTransactions;
+            IReadOnlyList<Transaction> sortedTransactions = new List<Transaction>();
 
             SortField sortField = this._consoleView.GetSortField();
 
@@ -216,7 +216,6 @@
             {
                 sortedTransactions = this._transactionService.SortTransactionsByAmount();
             }
-
             else if (sortField == SortField.Date)
             {
                 sortedTransactions = this._transactionService.SortTransactionsByDate();
@@ -229,6 +228,29 @@
             }
 
             this._consoleView.DisplayAsTable(sortedTransactions);
+        }
+
+        /// <inheritdoc />
+        public void SearchTransactions()
+        {
+            IReadOnlyList<Transaction> results = new List<Transaction>();
+
+            if (this.GetAllTransactionsCount() <= 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
+
+            string keyword = this._consoleView.GetSearchKeyword();
+            results = this._transactionService.GetAllTransactions().Where(t =>
+            t.TimeStamp.ToString("yyyy-MM-dd HH:mm").Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+            (t.Description != null && t.Description.Contains(keyword, StringComparison.OrdinalIgnoreCase)) ||
+            t.Amount.ToString().Equals(keyword) ||
+            t.Category.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+            t.Type.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+            t.Method.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            this._consoleView.DisplayAsTable(results);
         }
 
         /// <inheritdoc />
@@ -262,6 +284,15 @@
 
             int targetIndex = this._consoleView.GetIndexFromTable(transactions.Count);
             return transactions[targetIndex];
+        }
+
+        /// <summary>
+        /// Retrieves the count of transactions in the repository.
+        /// </summary>
+        /// <returns>An integer representing the count of transactions in the repository.</returns>
+        private int GetAllTransactionsCount()
+        {
+            return this._transactionService.GetTransactionCount();
         }
     }
 }
