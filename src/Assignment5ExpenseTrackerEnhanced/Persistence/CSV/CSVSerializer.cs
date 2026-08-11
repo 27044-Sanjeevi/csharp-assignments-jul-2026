@@ -1,4 +1,7 @@
 ﻿using Assignment5ExpenseTrackerEnhanced.Models;
+using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
+using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+using Spectre.Console;
 
 namespace Assignment5ExpenseTrackerEnhanced.Persistence.CSV
 {
@@ -10,29 +13,32 @@ namespace Assignment5ExpenseTrackerEnhanced.Persistence.CSV
         /// <inheritdoc />
         public string Serialize(Transaction transaction)
         {
-            return $"{transaction.Id}, " +
-                $"{transaction.Amount}, " +
-                $"{transaction.Type}, " +
-                $"{transaction.Category}, " +
-                $"{transaction.Method}, " +
-                $"{transaction.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss")}, " +
+            return $"{transaction.Id}," +
+                $"{transaction.Amount}," +
+                $"{transaction.Type}," +
+                $"{transaction.Category}," +
+                $"{transaction.Method}," +
+                $"{transaction.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss")}," +
                 $"{transaction.Description}";
         }
 
-        public Transaction DeSerialize(string csv)
+        /// <inheritdoc />
+        public Transaction DeSerialize(string csvText)
         {
-            List<string> fields = csv.Split(',');
+            string[] fields = csvText.Split(',');
 
-            return new Transaction
+            TransactionUpdateDto transactionUpdateDto = new TransactionUpdateDto()
             {
-                Id = int.fields[0],
-                Amount = fields[1],
-                Type = fields[0],
-                Category = fields[1],
-                Method = fields[0],
-                TimeStamp = fields[1],
-                Description = fields[0],
+                Id = Guid.Parse(fields[0]),
+                Amount = decimal.Parse(fields[1]),
+                Type = (TransactionType)Enum.Parse(typeof(TransactionType), fields[2]),
+                Category = (TransactionCategory)Enum.Parse(typeof(TransactionCategory), fields[3]),
+                Method = (PaymentMethod)Enum.Parse(typeof(PaymentMethod), fields[4]),
+                TimeStamp = DateTime.Parse(fields[5]),
+                Description = fields[6],
             };
+
+            return new Transaction(transactionUpdateDto);
         }
     }
 }

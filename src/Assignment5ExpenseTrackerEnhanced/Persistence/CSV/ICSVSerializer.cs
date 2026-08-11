@@ -1,4 +1,5 @@
 ﻿using Assignment5ExpenseTrackerEnhanced.Models;
+using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
 
 namespace Assignment5ExpenseTrackerEnhanced.Persistence.CSV
 {
@@ -18,7 +19,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Persistence.CSV
         /// Deserializes the specified string in CSV format into its original object representation.
         /// </summary>
         /// <param name="csv">The serialized string to deserialize.</param>
-        /// <returns>The deserialized object as a string.</returns>
+        /// <returns>The deserialized object.</returns>
         Transaction DeSerialize(string csv);
     }
 }

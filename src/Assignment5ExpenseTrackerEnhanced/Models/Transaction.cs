@@ -1,5 +1,7 @@
 ﻿namespace Assignment5ExpenseTrackerEnhanced.Models
 {
+    using System.Transactions;
+    using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
     using Assignment5ExpenseTrackerEnhanced.Models.Enums;
 
     /// <summary>
@@ -46,6 +48,22 @@
             this.Method = transaction.Method;
             this.TimeStamp = transaction.TimeStamp;
             this.Description = transaction.Description;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Transaction"/> class.
+        /// identifier.
+        /// </summary>
+        /// <param name="transactionUpdateDto">An object containing the updated values for the transaction.</param>
+        public Transaction(TransactionUpdateDto transactionUpdateDto)
+        {
+            this.Id = transactionUpdateDto.Id;
+            this.Amount = transactionUpdateDto.Amount;
+            this.Type = transactionUpdateDto.Type;
+            this.Category = transactionUpdateDto.Category;
+            this.Method = transactionUpdateDto.Method;
+            this.TimeStamp = transactionUpdateDto.TimeStamp;
+            this.Description = transactionUpdateDto.Description;
         }
 
         /// <summary>
