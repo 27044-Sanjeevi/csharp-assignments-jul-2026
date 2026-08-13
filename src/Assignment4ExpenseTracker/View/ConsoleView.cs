@@ -170,7 +170,7 @@
         }
 
         /// <inheritdoc />
-        public void DisplaySuccessfulAdd()
+        public void DisplayAddSuccessful()
         {
             this._consoleHelper.DisplaySuccessMessage("Transaction Added Successfully.");
         }

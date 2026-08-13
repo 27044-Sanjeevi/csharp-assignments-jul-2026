@@ -85,7 +85,7 @@
             }
             else
             {
-                this._consoleView.DisplaySuccessfulAdd();
+                this._consoleView.DisplayAddSuccessful();
             }
         }
 

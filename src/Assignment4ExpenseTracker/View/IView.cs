@@ -112,7 +112,7 @@
         /// <summary>
         /// Displays Message on successful addition of transaction.
         /// </summary>
-        void DisplaySuccessfulAdd();
+        void DisplayAddSuccessful();
 
         /// <summary>
         /// Prompts the user to select a row number within the specified range.
