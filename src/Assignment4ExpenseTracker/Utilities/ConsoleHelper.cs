@@ -165,7 +165,7 @@
         {
             this.WriteColored(message, ConsoleColor.Red);
         }
-        
+
         /// <summary>
         /// Displays the success message in green color.
         /// </summary>

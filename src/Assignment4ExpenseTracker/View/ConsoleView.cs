@@ -383,10 +383,8 @@
         /// <summary>
         /// Prompts the user continuously using arrow keys to select a menu option.
         /// </summary>
-        /// <param name="min">The minimum valid choice.</param>
-        /// <param name="max">The maximum valid choice.</param>
         /// <returns>A valid choice integer corresponding to the selection index.</returns>
-        public int ReadChoice(int min, int max)
+        public int ReadChoice()
         {
             var choices = new List<string>
             {

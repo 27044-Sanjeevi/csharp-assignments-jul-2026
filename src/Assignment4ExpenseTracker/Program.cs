@@ -16,8 +16,7 @@
         /// <summary>
         /// Main entry point of the program. Initializes dependencies and runs the controller.
         /// </summary>
-        /// <param name="args">Optional CLI arguments.</param>
-        public static void Main(string[] args)
+        public static void Main()
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8; // Used for rendering the Rupees symbol.
 
