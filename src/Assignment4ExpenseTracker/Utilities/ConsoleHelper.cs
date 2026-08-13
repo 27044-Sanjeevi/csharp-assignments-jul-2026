@@ -165,6 +165,15 @@
         {
             this.WriteColored(message, ConsoleColor.Red);
         }
+        
+        /// <summary>
+        /// Displays the success message in green color.
+        /// </summary>
+        /// <param name="message">The message to be displayed,</param>
+        public void DisplaySuccessMessage(string message)
+        {
+            this.WriteColored($"\n[SUCCESS] {message}\n", ConsoleColor.Green);
+        }
 
         /// <summary>
         /// Prints a goodbye message.

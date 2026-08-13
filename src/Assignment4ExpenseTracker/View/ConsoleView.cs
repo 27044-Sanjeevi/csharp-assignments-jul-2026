@@ -166,19 +166,19 @@
         /// <inheritdoc />
         public void DisplayUpdateSuccessful()
         {
-            this._consoleHelper.WriteColored("\n[SUCCESS] Transaction updated successfully.\n", ConsoleColor.Green);
+            this._consoleHelper.DisplaySuccessMessage("Transaction Updated successfully.");
         }
 
         /// <inheritdoc />
         public void DisplaySuccessfulAdd()
         {
-            this._consoleHelper.WriteColored("\n[SUCCESS] Transaction Added Successfully.", ConsoleColor.Green);
+            this._consoleHelper.DisplaySuccessMessage("Transaction Added Successfully.");
         }
 
         /// <inheritdoc />
         public void DisplayDeleteSuccessful()
         {
-            this._consoleHelper.WriteColored("\n [SUCCESS] Contact Deleted Successfully.", ConsoleColor.Green);
+            this._consoleHelper.DisplaySuccessMessage("Transaction Deleted Successfully.");
         }
 
         /// <inheritdoc />
