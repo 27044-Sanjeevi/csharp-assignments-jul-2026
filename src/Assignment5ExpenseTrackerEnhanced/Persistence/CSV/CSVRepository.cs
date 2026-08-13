@@ -41,8 +41,23 @@ namespace Assignment5ExpenseTrackerEnhanced.Persistence.CSV
         public bool Delete(Guid id)
         {
             string tempFilePath = this._filePath + ".tmp";
-            IEnumerable<Transaction> transactions = this.GetAll();
-            File.WriteAllLines(tempFilePath, transactions);
+            IEnumerable<Transaction> transactions = this.GetAll().ToList();
+
+            Transaction? transactionToRemove = transactions.FirstOrDefault(t => t.Id == id);
+            if (transactionToRemove == null)
+            {
+                return false;
+            }
+
+            string[] csvText;
+            List<string> lines = new List<string>();
+
+            foreach (Transaction transaction in transactions)
+            {
+                lines.Add();
+            }
+
+            File.WriteAllLines(tempFilePath, csvText);
         }
 
         /// <inheritdoc />
