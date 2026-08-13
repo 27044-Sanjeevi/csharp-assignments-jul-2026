@@ -10,27 +10,27 @@
         /// </summary>
         /// <param name="choice">The menu option selected for transaction operations.</param>
         /// <returns>true if the user chose to exit; otherwise, false.</returns>
-        bool HandleTransactionMenu(int choice);
+        bool HandleMenu(int choice);
 
         /// <summary>
         /// Adds a transaction using user-provided details.
         /// </summary>
-        void AddTransaction();
+        void Add();
 
         /// <summary>
         /// Updates an existing transaction.
         /// </summary>
-        void UpdateTransaction();
+        void Update();
 
         /// <summary>
         /// Displays all the transactions in a table.
         /// </summary>
-        void ViewAllTransactions();
+        void ViewAll();
 
         /// <summary>
         /// Deletes an existing transaction from the repository.
         /// </summary>
-        void DeleteTransaction();
+        void Delete();
 
         /// <summary>
         /// Generates and displays financial insights and reports.

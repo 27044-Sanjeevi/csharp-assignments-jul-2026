@@ -28,21 +28,21 @@
         }
 
         /// <inheritdoc />
-        public bool HandleTransactionMenu(int choice)
+        public bool HandleMenu(int choice)
         {
             switch (choice)
             {
                 case 1:
-                    this.AddTransaction();
+                    this.Add();
                     break;
                 case 2:
-                    this.ViewAllTransactions();
+                    this.ViewAll();
                     break;
                 case 3:
-                    this.UpdateTransaction();
+                    this.Update();
                     break;
                 case 4:
-                    this.DeleteTransaction();
+                    this.Delete();
                     break;
                 case 5:
                     this.GenerateReport();
@@ -57,7 +57,7 @@
         }
 
         /// <inheritdoc />
-        public void AddTransaction()
+        public void Add()
         {
             this._consoleView.DisplayAddHeader();
             decimal amount = this._consoleView.GetTransactionAmount();
@@ -90,7 +90,7 @@
         }
 
         /// <inheritdoc />
-        public void UpdateTransaction()
+        public void Update()
         {
             this._consoleView.DisplayUpdateHeader();
             Transaction? selectedRecord = this.GetTransactionByIndex();
@@ -139,7 +139,7 @@
         }
 
         /// <inheritdoc />
-        public void ViewAllTransactions()
+        public void ViewAll()
         {
             this._consoleView.DisplayAllTransactionsHeader();
             IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
@@ -148,7 +148,7 @@
         }
 
         /// <inheritdoc />
-        public void DeleteTransaction()
+        public void Delete()
         {
             this._consoleView.DisplayDeleteHeader();
 

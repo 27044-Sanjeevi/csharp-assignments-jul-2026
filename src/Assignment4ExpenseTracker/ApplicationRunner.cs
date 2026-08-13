@@ -40,7 +40,7 @@
                     int choice = this._view.ReadChoice(MinMenuChoice, MaxMenuChoice);
                     this._view.ClearScreen();
 
-                    exit = this._controller.HandleTransactionMenu(choice);
+                    exit = this._controller.HandleMenu(choice);
 
                     if (!exit)
                     {
