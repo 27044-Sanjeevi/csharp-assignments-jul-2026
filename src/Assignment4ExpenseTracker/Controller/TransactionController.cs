@@ -143,6 +143,11 @@
         {
             this._consoleView.DisplayAllTransactionsHeader();
             IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
+            if (transactions == null || transactions.Count == 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
 
             this._consoleView.DisplayAsTable(transactions);
         }
