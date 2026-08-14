@@ -8,9 +8,6 @@
     /// </summary>
     internal class ApplicationRunner
     {
-        private const int MinMenuChoice = 1;
-        private const int MaxMenuChoice = 7;
-
         private readonly IView _view;
         private readonly ITransactionController _controller;
 
@@ -37,7 +34,7 @@
                 {
                     this._view.ClearScreen();
                     this._view.ShowMainMenu();
-                    int choice = this._view.ReadChoice(MinMenuChoice, MaxMenuChoice);
+                    int choice = this._view.ReadChoice();
                     this._view.ClearScreen();
 
                     exit = this._controller.HandleMenu(choice);
