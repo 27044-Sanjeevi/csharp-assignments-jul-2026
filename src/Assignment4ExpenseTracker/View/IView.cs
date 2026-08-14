@@ -156,10 +156,8 @@
         /// <summary>
         /// Prompts the user to make a menu selection.
         /// </summary>
-        /// <param name="min">The minimum selection choice index.</param>
-        /// <param name="max">The maximum selection choice index.</param>
         /// <returns>The index of the choice.</returns>
-        int ReadChoice(int min, int max);
+        int ReadChoice();
 
         /// <summary>
         /// Pauses execution and prompts the user to return to the main screen.
