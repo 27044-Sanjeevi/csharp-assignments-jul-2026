@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.Services.Validation
+namespace Assignment4ExpenseTracker.Services.Validation
 {
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.Enums;
@@ -77,6 +77,9 @@
             {
                 return category == TransactionCategory.Salary ||
                        category == TransactionCategory.Investment ||
+                       category == TransactionCategory.Freelance ||
+                       category == TransactionCategory.Business ||
+                       category == TransactionCategory.Gifts ||
                        category == TransactionCategory.MiscellaneousIncome;
             }
 
@@ -88,6 +91,8 @@
                        category == TransactionCategory.Rent ||
                        category == TransactionCategory.Food ||
                        category == TransactionCategory.Shopping ||
+                       category == TransactionCategory.Healthcare ||
+                       category == TransactionCategory.Education ||
                        category == TransactionCategory.MiscellaneousExpense;
             }
 

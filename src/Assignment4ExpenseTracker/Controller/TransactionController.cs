@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.Controller
+namespace Assignment4ExpenseTracker.Controller
 {
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.DTOs;
@@ -93,8 +93,7 @@
         public void Update()
         {
             this._consoleView.DisplayUpdateHeader();
-            Transaction? selectedRecord = this.GetTransactionByIndex();
-            if (selectedRecord == null)
+            if (!this.TryGetSelectedTransaction(out Transaction? selectedRecord) || selectedRecord == null)
             {
                 return;
             }
@@ -157,15 +156,16 @@
         {
             this._consoleView.DisplayDeleteHeader();
 
-            Transaction? selectedRecord = this.GetTransactionByIndex();
-
-            if (selectedRecord == null)
+            if (!this.TryGetSelectedTransaction(out Transaction? selectedRecord) || selectedRecord == null)
             {
                 return;
             }
 
-            this._transactionService.DeleteTransaction(selectedRecord.Id);
-            this._consoleView.DisplayDeleteSuccessful();
+            if (this._consoleView.ConfirmDelete(selectedRecord))
+            {
+                this._transactionService.DeleteTransaction(selectedRecord.Id);
+                this._consoleView.DisplayDeleteSuccessful();
+            }
         }
 
         /// <inheritdoc />
@@ -199,6 +199,17 @@
 
             int targetIndex = this._consoleView.GetIndexFromTable(transactions.Count);
             return transactions[targetIndex];
+        }
+
+        /// <summary>
+        /// Reusable flow helper to retrieve a selected transaction by index and perform validation.
+        /// </summary>
+        /// <param name="selectedRecord">The retrieved transaction if found; otherwise, null.</param>
+        /// <returns>True if a transaction was successfully selected; otherwise, false.</returns>
+        private bool TryGetSelectedTransaction(out Transaction? selectedRecord)
+        {
+            selectedRecord = this.GetTransactionByIndex();
+            return selectedRecord != null;
         }
     }
 }

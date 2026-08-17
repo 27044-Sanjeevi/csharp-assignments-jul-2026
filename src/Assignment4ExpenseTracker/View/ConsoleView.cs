@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.View
+namespace Assignment4ExpenseTracker.View
 {
     using System.Linq;
     using Assignment4ExpenseTracker.IO;
@@ -12,6 +12,10 @@
     /// </summary>
     internal class ConsoleView : IView
     {
+        private const int ChoiceToZeroBasedOffset = 1;
+        private const int KeepCurrentChoiceIndex = 1;
+        private const int ChoiceWithKeepCurrentOffset = ChoiceToZeroBasedOffset + KeepCurrentChoiceIndex;
+
         private readonly IConsoleIO _consoleIo;
         private readonly ConsoleHelper _consoleHelper;
 
@@ -49,12 +53,12 @@
             int index = this._consoleHelper.ReadSelection("Select the cash flow type:", typeChoices);
             if (existingType.HasValue)
             {
-                if (index == 1)
+                if (index == KeepCurrentChoiceIndex)
                 {
                     return existingType.Value;
                 }
 
-                return (TransactionType)(index - 1);
+                return (TransactionType)(index - ChoiceToZeroBasedOffset);
             }
 
             return (TransactionType)index;
@@ -78,12 +82,12 @@
             int paymentIndex = this._consoleHelper.ReadSelection("Select the payment method:", paymentChoices);
             if (existingMethod.HasValue)
             {
-                if (paymentIndex == 1)
+                if (paymentIndex == KeepCurrentChoiceIndex)
                 {
                     return existingMethod.Value;
                 }
 
-                return (PaymentMethod)(paymentIndex - 1);
+                return (PaymentMethod)(paymentIndex - ChoiceToZeroBasedOffset);
             }
 
             return (PaymentMethod)paymentIndex;
@@ -96,6 +100,9 @@
             {
                 TransactionCategory.Salary,
                 TransactionCategory.Investment,
+                TransactionCategory.Freelance,
+                TransactionCategory.Business,
+                TransactionCategory.Gifts,
                 TransactionCategory.MiscellaneousIncome,
             };
             List<string> choices = incomeCategories.Select(c => c.ToString()).ToList();
@@ -107,15 +114,15 @@
             int categoryIndex = this._consoleHelper.ReadSelection("Select the income category:", choices);
             if (existingCategory.HasValue)
             {
-                if (categoryIndex == 1)
+                if (categoryIndex == KeepCurrentChoiceIndex)
                 {
                     return existingCategory.Value;
                 }
 
-                return incomeCategories[categoryIndex - 2];
+                return incomeCategories[categoryIndex - ChoiceWithKeepCurrentOffset];
             }
 
-            return incomeCategories[categoryIndex - 1];
+            return incomeCategories[categoryIndex - ChoiceToZeroBasedOffset];
         }
 
         /// <inheritdoc />
@@ -129,6 +136,8 @@
                 TransactionCategory.Rent,
                 TransactionCategory.Food,
                 TransactionCategory.Shopping,
+                TransactionCategory.Healthcare,
+                TransactionCategory.Education,
                 TransactionCategory.MiscellaneousExpense,
             };
             List<string> choices = expenseCategories.Select(c => c.ToString()).ToList();
@@ -140,15 +149,15 @@
             int categoryIndex = this._consoleHelper.ReadSelection("Select the expense category:", choices);
             if (existingCategory.HasValue)
             {
-                if (categoryIndex == 1)
+                if (categoryIndex == KeepCurrentChoiceIndex)
                 {
                     return existingCategory.Value;
                 }
 
-                return expenseCategories[categoryIndex - 2];
+                return expenseCategories[categoryIndex - ChoiceWithKeepCurrentOffset];
             }
 
-            return expenseCategories[categoryIndex - 1];
+            return expenseCategories[categoryIndex - ChoiceToZeroBasedOffset];
         }
 
         /// <inheritdoc />
@@ -164,21 +173,26 @@
         }
 
         /// <inheritdoc />
-        public void DisplayUpdateSuccessful()
-        {
-            this._consoleHelper.DisplaySuccessMessage("Transaction Updated successfully.");
-        }
+        public void DisplayAddSuccessful() => this._consoleHelper.DisplaySuccessMessage("Transaction Added Successfully.");
 
         /// <inheritdoc />
-        public void DisplayAddSuccessful()
-        {
-            this._consoleHelper.DisplaySuccessMessage("Transaction Added Successfully.");
-        }
+        public void DisplayUpdateSuccessful() => this._consoleHelper.DisplaySuccessMessage("Transaction Updated successfully.");
 
         /// <inheritdoc />
-        public void DisplayDeleteSuccessful()
+        public void DisplayDeleteSuccessful() => this._consoleHelper.DisplaySuccessMessage("Transaction Deleted Successfully.");
+
+        /// <inheritdoc />
+        public bool ConfirmDelete(Transaction transaction)
         {
-            this._consoleHelper.DisplaySuccessMessage("Transaction Deleted Successfully.");
+            ArgumentNullException.ThrowIfNull(transaction, nameof(transaction));
+            List<string> choices = new List<string>()
+            {
+                "No, Cancel deletion",
+                "Yes, permanently Delete",
+            };
+
+            int choiceIndex = this._consoleHelper.ReadSelection($"Are you sure you want to permanently delete this {transaction.Type} transaction of {transaction.Amount:C}?", choices);
+            return choiceIndex == 2;
         }
 
         /// <inheritdoc />

@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker
+namespace Assignment4ExpenseTracker
 {
     using Assignment4ExpenseTracker.Controller;
     using Assignment4ExpenseTracker.View;
@@ -49,6 +49,10 @@
                     this._view.HandleError(ex.Message);
                 }
                 catch (KeyNotFoundException ex)
+                {
+                    this._view.HandleError(ex.Message);
+                }
+                catch (OperationCanceledException ex)
                 {
                     this._view.HandleError(ex.Message);
                 }

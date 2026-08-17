@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.View
+namespace Assignment4ExpenseTracker.View
 {
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.Enums;
@@ -36,6 +36,13 @@
         /// Displayes a success message on successful deletion.
         /// </summary>
         void DisplayDeleteSuccessful();
+
+        /// <summary>
+        /// Prompts the user to confirm deletion of the specified transaction.
+        /// </summary>
+        /// <param name="transaction">The transaction record to be deleted.</param>
+        /// <returns>True if the user confirmed deletion; otherwise, false.</returns>
+        bool ConfirmDelete(Transaction transaction);
 
         /// <summary>
         /// Displays the header for the deletion operation.
