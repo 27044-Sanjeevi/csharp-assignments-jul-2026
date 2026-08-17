@@ -45,7 +45,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
         /// <summary>
         /// Filters transactions based on the selected filter type.
         /// </summary>
-        void FilterTransactions();
+        void Filter();
 
         /// <summary>
         /// Generates and displays financial insights and reports.

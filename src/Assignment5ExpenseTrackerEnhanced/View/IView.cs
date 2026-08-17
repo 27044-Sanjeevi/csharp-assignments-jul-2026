@@ -63,6 +63,11 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         void DisplayFilterHeader();
 
         /// <summary>
+        /// Displays the header for the search operation.
+        /// </summary>
+        void DisplaySearchHeader();
+
+        /// <summary>
         /// Displays the header for the view all operation.
         /// </summary>
         void DisplayAllTransactionsHeader();

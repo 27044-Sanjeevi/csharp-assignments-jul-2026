@@ -45,21 +45,18 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
                     this.Delete();
                     break;
                 case 5:
-                    this.Search();
+                    this.Filter();
                     break;
                 case 6:
-                    this.FilterTransactions();
+                    this.Sort();
                     break;
                 case 7:
-                    this.Sort();
+                    this.Search();
                     break;
                 case 8:
                     this.DisplayReport();
                     break;
                 case 9:
-                    // this.GenerateReportFile();
-                    break;
-                case 10:
                     return true;
                 default:
                     break;
@@ -183,6 +180,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
         /// <inheritdoc />
         public void Search()
         {
+            this._consoleView.DisplaySearchHeader();
             IReadOnlyList<Transaction> results = new List<Transaction>();
 
             if (this.GetAllTransactionsCount() <= 0)
@@ -220,7 +218,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
         }
 
         /// <inheritdoc />
-        public void FilterTransactions()
+        public void Filter()
         {
             this._consoleView.DisplayFilterHeader();
             IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();

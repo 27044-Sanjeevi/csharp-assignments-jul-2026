@@ -198,40 +198,25 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         }
 
         /// <inheritdoc />
-        public void DisplayDeleteHeader()
-        {
-            this._consoleHelper.PrintHeader("DELETE TRANSACTION");
-        }
+        public void DisplayDeleteHeader() => this._consoleHelper.PrintHeader("DELETE TRANSACTION");
 
         /// <inheritdoc />
-        public void DisplayAddHeader()
-        {
-            this._consoleHelper.PrintHeader("ADD NEW TRANSACTION");
-        }
+        public void DisplayAddHeader() => this._consoleHelper.PrintHeader("ADD NEW TRANSACTION");
 
         /// <inheritdoc />
-        public void DisplayUpdateHeader()
-        {
-            this._consoleHelper.PrintHeader("UPDATE TRANSACTION");
-        }
+        public void DisplayUpdateHeader() => this._consoleHelper.PrintHeader("UPDATE TRANSACTION");
 
         /// <inheritdoc />
-        public void DisplayReportHeader()
-        {
-            this._consoleHelper.PrintHeader("FINANCIAL INSIGHTS & REPORT");
-        }
+        public void DisplayReportHeader() => this._consoleHelper.PrintHeader("FINANCIAL INSIGHTS & REPORT");
 
         /// <inheritdoc />
-        public void DisplayAllTransactionsHeader()
-        {
-            this._consoleHelper.PrintHeader("TRANSACTION DASHBOARD");
-        }
+        public void DisplaySearchHeader() => this._consoleHelper.PrintHeader("SEARCH ACROSS TRANSACTIONS");
 
         /// <inheritdoc />
-        public void DisplayFilterHeader()
-        {
-            this._consoleHelper.PrintHeader("FILTER TRANSACTIONS");
-        }
+        public void DisplayAllTransactionsHeader() => this._consoleHelper.PrintHeader("TRANSACTION DASHBOARD");
+
+        /// <inheritdoc />
+        public void DisplayFilterHeader() => this._consoleHelper.PrintHeader("FILTER TRANSACTIONS");
 
         /// <inheritdoc />
         public FilterType GetFilterTypeChoice()
@@ -420,8 +405,7 @@ namespace Assignment5ExpenseTrackerEnhanced.View
                 "6. Sort Transactions",
                 "7. Search Transactions",
                 "8. Display Report",
-                "9. Generate Report File",
-                "10. Exit the application",
+                "9. Exit the application",
             };
 
             return this._consoleHelper.ReadSelection("Select an operation to run:", choices);
@@ -447,8 +431,7 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             table.AddRow("6", "Sort Transactions", "Sort transactions by amount, date or category.");
             table.AddRow("7", "Search Transactions", "Search by any fields of the transaction.");
             table.AddRow("8", "Display Report", "Displays financial insights and net balance summary.");
-            table.AddRow("9", "Generate Report File", "Generates financial insights and net balance summary as a file.");
-            table.AddRow("10", "Exit", "Exits the Application.");
+            table.AddRow("9", "Exit", "Exits the Application.");
 
             AnsiConsole.Write(table);
             this._consoleHelper.WriteLine(string.Empty);
