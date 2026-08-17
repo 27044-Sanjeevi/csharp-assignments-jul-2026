@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines input and output operations for console interactions.
     /// </summary>
-    internal interface IIo
+    internal interface IConsoleIO
     {
         /// <summary>
         /// Reads the next line of characters from the standard input stream.

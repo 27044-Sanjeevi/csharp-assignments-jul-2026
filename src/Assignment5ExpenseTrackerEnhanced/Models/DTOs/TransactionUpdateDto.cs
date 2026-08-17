@@ -27,7 +27,7 @@
         public DateTime TimeStamp { get; init; }
 
         /// <summary>
-        /// Gets the cash flow type of the transaction.
+        /// Gets the flow type of the transaction.
         /// </summary>
         /// <value name="Type">Type of the flow involved in transaction.</value>
         public TransactionType Type { get; init; }

@@ -1,4 +1,4 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Services
+namespace Assignment5ExpenseTrackerEnhanced.Services
 {
     using System;
     using System.Collections.Generic;
@@ -14,14 +14,14 @@
     internal class TransactionService : ITransactionService
     {
         private readonly IRepository _repository;
-        private readonly ITransactionValidation _validator;
+        private readonly TransactionValidation _validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionService"/> class.
         /// </summary>
         /// <param name="repository">The data persistence repository access tier.</param>
         /// <param name="validator">The engine used to enforce data rules.</param>
-        public TransactionService(IRepository repository, ITransactionValidation validator)
+        public TransactionService(IRepository repository, TransactionValidation validator)
         {
             this._repository = repository ?? throw new ArgumentNullException(nameof(repository));
             this._validator = validator ?? throw new ArgumentNullException(nameof(validator));
@@ -102,39 +102,65 @@
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<Transaction> FilterByTransactionType(TransactionType type)
-        {
-            return this._repository.FilterByTransactionType(type);
-        }
-
-        /// <inheritdoc />
-        public IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category)
-        {
-            return this._repository.FilterByCategory(category);
-        }
-
-        /// <inheritdoc />
         public IReadOnlyList<Transaction> GetAllTransactions()
         {
             return this._repository.GetAll().ToList();
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<Transaction> SortTransactionsByAmount()
+        public IReadOnlyList<Transaction> SearchTransactions(TransactionType? type, TransactionCategory? category, PaymentMethod? method, string? keyword)
         {
-            return this._repository.SortByAmount();
+            IEnumerable<Transaction> query = this._repository.GetAll();
+
+            if (type.HasValue)
+            {
+                query = query.Where(t => t.Type == type.Value);
+            }
+
+            if (category.HasValue)
+            {
+                query = query.Where(t => t.Category == category.Value);
+            }
+
+            if (method.HasValue)
+            {
+                query = query.Where(t => t.Method == method.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(t => t.Description != null
+                                         && t.Description.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return query.ToList();
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<Transaction> SortTransactionsByDate()
+        public IReadOnlyList<Transaction> GetSortedTransactions(SortBy sortBy, bool ascending)
         {
-            return this._repository.SortByDate();
-        }
+            List<Transaction> transactions = this._repository.GetAll().ToList();
 
-        /// <inheritdoc />
-        public int GetTransactionCount()
-        {
-            return this._repository.GetTransactionCount();
+            switch (sortBy)
+            {
+                case SortBy.Date:
+                    transactions = ascending
+                        ? transactions.OrderBy(t => t.TimeStamp).ToList()
+                        : transactions.OrderByDescending(t => t.TimeStamp).ToList();
+                    break;
+                case SortBy.Amount:
+                    transactions = ascending
+                        ? transactions.OrderBy(t => t.Amount).ToList()
+                        : transactions.OrderByDescending(t => t.Amount).ToList();
+                    break;
+                case SortBy.Category:
+                    transactions = ascending
+                        ? transactions.OrderBy(t => t.Category.ToString()).ToList()
+                        : transactions.OrderByDescending(t => t.Category.ToString()).ToList();
+                    break;
+            }
+
+            return transactions;
         }
 
         /// <inheritdoc />

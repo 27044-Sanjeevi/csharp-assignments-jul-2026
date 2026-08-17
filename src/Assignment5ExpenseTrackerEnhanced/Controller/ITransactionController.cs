@@ -1,51 +1,46 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Controller
+namespace Assignment5ExpenseTrackerEnhanced.Controller
 {
     /// <summary>
     /// Defines contracts for the main application controller.
     /// </summary>
-    internal interface IFinanceController
+    internal interface ITransactionController
     {
         /// <summary>
         /// Processes a transaction menu selection and invokes the corresponding operation.
         /// </summary>
         /// <param name="choice">The menu option selected for transaction operations.</param>
         /// <returns>true if the user chose to exit; otherwise, false.</returns>
-        bool HandleTransactionMenu(int choice);
+        bool HandleMenu(int choice);
 
         /// <summary>
         /// Adds a transaction using user-provided details.
         /// </summary>
-        void AddTransaction();
+        void Add();
 
         /// <summary>
         /// Updates an existing transaction.
         /// </summary>
-        void UpdateTransaction();
-
-        /// <summary>
-        /// Filters transactions based on the selected filter type.
-        /// </summary>
-        void FilterTransactions();
+        void Update();
 
         /// <summary>
         /// Displays all the transactions in a table.
         /// </summary>
-        void ViewAllTransactions();
+        void ViewAll();
 
         /// <summary>
         /// Deletes an existing transaction from the repository.
         /// </summary>
-        void DeleteTransaction();
+        void Delete();
 
         /// <summary>
-        /// Sorts the transactions by amount or by transaction date.
+        /// Searches and filters transactions by dynamic criteria.
         /// </summary>
-        void SortTransactions();
+        void Search();
 
         /// <summary>
-        /// Searches for a keyword across all the transaction records.
+        /// Sorts and displays transactions by dynamic criteria.
         /// </summary>
-        void SearchTransactions();
+        void Sort();
 
         /// <summary>
         /// Generates and displays financial insights and reports.

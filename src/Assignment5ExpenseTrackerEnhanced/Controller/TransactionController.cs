@@ -1,4 +1,4 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Controller
+namespace Assignment5ExpenseTrackerEnhanced.Controller
 {
     using Assignment5ExpenseTrackerEnhanced.Models;
     using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
@@ -10,56 +10,50 @@
     /// <summary>
     /// Coordinates operations between the View and the Service layer.
     /// </summary>
-    internal class FinanceController : IFinanceController
+    internal class TransactionController : ITransactionController
     {
         private readonly ITransactionService _transactionService;
         private readonly IView _consoleView;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FinanceController"/> class.
+        /// Initializes a new instance of the <see cref="TransactionController"/> class.
         /// </summary>
         /// <param name="transactionService">The service for transaction related operations.</param>
         /// <param name="consoleView">The console view renderer.</param>
         /// <exception cref="ArgumentNullException">Thrown when the argument is null.</exception>
-        public FinanceController(ITransactionService transactionService, IView consoleView)
+        public TransactionController(ITransactionService transactionService, IView consoleView)
         {
             this._transactionService = transactionService ?? throw new ArgumentNullException(nameof(transactionService));
             this._consoleView = consoleView ?? throw new ArgumentNullException(nameof(consoleView));
         }
 
         /// <inheritdoc />
-        public bool HandleTransactionMenu(int choice)
+        public bool HandleMenu(int choice)
         {
             switch (choice)
             {
                 case 1:
-                    this.AddTransaction();
+                    this.Add();
                     break;
                 case 2:
-                    this.ViewAllTransactions();
+                    this.ViewAll();
                     break;
                 case 3:
-                    this.UpdateTransaction();
+                    this.Update();
                     break;
                 case 4:
-                    this.DeleteTransaction();
+                    this.Delete();
                     break;
                 case 5:
-                    this.FilterTransactions();
+                    this.Search();
                     break;
                 case 6:
-                    this.SortTransactions();
+                    this.Sort();
                     break;
                 case 7:
-                    this.SearchTransactions();
+                    this.GenerateReport();
                     break;
                 case 8:
-                    // this.DisplayReport();
-                    break;
-                case 9:
-                    // this.GenerateReportFile();
-                    break;
-                case 10:
                     return true;
                 default:
                     break;
@@ -69,11 +63,11 @@
         }
 
         /// <inheritdoc />
-        public void AddTransaction()
+        public void Add()
         {
             this._consoleView.DisplayAddHeader();
             decimal amount = this._consoleView.GetTransactionAmount();
-            TransactionType transactionType = this._consoleView.GetTransactionType();
+            TransactionType transactionType = this._consoleView.GetTransactionTypeChoice();
             PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod();
             TransactionCategory category = transactionType == TransactionType.Income ?
                                            this._consoleView.GetIncomeCategory() :
@@ -97,12 +91,12 @@
             }
             else
             {
-                this._consoleView.DisplaySuccessfulAdd();
+                this._consoleView.DisplayAddSuccessful();
             }
         }
 
         /// <inheritdoc />
-        public void UpdateTransaction()
+        public void Update()
         {
             this._consoleView.DisplayUpdateHeader();
             Transaction? selectedRecord = this.GetTransactionByIndex();
@@ -112,7 +106,7 @@
             }
 
             decimal amount = this._consoleView.GetTransactionAmountToUpdate(selectedRecord.Amount);
-            TransactionType transactionType = this._consoleView.GetTransactionType(selectedRecord.Type);
+            TransactionType transactionType = this._consoleView.GetTransactionTypeChoice(selectedRecord.Type);
             PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod(selectedRecord.Method);
             TransactionCategory category;
             if (transactionType == selectedRecord.Type)
@@ -151,45 +145,21 @@
         }
 
         /// <inheritdoc />
-        public void FilterTransactions()
+        public void ViewAll()
         {
-            this._consoleView.DisplayFilterHeader();
+            this._consoleView.DisplayAllTransactionsHeader();
             IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
-            if (transactions.Count <= 0)
+            if (transactions == null || transactions.Count == 0)
             {
                 this._consoleView.DisplayTransactionsNotFound();
                 return;
             }
 
-            FilterType filterType = this._consoleView.GetFilterTypeChoice();
-            TransactionType transactionType = this._consoleView.GetTransactionType();
-            if (filterType == FilterType.TransactionType)
-            {
-                transactions = this._transactionService.FilterByTransactionType(transactionType);
-            }
-
-            if (filterType == FilterType.Category)
-            {
-                TransactionCategory category = transactionType == TransactionType.Income ?
-                                           this._consoleView.GetIncomeCategory() :
-                                           this._consoleView.GetExpenseCategory();
-                transactions = this._transactionService.FilterByCategory(category);
-            }
-
-            this._consoleView.DisplayFilteredTable(transactions);
-        }
-
-        /// <inheritdoc />
-        public void ViewAllTransactions()
-        {
-            this._consoleView.DisplayAllTransactionsHeader();
-            IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
-
             this._consoleView.DisplayAsTable(transactions);
         }
 
         /// <inheritdoc />
-        public void DeleteTransaction()
+        public void Delete()
         {
             this._consoleView.DisplayDeleteHeader();
 
@@ -205,50 +175,39 @@
         }
 
         /// <inheritdoc />
-        public void SortTransactions()
+        public void Search()
         {
-            this._consoleView.DisplaySortHeader();
-            IReadOnlyList<Transaction> sortedTransactions = new List<Transaction>();
+            (TransactionType? type, TransactionCategory? category, PaymentMethod? method, string? keyword, bool isCancelled) = this._consoleView.GetSearchCriteria();
 
-            SortField sortField = this._consoleView.GetSortField();
-
-            if (sortField == SortField.Amount)
+            if (isCancelled)
             {
-                sortedTransactions = this._transactionService.SortTransactionsByAmount();
-            }
-            else if (sortField == SortField.Date)
-            {
-                sortedTransactions = this._transactionService.SortTransactionsByDate();
+                return;
             }
 
-            if (sortedTransactions.Count <= 0)
+            IReadOnlyList<Transaction> results = this._transactionService.SearchTransactions(type, category, method, keyword);
+
+            this._consoleView.DisplayAllTransactionsHeader();
+            if (results == null || results.Count == 0)
             {
                 this._consoleView.DisplayTransactionsNotFound();
                 return;
             }
 
-            this._consoleView.DisplayAsTable(sortedTransactions);
+            this._consoleView.DisplayAsTable(results);
         }
 
         /// <inheritdoc />
-        public void SearchTransactions()
+        public void Sort()
         {
-            IReadOnlyList<Transaction> results = new List<Transaction>();
+            (SortBy sortBy, bool ascending) = this._consoleView.GetSortingCriteria();
+            IReadOnlyList<Transaction> results = this._transactionService.GetSortedTransactions(sortBy, ascending);
 
-            if (this.GetAllTransactionsCount() <= 0)
+            this._consoleView.DisplayAllTransactionsHeader();
+            if (results == null || results.Count == 0)
             {
                 this._consoleView.DisplayTransactionsNotFound();
                 return;
             }
-
-            string keyword = this._consoleView.GetSearchKeyword();
-            results = this._transactionService.GetAllTransactions().Where(t =>
-            t.TimeStamp.ToString("yyyy-MM-dd HH:mm").Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-            (t.Description != null && t.Description.Contains(keyword, StringComparison.OrdinalIgnoreCase)) ||
-            t.Amount.ToString().Equals(keyword) ||
-            t.Category.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-            t.Type.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-            t.Method.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
 
             this._consoleView.DisplayAsTable(results);
         }
@@ -263,6 +222,9 @@
                 report.TotalExpense,
                 report.NetBalance,
                 report.TransactionCount);
+
+            IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
+            this._consoleView.DisplayVisualCharts(transactions);
         }
 
         /// <summary>
@@ -284,15 +246,6 @@
 
             int targetIndex = this._consoleView.GetIndexFromTable(transactions.Count);
             return transactions[targetIndex];
-        }
-
-        /// <summary>
-        /// Retrieves the count of transactions in the repository.
-        /// </summary>
-        /// <returns>An integer representing the count of transactions in the repository.</returns>
-        private int GetAllTransactionsCount()
-        {
-            return this._transactionService.GetTransactionCount();
         }
     }
 }

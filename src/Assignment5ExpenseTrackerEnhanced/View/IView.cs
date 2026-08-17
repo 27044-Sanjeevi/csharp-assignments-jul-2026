@@ -1,7 +1,6 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.View
+namespace Assignment5ExpenseTrackerEnhanced.View
 {
     using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
     using Assignment5ExpenseTrackerEnhanced.Models.Enums;
     using Assignment5ExpenseTrackerEnhanced.Services.Validation;
 
@@ -54,19 +53,9 @@
         void DisplayUpdateHeader();
 
         /// <summary>
-        /// Displays the header for the filter operation.
-        /// </summary>
-        void DisplayFilterHeader();
-
-        /// <summary>
         /// Displays the header for the report operation.
         /// </summary>
         void DisplayReportHeader();
-
-        /// <summary>
-        /// Displayes the header for the sort operation.
-        /// </summary>
-        void DisplaySortHeader();
 
         /// <summary>
         /// Displays the header for the view all operation.
@@ -74,23 +63,11 @@
         void DisplayAllTransactionsHeader();
 
         /// <summary>
-        /// Retrieves the keyword to be searched across all the transactions from the user.
-        /// </summary>
-        /// <returns>The string containing the keyword to be searched.</returns>
-        public string GetSearchKeyword();
-
-        /// <summary>
-        /// Retrieves the sort field for the current context.
-        /// </summary>
-        /// <returns>A SortField object representing the sort criteria.</returns>
-        SortField GetSortField();
-
-        /// <summary>
         /// Reads the flow type of the transaction.
         /// </summary>
-        /// <param name="existingType">Holds the existing Flow type of the transaction.</param>
+        /// <param name="existingFlow">Holds the existing Flow type of the transaction.</param>
         /// <returns>The flow type chosen by the user.</returns>
-        TransactionType GetTransactionType(TransactionType? existingType = null);
+        TransactionType GetTransactionTypeChoice(TransactionType? existingFlow = null);
 
         /// <summary>
         /// Reads the current payment method.
@@ -114,12 +91,6 @@
         TransactionCategory GetExpenseCategory(TransactionCategory? existingCategory = null);
 
         /// <summary>
-        /// Retrieves the parameter for filtering the transactions.
-        /// </summary>
-        /// <returns>The parameter to be filtered by.</returns>
-        FilterType GetFilterTypeChoice();
-
-        /// <summary>
         /// Reads the optional description of the transaction from user input.
         /// </summary>
         /// <returns>The description of the transaction as a string.</returns>
@@ -141,7 +112,7 @@
         /// <summary>
         /// Displays Message on successful addition of transaction.
         /// </summary>
-        void DisplaySuccessfulAdd();
+        void DisplayAddSuccessful();
 
         /// <summary>
         /// Prompts the user to select a row number within the specified range.
@@ -150,12 +121,6 @@
         /// <param name="maxIndex">The maximum valid row number for selection.</param>
         /// <returns>The zero-based index of the selected row.</returns>
         int GetIndexFromTable(int maxIndex);
-
-        /// <summary>
-        /// Displays a table of transactions after applying filters.
-        /// </summary>
-        /// <param name="transactions">The filtered list of transactions to display.</param>
-        void DisplayFilteredTable(IReadOnlyList<Transaction> transactions);
 
         /// <summary>
         /// Renders a collection of transaction records as a formatted table grid.
@@ -191,10 +156,8 @@
         /// <summary>
         /// Prompts the user to make a menu selection.
         /// </summary>
-        /// <param name="min">The minimum selection choice index.</param>
-        /// <param name="max">The maximum selection choice index.</param>
         /// <returns>The index of the choice.</returns>
-        int ReadChoice(int min, int max);
+        int ReadChoice();
 
         /// <summary>
         /// Pauses execution and prompts the user to return to the main screen.
@@ -202,9 +165,27 @@
         void PauseAndReturn();
 
         /// <summary>
+        /// Collects search criteria from the user.
+        /// </summary>
+        /// <returns>A tuple containing optional type, category, method, keyword filters, and a cancellation flag.</returns>
+        (TransactionType? type, TransactionCategory? category, PaymentMethod? method, string? keyword, bool isCancelled) GetSearchCriteria();
+
+        /// <summary>
+        /// Collects sorting criteria from the user.
+        /// </summary>
+        /// <returns>A tuple containing the SortBy enum and whether it is ascending.</returns>
+        (SortBy sortBy, bool ascending) GetSortingCriteria();
+
+        /// <summary>
+        /// Renders visualized charts (breakdown/bar) of the transaction data.
+        /// </summary>
+        /// <param name="transactions">The collection of transaction data objects to visualize.</param>
+        void DisplayVisualCharts(IReadOnlyList<Transaction> transactions);
+
+        /// <summary>
         /// Displays an error message.
         /// </summary>
         /// <param name="message">The error message.</param>
-        void DisplayError(string message);
+        void HandleError(string message);
     }
 }

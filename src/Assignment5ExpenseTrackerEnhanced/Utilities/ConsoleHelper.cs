@@ -9,14 +9,14 @@
     /// </summary>
     internal class ConsoleHelper
     {
-        private readonly IIo _consoleIo;
+        private readonly IConsoleIO _consoleIo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleHelper"/> class.
         /// </summary>
         /// <param name="consoleIo">The console I/O wrapper dependency.</param>
         /// <exception cref="ArgumentNullException">Thrown when consoleIo is null.</exception>
-        public ConsoleHelper(IIo consoleIo)
+        public ConsoleHelper(IConsoleIO consoleIo)
         {
             this._consoleIo = consoleIo ?? throw new ArgumentNullException(nameof(consoleIo));
         }
@@ -164,6 +164,15 @@
         public void DisplayError(string message)
         {
             this.WriteColored(message, ConsoleColor.Red);
+        }
+
+        /// <summary>
+        /// Displays the success message in green color.
+        /// </summary>
+        /// <param name="message">The message to be displayed,</param>
+        public void DisplaySuccessMessage(string message)
+        {
+            this.WriteColored($"\n[SUCCESS] {message}\n", ConsoleColor.Green);
         }
 
         /// <summary>

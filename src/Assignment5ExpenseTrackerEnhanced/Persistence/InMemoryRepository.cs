@@ -1,9 +1,6 @@
-namespace Assignment5ExpenseTrackerEnhanced.Persistence.InMemory
+﻿namespace Assignment4ExpenseTracker.Persistence
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Assignment5ExpenseTrackerEnhanced.Models;
+    using Assignment4ExpenseTracker.Models;
 
     /// <summary>
     /// Provides an in-memory repository for storing and managing transactions.

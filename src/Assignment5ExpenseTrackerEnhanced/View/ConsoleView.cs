@@ -1,11 +1,9 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.View
+namespace Assignment5ExpenseTrackerEnhanced.View
 {
     using System.Linq;
     using Assignment5ExpenseTrackerEnhanced.IO;
     using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
     using Assignment5ExpenseTrackerEnhanced.Models.Enums;
-    using Assignment5ExpenseTrackerEnhanced.Services.Validation;
     using Assignment5ExpenseTrackerEnhanced.Utilities;
     using Spectre.Console;
 
@@ -14,7 +12,7 @@
     /// </summary>
     internal class ConsoleView : IView
     {
-        private readonly IIo _consoleIo;
+        private readonly IConsoleIO _consoleIo;
         private readonly ConsoleHelper _consoleHelper;
 
         /// <summary>
@@ -23,7 +21,7 @@
         /// <param name="consoleIo">The IIo implementation used for console input and output.</param>
         /// <param name="consoleHelper">The console helper for generic input, output, and formatting operations.</param>
         /// <exception cref="ArgumentNullException">Thrown when consoleIo is null.</exception>
-        public ConsoleView(IIo consoleIo, ConsoleHelper consoleHelper)
+        public ConsoleView(IConsoleIO consoleIo, ConsoleHelper consoleHelper)
         {
             this._consoleIo = consoleIo ?? throw new ArgumentNullException(nameof(consoleIo));
             this._consoleHelper = consoleHelper ?? throw new ArgumentNullException(nameof(consoleHelper));
@@ -36,7 +34,7 @@
         public decimal GetTransactionAmountToUpdate(decimal existingAmount) => this._consoleHelper.ReadPositiveDecimal($"Enter the transaction amount [Existing: {existingAmount}] (Press Enter to keep current): ", isOptional: true) ?? existingAmount;
 
         /// <inheritdoc />
-        public TransactionType GetTransactionType(TransactionType? existingType = null)
+        public TransactionType GetTransactionTypeChoice(TransactionType? existingType = null)
         {
             List<string> typeChoices = new List<string>
             {
@@ -48,7 +46,7 @@
                 typeChoices.Insert(0, $"Keep current ({existingType.Value})");
             }
 
-            int index = this._consoleHelper.ReadSelection("Select the transaction type:", typeChoices);
+            int index = this._consoleHelper.ReadSelection("Select the cash flow type:", typeChoices);
             if (existingType.HasValue)
             {
                 if (index == 1)
@@ -60,18 +58,6 @@
             }
 
             return (TransactionType)index;
-        }
-
-        /// <inheritdoc />
-        public FilterType GetFilterTypeChoice()
-        {
-            List<string> filterChoices = new List<string>
-            {
-                "Transaction Type",
-                "Category",
-            };
-            int filterIndex = this._consoleHelper.ReadSelection("Select the filtering parameter:", filterChoices);
-            return (FilterType)filterIndex;
         }
 
         /// <inheritdoc />
@@ -180,19 +166,19 @@
         /// <inheritdoc />
         public void DisplayUpdateSuccessful()
         {
-            this._consoleHelper.WriteColored("\n[SUCCESS] Transaction updated successfully.\n", ConsoleColor.Green);
+            this._consoleHelper.DisplaySuccessMessage("Transaction Updated successfully.");
         }
 
         /// <inheritdoc />
-        public void DisplaySuccessfulAdd()
+        public void DisplayAddSuccessful()
         {
-            this._consoleHelper.WriteColored("\n[SUCCESS] Transaction Added Successfully.", ConsoleColor.Green);
+            this._consoleHelper.DisplaySuccessMessage("Transaction Added Successfully.");
         }
 
         /// <inheritdoc />
         public void DisplayDeleteSuccessful()
         {
-            this._consoleHelper.WriteColored("\n [SUCCESS] Contact Deleted Successfully.", ConsoleColor.Green);
+            this._consoleHelper.DisplaySuccessMessage("Transaction Deleted Successfully.");
         }
 
         /// <inheritdoc />
@@ -230,21 +216,9 @@
         }
 
         /// <inheritdoc />
-        public void DisplayFilterHeader()
-        {
-            this._consoleHelper.PrintHeader("FILTER TRANSACTIONS");
-        }
-
-        /// <inheritdoc />
         public void DisplayReportHeader()
         {
             this._consoleHelper.PrintHeader("FINANCIAL INSIGHTS & REPORT");
-        }
-
-        /// <inheritdoc />
-        public void DisplaySortHeader()
-        {
-            this._consoleHelper.PrintHeader("SORT TRANSACTIONS");
         }
 
         /// <inheritdoc />
@@ -269,12 +243,6 @@
             }
         }
 
-        /// <inheritdoc />
-        public string GetSearchKeyword()
-        {
-            return this._consoleHelper.ReadString("Enter the keyword to search across all your transactions : ")?.Trim().ToLower() ?? string.Empty;
-        }
-
         /// <summary>
         /// Displays the details of a given transaction.
         /// </summary>
@@ -293,30 +261,6 @@
             this._consoleIo.WriteLine($"Description: {Markup.Escape(transaction.Description ?? "N/A")}");
         }
 
-        /// <summary>
-        /// Retrieves the field for sorting from the user.
-        /// </summary>
-        /// <returns>The selected SortField based on user input.</returns>
-        public SortField GetSortField()
-        {
-            List<string> choices = new List<string>()
-            {
-                "Amount",
-                "Date",
-            };
-
-            int index = this._consoleHelper.ReadSelection("Select the field to Sort By: ", choices);
-
-            return (SortField)(index + 1);
-        }
-
-        /// <inheritdoc />
-        public void DisplayFilteredTable(IReadOnlyList<Transaction> transactions)
-        {
-            this._consoleHelper.PrintSubHeader("Filtered Transactions");
-            this.DisplayAsTable(transactions);
-        }
-
         /// <inheritdoc />
         public void DisplayAsTable(IReadOnlyList<Transaction> transactions)
         {
@@ -329,7 +273,6 @@
             var table = new Table()
                 .Border(TableBorder.Rounded)
                 .Title("[bold cyan]ALL TRANSACTIONS [/]")
-                .ShowRowSeparators()
                 .Caption($"Total Records: {transactions.Count}");
 
             table.AddColumn(new TableColumn("[bold]ID[/]").Centered());
@@ -387,9 +330,10 @@
         /// Displays an error message in red.
         /// </summary>
         /// <param name="message">The error message to display.</param>
-        public void DisplayError(string message)
+        public void HandleError(string message)
         {
             this._consoleHelper.DisplayError(message);
+            this.PauseAndReturn();
         }
 
         /// <summary>
@@ -439,10 +383,8 @@
         /// <summary>
         /// Prompts the user continuously using arrow keys to select a menu option.
         /// </summary>
-        /// <param name="min">The minimum valid choice.</param>
-        /// <param name="max">The maximum valid choice.</param>
         /// <returns>A valid choice integer corresponding to the selection index.</returns>
-        public int ReadChoice(int min, int max)
+        public int ReadChoice()
         {
             var choices = new List<string>
             {
@@ -450,12 +392,10 @@
                 "2. View all transactions",
                 "3. Update an existing transaction",
                 "4. Delete a transaction",
-                "5. Filter transactions",
-                "6. Sort Transactions",
-                "7. Search Transactions",
-                "8. Display Report",
-                "9. Generate Report File",
-                "10. Exit the application",
+                "5. Search transactions",
+                "6. Sort transactions",
+                "7. Generate Insights and Report",
+                "8. Exit the application",
             };
 
             return this._consoleHelper.ReadSelection("Select an operation to run:", choices);
@@ -477,15 +417,289 @@
             table.AddRow("2", "View Transactions", "Displays all recorded transactions in a dashboard.");
             table.AddRow("3", "Update Transaction", "Modifies the details of an existing transaction.");
             table.AddRow("4", "Delete Transaction", "Permanently removes a transaction record.");
-            table.AddRow("5", "Filter Transactions", "Filters transactions by transaction type or category.");
-            table.AddRow("6", "Sort Transactions", "Sort transactions by amount, date or category.");
-            table.AddRow("7", "Search Transactions", "Search by any fields of the transaction.");
-            table.AddRow("8", "Display Report", "Displays financial insights and net balance summary.");
-            table.AddRow("9", "Generate Report File", "Generates financial insights and net balance summary as a file.");
-            table.AddRow("10", "Exit", "Exits the Application.");
+            table.AddRow("5", "Search Transactions", "Filters and displays transactions matching search filters.");
+            table.AddRow("6", "Sort Transactions", "Displays transactions sorted by dynamic criteria.");
+            table.AddRow("7", "Generate Report", "Displays financial insights, net balance, and charts.");
+            table.AddRow("8", "Exit", "Exits the Application.");
 
             AnsiConsole.Write(table);
             this._consoleHelper.WriteLine(string.Empty);
+        }
+
+        /// <inheritdoc />
+        public (TransactionType? type, TransactionCategory? category, PaymentMethod? method, string? keyword, bool isCancelled) GetSearchCriteria()
+        {
+            this._consoleHelper.PrintHeader("SEARCH TRANSACTIONS");
+
+            TransactionType? type = null;
+            TransactionCategory? category = null;
+            PaymentMethod? method = null;
+            string? keyword = null;
+
+            bool searchReady = false;
+            while (!searchReady)
+            {
+                var filterOptions = new List<string>
+                {
+                    $"[1] Flow Type: {(type.HasValue ? $"[green]{type.Value}[/]" : "[grey]Any[/]")}",
+                    $"[2] Category: {(category.HasValue ? $"[green]{category.Value}[/]" : "[grey]Any[/]")}",
+                    $"[3] Payment Method: {(method.HasValue ? $"[green]{method.Value}[/]" : "[grey]Any[/]")}",
+                    $"[4] Description Keyword: {(!string.IsNullOrEmpty(keyword) ? $"[green]\"{keyword}\"[/]" : "[grey]Any[/]")}",
+                    "[bold yellow]=> Run Search Now[/]",
+                    "[bold red]=> Cancel Search[/]",
+                };
+
+                int selection = this._consoleHelper.ReadSelection("Select search filters to apply:", filterOptions);
+                switch (selection)
+                {
+                    case 1:
+                        type = this.GetOptionalTransactionType();
+                        if (type.HasValue && category.HasValue)
+                        {
+                            if (!this.IsValidCategoryCombination(type.Value, category.Value))
+                            {
+                                category = null;
+                            }
+                        }
+
+                        break;
+                    case 2:
+                        category = this.GetOptionalCategory(type);
+                        break;
+                    case 3:
+                        method = this.GetOptionalPaymentMethod();
+                        break;
+                    case 4:
+                        keyword = this._consoleHelper.ReadString("Enter description keyword (optional): ", isOptional: true);
+                        break;
+                    case 5:
+                        searchReady = true;
+                        break;
+                    case 6:
+                        return (null, null, null, null, true); // Cancelled
+                }
+            }
+
+            return (type, category, method, keyword, false);
+        }
+
+        /// <inheritdoc />
+        public (SortBy sortBy, bool ascending) GetSortingCriteria()
+        {
+            this._consoleHelper.PrintHeader("SORT TRANSACTIONS");
+
+            var fieldChoices = new List<string>
+            {
+                "Date & Time",
+                "Amount",
+                "Category",
+            };
+
+            int fieldIndex = this._consoleHelper.ReadSelection("Select field to sort by:", fieldChoices);
+            SortBy sortBy = fieldIndex switch
+            {
+                1 => SortBy.Date,
+                2 => SortBy.Amount,
+                3 => SortBy.Category,
+                _ => SortBy.Date,
+            };
+
+            var orderChoices = new List<string>
+            {
+                "Ascending",
+                "Descending",
+            };
+
+            int orderIndex = this._consoleHelper.ReadSelection("Select sort order:", orderChoices);
+            bool ascending = orderIndex == 1;
+
+            return (sortBy, ascending);
+        }
+
+        /// <inheritdoc />
+        public void DisplayVisualCharts(IReadOnlyList<Transaction> transactions)
+        {
+            if (transactions == null || transactions.Count == 0)
+            {
+                return;
+            }
+
+            decimal totalIncome = 0;
+            decimal totalExpense = 0;
+            Dictionary<TransactionCategory, decimal> expenseByCategory = new Dictionary<TransactionCategory, decimal>();
+
+            foreach (Transaction transaction in transactions)
+            {
+                if (transaction == null)
+                {
+                    continue;
+                }
+
+                if (transaction.Type == TransactionType.Income)
+                {
+                    totalIncome += transaction.Amount;
+                }
+                else
+                {
+                    totalExpense += transaction.Amount;
+                    if (expenseByCategory.ContainsKey(transaction.Category))
+                    {
+                        expenseByCategory[transaction.Category] += transaction.Amount;
+                    }
+                    else
+                    {
+                        expenseByCategory[transaction.Category] = transaction.Amount;
+                    }
+                }
+            }
+
+            // 1. Cash Flow Breakdown Chart (Income vs Expense Ratio)
+            AnsiConsole.MarkupLine("[bold yellow]Cash Flow Breakdown[/]");
+            var flowChart = new BreakdownChart()
+                .Width(60);
+
+            if (totalIncome > 0)
+            {
+                flowChart.AddItem("Income", (double)totalIncome, Color.Green);
+            }
+
+            if (totalExpense > 0)
+            {
+                flowChart.AddItem("Expense", (double)totalExpense, Color.Red);
+            }
+
+            if (totalIncome > 0 || totalExpense > 0)
+            {
+                AnsiConsole.Write(flowChart);
+                AnsiConsole.WriteLine();
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[grey]No data available for Cash Flow breakdown.[/]\n");
+            }
+
+            // 2. Expenses by Category Chart
+            AnsiConsole.MarkupLine("[bold yellow]Expenses by Category[/]");
+            if (expenseByCategory.Count > 0)
+            {
+                var categoryChart = new BarChart()
+                    .Width(60)
+                    .Label("[red]Category Expenses (Amount)[/]");
+
+                foreach (KeyValuePair<TransactionCategory, decimal> pair in expenseByCategory.OrderByDescending(p => p.Value))
+                {
+                    categoryChart.AddItem(pair.Key.ToString(), (double)pair.Value, this.GetCategoryColor(pair.Key));
+                }
+
+                AnsiConsole.Write(categoryChart);
+                AnsiConsole.WriteLine();
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[grey]No expenses recorded to display category breakdown.[/]\n");
+            }
+        }
+
+        /// <summary>
+        /// Selects an optional transaction flow type.
+        /// </summary>
+        /// <returns>The chosen TransactionType, or null for Any.</returns>
+        private TransactionType? GetOptionalTransactionType()
+        {
+            var choices = new List<string> { "Any", "Income", "Expense" };
+            int selection = this._consoleHelper.ReadSelection("Select flow type:", choices);
+            return selection == 1 ? null : (TransactionType)(selection - 2);
+        }
+
+        /// <summary>
+        /// Selects an optional payment method.
+        /// </summary>
+        /// <returns>The chosen PaymentMethod, or null for Any.</returns>
+        private PaymentMethod? GetOptionalPaymentMethod()
+        {
+            var choices = new List<string> { "Any", "Cash", "Credit Card", "Debit Card", "Bank Transfer" };
+            int selection = this._consoleHelper.ReadSelection("Select payment method:", choices);
+            return selection == 1 ? null : (PaymentMethod)(selection - 2);
+        }
+
+        /// <summary>
+        /// Selects an optional transaction category.
+        /// </summary>
+        /// <param name="flowType">The flow type filter context.</param>
+        /// <returns>The chosen TransactionCategory, or null for Any.</returns>
+        private TransactionCategory? GetOptionalCategory(TransactionType? flowType)
+        {
+            List<string> choices = new List<string> { "Any" };
+            List<TransactionCategory> categories = new List<TransactionCategory>();
+
+            if (!flowType.HasValue || flowType.Value == TransactionType.Income)
+            {
+                categories.Add(TransactionCategory.Salary);
+                categories.Add(TransactionCategory.Investment);
+                categories.Add(TransactionCategory.MiscellaneousIncome);
+            }
+
+            if (!flowType.HasValue || flowType.Value == TransactionType.Expense)
+            {
+                categories.Add(TransactionCategory.Transport);
+                categories.Add(TransactionCategory.Utilities);
+                categories.Add(TransactionCategory.Groceries);
+                categories.Add(TransactionCategory.Rent);
+                categories.Add(TransactionCategory.Food);
+                categories.Add(TransactionCategory.Shopping);
+                categories.Add(TransactionCategory.MiscellaneousExpense);
+            }
+
+            choices.AddRange(categories.Select(c => c.ToString()));
+            int selection = this._consoleHelper.ReadSelection("Select category:", choices);
+            return selection == 1 ? null : categories[selection - 2];
+        }
+
+        /// <summary>
+        /// Validates that a category belongs to a given flow type.
+        /// </summary>
+        private bool IsValidCategoryCombination(TransactionType type, TransactionCategory category)
+        {
+            if (type == TransactionType.Income)
+            {
+                return category == TransactionCategory.Salary ||
+                       category == TransactionCategory.Investment ||
+                       category == TransactionCategory.MiscellaneousIncome;
+            }
+
+            if (type == TransactionType.Expense)
+            {
+                return category == TransactionCategory.Transport ||
+                       category == TransactionCategory.Utilities ||
+                       category == TransactionCategory.Groceries ||
+                       category == TransactionCategory.Rent ||
+                       category == TransactionCategory.Food ||
+                       category == TransactionCategory.Shopping ||
+                       category == TransactionCategory.MiscellaneousExpense;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Maps an Expense/Income category to a unique color for beautiful charts.
+        /// </summary>
+        private Color GetCategoryColor(TransactionCategory category)
+        {
+            return category switch
+            {
+                TransactionCategory.Salary => Color.Green,
+                TransactionCategory.Investment => Color.Teal,
+                TransactionCategory.MiscellaneousIncome => Color.GreenYellow,
+                TransactionCategory.Transport => Color.SkyBlue1,
+                TransactionCategory.Utilities => Color.Purple,
+                TransactionCategory.Groceries => Color.DarkOrange,
+                TransactionCategory.Rent => Color.Red,
+                TransactionCategory.Food => Color.Yellow,
+                TransactionCategory.Shopping => Color.Purple,
+                TransactionCategory.MiscellaneousExpense => Color.Grey,
+                _ => Color.White
+            };
         }
     }
 }

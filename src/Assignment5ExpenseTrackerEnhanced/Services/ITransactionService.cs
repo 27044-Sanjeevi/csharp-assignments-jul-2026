@@ -1,4 +1,4 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Services
+namespace Assignment5ExpenseTrackerEnhanced.Services
 {
     using System;
     using System.Collections.Generic;
@@ -34,42 +34,28 @@
         ValidationResult UpdateTransaction(TransactionUpdateDto transaction);
 
         /// <summary>
-        /// Sorts transactions in ascending order by amount.
-        /// </summary>
-        /// <returns>A read-only list containing the sorted transactions.</returns>
-        IReadOnlyList<Transaction> SortTransactionsByAmount();
-
-        /// <summary>
-        /// Sorts thetransactions by their date.
-        /// </summary>
-        /// <returns>A read-only list of transactions sorted in ascending order by date.</returns>
-        IReadOnlyList<Transaction> SortTransactionsByDate();
-
-        /// <summary>
-        /// Retrieves the count of transactions in the repository.
-        /// </summary>
-        /// <returns>An integer representing the count of transactions in the repository.</returns>
-        int GetTransactionCount();
-
-        /// <summary>
-        /// Filters transactions based on the specified flow type.
-        /// </summary>
-        /// <param name="type">The type to filter.</param>
-        /// <returns>An enumerable collection of transactions that match the flow type criteria.</returns>
-        IReadOnlyList<Transaction> FilterByTransactionType(TransactionType type);
-
-        /// <summary>
-        /// Filters transactions based on the specified category.
-        /// </summary>
-        /// <param name="category">The category to filter.</param>
-        /// <returns>An enumerable collection of transactions that match the category criteria.</returns>
-        IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category);
-
-        /// <summary>
         /// Extracts all transaction records currently stored in the system.
         /// </summary>
         /// <returns>A validation result object containing the outcome and explanation.</returns>
         IReadOnlyList<Transaction> GetAllTransactions();
+
+        /// <summary>
+        /// Searches transaction records matching optional filters.
+        /// </summary>
+        /// <param name="type">Optional transaction flow type.</param>
+        /// <param name="category">Optional category.</param>
+        /// <param name="method">Optional payment method.</param>
+        /// <param name="keyword">Optional description search keyword.</param>
+        /// <returns>The filtered list of transactions.</returns>
+        IReadOnlyList<Transaction> SearchTransactions(TransactionType? type, TransactionCategory? category, PaymentMethod? method, string? keyword);
+
+        /// <summary>
+        /// Retrieves transaction records sorted by specified criteria.
+        /// </summary>
+        /// <param name="sortBy">The SortBy enum to sort by.</param>
+        /// <param name="ascending">True for ascending order; false for descending.</param>
+        /// <returns>The sorted list of transactions.</returns>
+        IReadOnlyList<Transaction> GetSortedTransactions(SortBy sortBy, bool ascending);
 
         /// <summary>
         /// Generates a financial report DTO containing summary metrics.

@@ -1,12 +1,6 @@
 ﻿namespace Assignment5ExpenseTrackerEnhanced
 {
-    using Assignment5ExpenseTrackerEnhanced;
     using Assignment5ExpenseTrackerEnhanced.Controller;
-    using Assignment5ExpenseTrackerEnhanced.IO;
-    using Assignment5ExpenseTrackerEnhanced.Persistence;
-    using Assignment5ExpenseTrackerEnhanced.Services;
-    using Assignment5ExpenseTrackerEnhanced.Services.Validation;
-    using Assignment5ExpenseTrackerEnhanced.Utilities;
     using Assignment5ExpenseTrackerEnhanced.View;
 
     /// <summary>
@@ -14,18 +8,15 @@
     /// </summary>
     internal class ApplicationRunner
     {
-        private const int MinMenuChoice = 1;
-        private const int MaxMenuChoice = 7;
-
         private readonly IView _view;
-        private readonly IFinanceController _controller;
+        private readonly ITransactionController _controller;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationRunner"/> class.
         /// </summary>
         /// <param name="view">The console view for displaying information to the user.</param>
         /// <param name="controller">The main controller responsible for managing application logic.</param>
-        public ApplicationRunner(IView view, IFinanceController controller)
+        public ApplicationRunner(IView view, ITransactionController controller)
         {
             this._view = view ?? throw new ArgumentNullException(nameof(view));
             this._controller = controller ?? throw new ArgumentNullException(nameof(controller));
@@ -43,10 +34,10 @@
                 {
                     this._view.ClearScreen();
                     this._view.ShowMainMenu();
-                    int choice = this._view.ReadChoice(MinMenuChoice, MaxMenuChoice);
+                    int choice = this._view.ReadChoice();
                     this._view.ClearScreen();
 
-                    exit = this._controller.HandleTransactionMenu(choice);
+                    exit = this._controller.HandleMenu(choice);
 
                     if (!exit)
                     {
@@ -55,18 +46,15 @@
                 }
                 catch (ArgumentException ex)
                 {
-                    this._view.DisplayError(ex.Message);
-                    this._view.PauseAndReturn();
+                    this._view.HandleError(ex.Message);
                 }
                 catch (KeyNotFoundException ex)
                 {
-                    this._view.DisplayError(ex.Message);
-                    this._view.PauseAndReturn();
+                    this._view.HandleError(ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    this._view.DisplayError($"Unexpected error: {ex.Message}");
-                    this._view.PauseAndReturn();
+                    this._view.HandleError($"Unexpected error: {ex.Message}");
                 }
             }
         }
