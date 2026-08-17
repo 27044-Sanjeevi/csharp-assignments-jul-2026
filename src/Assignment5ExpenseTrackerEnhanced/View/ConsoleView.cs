@@ -40,17 +40,17 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         /// <inheritdoc />
         public TransactionType GetTransactionTypeChoice(TransactionType? existingType = null)
         {
-            List<string> typeChoices = new List<string>
+            List<string> choices = new List<string>
             {
                 "Income",
                 "Expense",
             };
             if (existingType.HasValue)
             {
-                typeChoices.Insert(0, $"Keep current ({existingType.Value})");
+                choices.Insert(0, $"Keep current ({existingType.Value})");
             }
 
-            int index = this._consoleHelper.ReadSelection("Select the cash flow type:", typeChoices);
+            int index = this._consoleHelper.ReadSelection("Select the cash flow type:", choices);
             if (existingType.HasValue)
             {
                 if (index == KeepCurrentChoiceIndex)
@@ -67,7 +67,7 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         /// <inheritdoc />
         public PaymentMethod GetPaymentMethod(PaymentMethod? existingMethod = null)
         {
-            List<string> paymentChoices = new List<string>
+            List<string> choices = new List<string>
             {
                 "Cash",
                 "Credit Card",
@@ -76,10 +76,10 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             };
             if (existingMethod.HasValue)
             {
-                paymentChoices.Insert(0, $"Keep current ({existingMethod.Value})");
+                choices.Insert(0, $"Keep current ({existingMethod.Value})");
             }
 
-            int paymentIndex = this._consoleHelper.ReadSelection("Select the payment method:", paymentChoices);
+            int paymentIndex = this._consoleHelper.ReadSelection("Select the payment method:", choices);
             if (existingMethod.HasValue)
             {
                 if (paymentIndex == KeepCurrentChoiceIndex)
@@ -167,28 +167,16 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         public string? GetTransactionDescriptionToUpdate(string? existingDescription) => this._consoleHelper.ReadString($"Enter a description for the transaction [Current: {existingDescription ?? "None"}] (Press Enter to keep current): ", isOptional: true) ?? existingDescription;
 
         /// <inheritdoc />
-        public void DisplayTransactionsNotFound()
-        {
-            this._consoleHelper.WriteColored("\nNo transactions found.\n", ConsoleColor.Yellow);
-        }
+        public void DisplayTransactionsNotFound() => this._consoleHelper.WriteColored("\nNo transactions found.\n", ConsoleColor.Yellow);
 
         /// <inheritdoc />
-        public void DisplayUpdateSuccessful()
-        {
-            this._consoleHelper.DisplaySuccessMessage("Transaction Updated successfully.");
-        }
+        public void DisplayUpdateSuccessful() => this._consoleHelper.DisplaySuccessMessage("Transaction Updated successfully.");
 
         /// <inheritdoc />
-        public void DisplayAddSuccessful()
-        {
-            this._consoleHelper.DisplaySuccessMessage("Transaction Added Successfully.");
-        }
+        public void DisplayAddSuccessful() => this._consoleHelper.DisplaySuccessMessage("Transaction Added Successfully.");
 
         /// <inheritdoc />
-        public void DisplayDeleteSuccessful()
-        {
-            this._consoleHelper.DisplaySuccessMessage("Transaction Deleted Successfully.");
-        }
+        public void DisplayDeleteSuccessful() => this._consoleHelper.DisplaySuccessMessage("Transaction Deleted Successfully.");
 
         /// <inheritdoc />
         public void DisplayValidationResult(Services.Validation.ValidationResult result)
@@ -256,10 +244,7 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         }
 
         /// <inheritdoc />
-        public string GetSearchKeyword()
-        {
-            return this._consoleHelper.ReadString("Enter the keyword to search across all your transactions : ")?.Trim().ToLower() ?? string.Empty;
-        }
+        public string GetSearchKeyword() => this._consoleHelper.ReadString("Enter the keyword to search across all your transactions : ")?.Trim().ToLower() ?? string.Empty;
 
         /// <summary>
         /// Displays the details of a given transaction.
@@ -357,26 +342,17 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         /// <summary>
         /// Clears the console window.
         /// </summary>
-        public void ClearScreen()
-        {
-            this._consoleHelper.ClearScreen();
-        }
+        public void ClearScreen() => this._consoleHelper.ClearScreen();
 
         /// <summary>
         /// Prompts the user to return to the main menu page.
         /// </summary>
-        public void PauseAndReturn()
-        {
-            this._consoleHelper.PauseAndReturn();
-        }
+        public void PauseAndReturn() => this._consoleHelper.PauseAndReturn();
 
         /// <summary>
         /// Prints a goodbye message.
         /// </summary>
-        public void PrintGoodbye()
-        {
-            this._consoleHelper.PrintGoodbye();
-        }
+        public void PrintGoodbye() => this._consoleHelper.PrintGoodbye();
 
         /// <inheritdoc />
         public void DisplayInsights(decimal totalIncome, decimal totalExpense, decimal netBalance, int totalTransactions)
