@@ -164,6 +164,18 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
         }
 
         /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByTransactionType(TransactionType type)
+        {
+            return this._repository.FilterByTransactionType(type);
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category)
+        {
+            return this._repository.FilterByCategory(category);
+        }
+
+        /// <inheritdoc />
         public ReportDto GenerateFinancialReport()
         {
             IReadOnlyList<Transaction> transactions = this._repository.GetAll().ToList();

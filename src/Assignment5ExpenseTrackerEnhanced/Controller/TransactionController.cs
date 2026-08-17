@@ -48,12 +48,18 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
                     this.Search();
                     break;
                 case 6:
-                    this.Sort();
+                    this.FilterTransactions();
                     break;
                 case 7:
-                    this.GenerateReport();
+                    this.Sort();
                     break;
                 case 8:
+                    this.DisplayReport();
+                    break;
+                case 9:
+                    // this.GenerateReportFile();
+                    break;
+                case 10:
                     return true;
                 default:
                     break;
@@ -213,7 +219,36 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
         }
 
         /// <inheritdoc />
-        public void GenerateReport()
+        public void FilterTransactions()
+        {
+            this._consoleView.DisplayFilterHeader();
+            IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
+            if (transactions.Count <= 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
+
+            FilterType filterType = this._consoleView.GetFilterTypeChoice();
+            TransactionType transactionType = this._consoleView.GetTransactionType();
+            if (filterType == FilterType.TransactionType)
+            {
+                transactions = this._transactionService.FilterByTransactionType(transactionType);
+            }
+
+            if (filterType == FilterType.Category)
+            {
+                TransactionCategory category = transactionType == TransactionType.Income ?
+                                           this._consoleView.GetIncomeCategory() :
+                                           this._consoleView.GetExpenseCategory();
+                transactions = this._transactionService.FilterByCategory(category);
+            }
+
+            this._consoleView.DisplayFilteredTable(transactions);
+        }
+
+        /// <inheritdoc />
+        public void DisplayReport()
         {
             this._consoleView.DisplayReportHeader();
             ReportDto report = this._transactionService.GenerateFinancialReport();

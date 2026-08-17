@@ -58,6 +58,20 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
         IReadOnlyList<Transaction> GetSortedTransactions(SortBy sortBy, bool ascending);
 
         /// <summary>
+        /// Filters transactions based on the specified flow type.
+        /// </summary>
+        /// <param name="type">The type to filter.</param>
+        /// <returns>An enumerable collection of transactions that match the flow type criteria.</returns>
+        IReadOnlyList<Transaction> FilterByTransactionType(TransactionType type);
+
+        /// <summary>
+        /// Filters transactions based on the specified category.
+        /// </summary>
+        /// <param name="category">The category to filter.</param>
+        /// <returns>An enumerable collection of transactions that match the category criteria.</returns>
+        IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category);
+
+        /// <summary>
         /// Generates a financial report DTO containing summary metrics.
         /// </summary>
         /// <returns>A ReportDto containing consolidated statistics.</returns>

@@ -228,6 +228,24 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         }
 
         /// <inheritdoc />
+        public void DisplayFilterHeader()
+        {
+            this._consoleHelper.PrintHeader("FILTER TRANSACTIONS");
+        }
+
+        /// <inheritdoc />
+        public FilterType GetFilterTypeChoice()
+        {
+            List<string> filterChoices = new List<string>
+            {
+                "Transaction Type",
+                "Category",
+            };
+            int filterIndex = this._consoleHelper.ReadSelection("Select the filtering parameter:", filterChoices);
+            return (FilterType)filterIndex;
+        }
+
+        /// <inheritdoc />
         public int GetIndexFromTable(int maxIndex)
         {
             while (true)
@@ -483,6 +501,39 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             return (type, category, method, keyword, false);
         }
 
+        /// <inheritdoc />
+        public TransactionType GetTransactionType(TransactionType? existingType = null)
+        {
+            List<string> typeChoices = new List<string>
+            {
+                "Income",
+                "Expense",
+            };
+            if (existingType.HasValue)
+            {
+                typeChoices.Insert(0, $"Keep current ({existingType.Value})");
+            }
+
+            int index = this._consoleHelper.ReadSelection("Select the transaction type:", typeChoices);
+            if (existingType.HasValue)
+            {
+                if (index == 1)
+                {
+                    return existingType.Value;
+                }
+
+                return (TransactionType)(index - 1);
+            }
+
+            return (TransactionType)index;
+        }
+
+        /// <inheritdoc />
+        public void DisplayFilteredTable(IReadOnlyList<Transaction> transactions)
+        {
+            this._consoleHelper.PrintSubHeader("Filtered Transactions");
+            this.DisplayAsTable(transactions);
+        }
         /// <inheritdoc />
         public (SortBy sortBy, bool ascending) GetSortingCriteria()
         {

@@ -43,8 +43,13 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
         void Sort();
 
         /// <summary>
+        /// Filters transactions based on the selected filter type.
+        /// </summary>
+        void FilterTransactions();
+
+        /// <summary>
         /// Generates and displays financial insights and reports.
         /// </summary>
-        void GenerateReport();
+        void DisplayReport();
     }
 }

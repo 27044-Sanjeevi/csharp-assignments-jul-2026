@@ -6,6 +6,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Persistence.Csv
     using System.Linq;
     using System.Text;
     using Assignment5ExpenseTrackerEnhanced.Models;
+    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
     using Assignment5ExpenseTrackerEnhanced.Persistence;
 
     /// <summary>
@@ -80,6 +81,22 @@ namespace Assignment5ExpenseTrackerEnhanced.Persistence.Csv
             this._transactions.RemoveAt(index);
             this.Save();
             return true;
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByTransactionType(TransactionType type)
+        {
+            return this.GetAll()
+                .Where(t => t.Type == type)
+                .ToList();
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category)
+        {
+            return this.GetAll()
+                .Where(t => t.Category == category)
+                .ToList();
         }
 
         /// <summary>

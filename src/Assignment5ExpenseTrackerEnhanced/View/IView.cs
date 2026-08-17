@@ -58,6 +58,11 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         void DisplayReportHeader();
 
         /// <summary>
+        /// Displays the header for the filter operation.
+        /// </summary>
+        void DisplayFilterHeader();
+
+        /// <summary>
         /// Displays the header for the view all operation.
         /// </summary>
         void DisplayAllTransactionsHeader();
@@ -89,6 +94,12 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         /// <param name="existingCategory">Holds the exiting category of the transaction.</param>
         /// <returns>The transaction category for the expense.</returns>
         TransactionCategory GetExpenseCategory(TransactionCategory? existingCategory = null);
+
+        /// <summary>
+        /// Retrieves the parameter for filtering the transactions.
+        /// </summary>
+        /// <returns>The parameter to be filtered by.</returns>
+        FilterType GetFilterTypeChoice();
 
         /// <summary>
         /// Reads the optional description of the transaction from user input.
@@ -165,6 +176,13 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         void PauseAndReturn();
 
         /// <summary>
+        /// Reads the flow type of the transaction.
+        /// </summary>
+        /// <param name="existingType">Holds the existing Flow type of the transaction.</param>
+        /// <returns>The flow type chosen by the user.</returns>
+        TransactionType GetTransactionType(TransactionType? existingType = null);
+
+        /// <summary>
         /// Collects search criteria from the user.
         /// </summary>
         /// <returns>A tuple containing optional type, category, method, keyword filters, and a cancellation flag.</returns>
@@ -181,6 +199,12 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         /// </summary>
         /// <param name="transactions">The collection of transaction data objects to visualize.</param>
         void DisplayVisualCharts(IReadOnlyList<Transaction> transactions);
+
+        /// <summary>
+        /// Displays a table of transactions after applying filters.
+        /// </summary>
+        /// <param name="transactions">The filtered list of transactions to display.</param>
+        void DisplayFilteredTable(IReadOnlyList<Transaction> transactions);
 
         /// <summary>
         /// Displays an error message.
