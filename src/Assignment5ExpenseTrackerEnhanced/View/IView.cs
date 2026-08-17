@@ -108,6 +108,12 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         string? GetTransactionDescription();
 
         /// <summary>
+        /// Retrieves the keyword to be searched across all the transactions from the user.
+        /// </summary>
+        /// <returns>The string containing the keyword to be searched.</returns>
+        public string GetSearchKeyword();
+
+        /// <summary>
         /// Retrieves an updated transaction description based on the provided existing description.
         /// </summary>
         /// <param name="existingDescription">The current transaction description to update.</param>
@@ -181,12 +187,6 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         /// <param name="existingType">Holds the existing Flow type of the transaction.</param>
         /// <returns>The flow type chosen by the user.</returns>
         TransactionType GetTransactionType(TransactionType? existingType = null);
-
-        /// <summary>
-        /// Collects search criteria from the user.
-        /// </summary>
-        /// <returns>A tuple containing optional type, category, method, keyword filters, and a cancellation flag.</returns>
-        (TransactionType? type, TransactionCategory? category, PaymentMethod? method, string? keyword, bool isCancelled) GetSearchCriteria();
 
         /// <summary>
         /// Collects sorting criteria from the user.

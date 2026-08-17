@@ -76,5 +76,11 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
         /// </summary>
         /// <returns>A ReportDto containing consolidated statistics.</returns>
         ReportDto GenerateFinancialReport();
+
+        /// <summary>
+        /// Retrieves the count of transactions in the repository.
+        /// </summary>
+        /// <returns>An integer representing the count of transactions in the repository.</returns>
+        int GetTransactionCount();
     }
 }

@@ -183,21 +183,22 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
         /// <inheritdoc />
         public void Search()
         {
-            (TransactionType? type, TransactionCategory? category, PaymentMethod? method, string? keyword, bool isCancelled) = this._consoleView.GetSearchCriteria();
+            IReadOnlyList<Transaction> results = new List<Transaction>();
 
-            if (isCancelled)
-            {
-                return;
-            }
-
-            IReadOnlyList<Transaction> results = this._transactionService.SearchTransactions(type, category, method, keyword);
-
-            this._consoleView.DisplayAllTransactionsHeader();
-            if (results == null || results.Count == 0)
+            if (this.GetAllTransactionsCount() <= 0)
             {
                 this._consoleView.DisplayTransactionsNotFound();
                 return;
             }
+
+            string keyword = this._consoleView.GetSearchKeyword();
+            results = this._transactionService.GetAllTransactions().Where(t =>
+            t.TimeStamp.ToString("yyyy-MM-dd HH:mm").Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+            (t.Description != null && t.Description.Contains(keyword, StringComparison.OrdinalIgnoreCase)) ||
+            t.Amount.ToString().Equals(keyword) ||
+            t.Category.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+            t.Type.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+            t.Method.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
 
             this._consoleView.DisplayAsTable(results);
         }
@@ -281,6 +282,15 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
 
             int targetIndex = this._consoleView.GetIndexFromTable(transactions.Count);
             return transactions[targetIndex];
+        }
+
+        /// <summary>
+        /// Retrieves the count of transactions in the repository.
+        /// </summary>
+        /// <returns>An integer representing the count of transactions in the repository.</returns>
+        private int GetAllTransactionsCount()
+        {
+            return this._transactionService.GetTransactionCount();
         }
     }
 }

@@ -176,6 +176,12 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
         }
 
         /// <inheritdoc />
+        public int GetTransactionCount()
+        {
+            return this._repository.GetTransactionCount();
+        }
+
+        /// <inheritdoc />
         public ReportDto GenerateFinancialReport()
         {
             IReadOnlyList<Transaction> transactions = this._repository.GetAll().ToList();

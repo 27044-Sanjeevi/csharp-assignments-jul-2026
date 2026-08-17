@@ -99,6 +99,12 @@ namespace Assignment5ExpenseTrackerEnhanced.Persistence.Csv
                 .ToList();
         }
 
+        /// <inheritdoc />
+        public int GetTransactionCount()
+        {
+            return this._transactions.Count;
+        }
+
         /// <summary>
         /// Centralised single-source lookup helper to find an internal array index by Guid.
         /// </summary>

@@ -56,5 +56,11 @@
         /// <param name="category">The category to filter.</param>
         /// <returns>An enumerable collection of transactions that match the category criteria.</returns>
         IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category);
+
+        /// <summary>
+        /// Retrieves the count of transactions in the repository.
+        /// </summary>
+        /// <returns>An integer representing the count of transactions in the repository.</returns>
+        int GetTransactionCount();
     }
 }
