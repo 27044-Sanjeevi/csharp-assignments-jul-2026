@@ -12,6 +12,10 @@ namespace Assignment5ExpenseTrackerEnhanced.View
     /// </summary>
     internal class ConsoleView : IView
     {
+        private const int ChoiceToZeroBasedOffset = 1;
+        private const int KeepCurrentChoiceIndex = 1;
+        private const int ChoiceWithKeepCurrentOffset = ChoiceToZeroBasedOffset + KeepCurrentChoiceIndex;
+
         private readonly IConsoleIO _consoleIo;
         private readonly ConsoleHelper _consoleHelper;
 
@@ -49,12 +53,12 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             int index = this._consoleHelper.ReadSelection("Select the cash flow type:", typeChoices);
             if (existingType.HasValue)
             {
-                if (index == 1)
+                if (index == KeepCurrentChoiceIndex)
                 {
                     return existingType.Value;
                 }
 
-                return (TransactionType)(index - 1);
+                return (TransactionType)(index - ChoiceToZeroBasedOffset);
             }
 
             return (TransactionType)index;
@@ -78,12 +82,12 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             int paymentIndex = this._consoleHelper.ReadSelection("Select the payment method:", paymentChoices);
             if (existingMethod.HasValue)
             {
-                if (paymentIndex == 1)
+                if (paymentIndex == KeepCurrentChoiceIndex)
                 {
                     return existingMethod.Value;
                 }
 
-                return (PaymentMethod)(paymentIndex - 1);
+                return (PaymentMethod)(paymentIndex - ChoiceToZeroBasedOffset);
             }
 
             return (PaymentMethod)paymentIndex;
@@ -96,6 +100,9 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             {
                 TransactionCategory.Salary,
                 TransactionCategory.Investment,
+                TransactionCategory.Freelance,
+                TransactionCategory.Business,
+                TransactionCategory.Gifts,
                 TransactionCategory.MiscellaneousIncome,
             };
             List<string> choices = incomeCategories.Select(c => c.ToString()).ToList();
@@ -107,15 +114,15 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             int categoryIndex = this._consoleHelper.ReadSelection("Select the income category:", choices);
             if (existingCategory.HasValue)
             {
-                if (categoryIndex == 1)
+                if (categoryIndex == KeepCurrentChoiceIndex)
                 {
                     return existingCategory.Value;
                 }
 
-                return incomeCategories[categoryIndex - 2];
+                return incomeCategories[categoryIndex - ChoiceWithKeepCurrentOffset];
             }
 
-            return incomeCategories[categoryIndex - 1];
+            return incomeCategories[categoryIndex - ChoiceToZeroBasedOffset];
         }
 
         /// <inheritdoc />
@@ -129,6 +136,8 @@ namespace Assignment5ExpenseTrackerEnhanced.View
                 TransactionCategory.Rent,
                 TransactionCategory.Food,
                 TransactionCategory.Shopping,
+                TransactionCategory.Healthcare,
+                TransactionCategory.Education,
                 TransactionCategory.MiscellaneousExpense,
             };
             List<string> choices = expenseCategories.Select(c => c.ToString()).ToList();
@@ -140,15 +149,15 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             int categoryIndex = this._consoleHelper.ReadSelection("Select the expense category:", choices);
             if (existingCategory.HasValue)
             {
-                if (categoryIndex == 1)
+                if (categoryIndex == KeepCurrentChoiceIndex)
                 {
                     return existingCategory.Value;
                 }
 
-                return expenseCategories[categoryIndex - 2];
+                return expenseCategories[categoryIndex - ChoiceWithKeepCurrentOffset];
             }
 
-            return expenseCategories[categoryIndex - 1];
+            return expenseCategories[categoryIndex - ChoiceToZeroBasedOffset];
         }
 
         /// <inheritdoc />
@@ -239,7 +248,7 @@ namespace Assignment5ExpenseTrackerEnhanced.View
 
                 if (choice >= 1 && choice <= maxIndex)
                 {
-                    return choice - 1;
+                    return choice - ChoiceToZeroBasedOffset;
                 }
 
                 this._consoleHelper.DisplayError($"Invalid selection. Please choose a row between 1 and {maxIndex}.\n");
@@ -453,12 +462,12 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             int index = this._consoleHelper.ReadSelection("Select the transaction type:", typeChoices);
             if (existingType.HasValue)
             {
-                if (index == 1)
+                if (index == KeepCurrentChoiceIndex)
                 {
                     return existingType.Value;
                 }
 
-                return (TransactionType)(index - 1);
+                return (TransactionType)(index - ChoiceToZeroBasedOffset);
             }
 
             return (TransactionType)index;
@@ -587,15 +596,21 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             {
                 TransactionCategory.Salary => Color.Green,
                 TransactionCategory.Investment => Color.Teal,
+                TransactionCategory.Freelance => Color.LightGreen,
+                TransactionCategory.Business => Color.DarkGreen,
+                TransactionCategory.Gifts => Color.Pink1,
                 TransactionCategory.MiscellaneousIncome => Color.GreenYellow,
                 TransactionCategory.Transport => Color.SkyBlue1,
                 TransactionCategory.Utilities => Color.Purple,
                 TransactionCategory.Groceries => Color.DarkOrange,
                 TransactionCategory.Rent => Color.Red,
                 TransactionCategory.Food => Color.Yellow,
-                TransactionCategory.Shopping => Color.Purple,
+                TransactionCategory.Shopping => Color.Purple3,
+                TransactionCategory.Healthcare => Color.Red3,
+                TransactionCategory.Education => Color.Blue,
                 TransactionCategory.MiscellaneousExpense => Color.Grey,
                 _ => Color.White
+
             };
         }
     }

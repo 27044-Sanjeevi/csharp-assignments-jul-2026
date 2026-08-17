@@ -29,7 +29,9 @@
         /// <returns>The parsed integer value, or null if the field was skipped.</returns>
         public int? ReadPositiveInt(string prompt, bool isOptional = false)
         {
-            while (true)
+            int attempts = 0;
+            const int MaxAttempts = 3;
+            while (attempts < MaxAttempts)
             {
                 string? input = this.ReadLine(prompt);
                 if (isOptional && string.IsNullOrWhiteSpace(input))
@@ -42,8 +44,14 @@
                     return value;
                 }
 
-                this.WriteColored("[INPUT ERROR] Invalid number. Please enter a positive integer value.\n", ConsoleColor.Red);
+                attempts++;
+                if (attempts < MaxAttempts)
+                {
+                    this.WriteColored($"[INPUT ERROR] Invalid number. Please enter a positive integer value. ({attempts}/{MaxAttempts} attempts)\n", ConsoleColor.Red);
+                }
             }
+
+            throw this.AbortInputAttempts();
         }
 
         /// <summary>
@@ -54,7 +62,9 @@
         /// <returns>The trimmed string input, or null if skipped.</returns>
         public string? ReadString(string prompt, bool isOptional = false)
         {
-            while (true)
+            int attempts = 0;
+            const int MaxAttempts = 3;
+            while (attempts < MaxAttempts)
             {
                 string? input = this.ReadLine(prompt)?.Trim();
 
@@ -65,23 +75,32 @@
                         return null;
                     }
 
-                    this.WriteColored("[INPUT ERROR] Input cannot be empty. Please try again.\n", ConsoleColor.Red);
+                    attempts++;
+                    if (attempts < MaxAttempts)
+                    {
+                        this.WriteColored($"[INPUT ERROR] Input cannot be empty. Please try again. ({attempts}/{MaxAttempts} attempts)\n", ConsoleColor.Red);
+                    }
+
                     continue;
                 }
 
                 return input;
             }
+
+            throw this.AbortInputAttempts();
         }
 
         /// <summary>
-        /// Reads a oositive decimal value from the console, optionally allowing an empty input to bypass validation.
+        /// Reads a positive decimal value from the console, optionally allowing an empty input to bypass validation.
         /// </summary>
         /// <param name="prompt">The prompt message to display.</param>
         /// <param name="isOptional">If true, pressing Enter returns null. If false, it loops until a valid decimal is entered.</param>
         /// <returns>The parsed decimal value, or null if the field was skipped.</returns>
         public decimal? ReadPositiveDecimal(string prompt, bool isOptional = false)
         {
-            while (true)
+            int attempts = 0;
+            const int MaxAttempts = 3;
+            while (attempts < MaxAttempts)
             {
                 string? input = this.ReadLine(prompt);
 
@@ -95,8 +114,14 @@
                     return value;
                 }
 
-                this.WriteColored("[INPUT ERROR] Invalid number. Please enter a positive decimal value.\n", ConsoleColor.Red);
+                attempts++;
+                if (attempts < MaxAttempts)
+                {
+                    this.WriteColored($"[INPUT ERROR] Invalid number. Please enter a positive decimal value. ({attempts}/{MaxAttempts} attempts)\n", ConsoleColor.Red);
+                }
             }
+
+            throw this.AbortInputAttempts();
         }
 
         /// <summary>
@@ -215,6 +240,16 @@
 
             string selected = AnsiConsole.Prompt(prompt);
             return choices.IndexOf(selected) + 1;
+        }
+
+        /// <summary>
+        /// Handles aborting when input attempts are exceeded by printing a message and returning the abort exception.
+        /// </summary>
+        /// <returns>An OperationCanceledException to be thrown.</returns>
+        private Exception AbortInputAttempts()
+        {
+            this.WriteColored("\n[ABORT] Maximum input attempts exceeded.\n", ConsoleColor.Red);
+            return new OperationCanceledException("Input attempts exceeded.");
         }
     }
 }
