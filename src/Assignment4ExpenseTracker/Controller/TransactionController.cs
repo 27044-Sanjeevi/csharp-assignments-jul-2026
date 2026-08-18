@@ -163,8 +163,16 @@ namespace Assignment4ExpenseTracker.Controller
 
             if (this._consoleView.ConfirmDelete(selectedRecord))
             {
-                this._transactionService.DeleteTransaction(selectedRecord.Id);
-                this._consoleView.DisplayDeleteSuccessful();
+                ValidationResult result = this._transactionService.DeleteTransaction(selectedRecord.Id);
+
+                if (result.IsValid)
+                {
+                    this._consoleView.DisplayDeleteSuccessful();
+                }
+                else
+                {
+                    this._consoleView.DisplayValidationResult(result);
+                }
             }
         }
 
