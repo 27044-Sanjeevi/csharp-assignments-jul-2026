@@ -39,7 +39,7 @@
                 Category = transactionDto.Category,
                 Method = transactionDto.Method,
                 Description = transactionDto.Description,
-                TimeStamp = DateTime.Now,
+                Timestamp = DateTime.Now,
             };
 
             ValidationResult validationResult = this._validator.ValidateTransaction(transaction);
@@ -84,7 +84,7 @@
                 Category = updateDto.Category,
                 Method = updateDto.Method,
                 Description = updateDto.Description,
-                TimeStamp = updateDto.TimeStamp,
+                Timestamp = updateDto.Timestamp,
             };
 
             validationResult = this._validator.ValidateTransaction(updatedModel);

@@ -23,8 +23,8 @@
         /// <summary>
         /// Gets the timestamp of when the transaction occurred.
         /// </summary>
-        /// <value name="TimeStamp">Timestamp of the transaction.</value>
-        public DateTime TimeStamp { get; init; }
+        /// <value name="Timestamp">Timestamp of the transaction.</value>
+        public DateTime Timestamp { get; init; }
 
         /// <summary>
         /// Gets the flow type of the transaction.

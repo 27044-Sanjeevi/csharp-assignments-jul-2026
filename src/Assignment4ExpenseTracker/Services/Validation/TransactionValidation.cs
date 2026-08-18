@@ -36,7 +36,7 @@ namespace Assignment4ExpenseTracker.Services.Validation
                 validationResult.AddError(InvalidAmountMessage);
             }
 
-            if (transaction.TimeStamp > DateTime.Now)
+            if (transaction.Timestamp > DateTime.Now)
             {
                 validationResult.AddError(FutureDateMessage);
             }

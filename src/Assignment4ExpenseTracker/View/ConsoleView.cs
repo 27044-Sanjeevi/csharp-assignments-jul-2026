@@ -268,7 +268,7 @@ namespace Assignment4ExpenseTracker.View
             this._consoleIo.WriteLine("Transaction Details:");
             this._consoleIo.WriteLine($"ID: {transaction.Id}");
             this._consoleIo.WriteLine($"Amount: {transaction.Amount:C}");
-            this._consoleIo.WriteLine($"Date: {transaction.TimeStamp:yyyy-MM-dd HH:mm}");
+            this._consoleIo.WriteLine($"Date: {transaction.Timestamp:yyyy-MM-dd HH:mm}");
             this._consoleIo.WriteLine($"Transaction Type: {transaction.Type}");
             this._consoleIo.WriteLine($"Payment Method: {transaction.Method}");
             this._consoleIo.WriteLine($"Category: {transaction.Category}");
@@ -307,7 +307,7 @@ namespace Assignment4ExpenseTracker.View
                 }
 
                 string displayId = index.ToString();
-                string formattedDate = transaction.TimeStamp.ToString("yyyy-MM-dd HH:mm");
+                string formattedDate = transaction.Timestamp.ToString("yyyy-MM-dd HH:mm");
                 string amountDisplay;
                 string typeDisplay;
 

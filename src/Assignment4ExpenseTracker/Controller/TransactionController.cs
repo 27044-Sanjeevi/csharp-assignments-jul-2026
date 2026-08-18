@@ -121,7 +121,7 @@ namespace Assignment4ExpenseTracker.Controller
             {
                 Id = selectedRecord.Id,
                 Amount = amount,
-                TimeStamp = selectedRecord.TimeStamp,
+                Timestamp = selectedRecord.Timestamp,
                 Type = transactionType,
                 Category = category,
                 Method = paymentMethod,
