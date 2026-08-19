@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.Services
+namespace Assignment4ExpenseTracker.Services
 {
     using System;
     using System.Collections.Generic;
@@ -14,14 +14,14 @@
     internal class TransactionService : ITransactionService
     {
         private readonly IRepository _repository;
-        private readonly TransactionValidation _validator;
+        private readonly TransactionValidator _validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionService"/> class.
         /// </summary>
         /// <param name="repository">The data persistence repository access tier.</param>
         /// <param name="validator">The engine used to enforce data rules.</param>
-        public TransactionService(IRepository repository, TransactionValidation validator)
+        public TransactionService(IRepository repository, TransactionValidator validator)
         {
             this._repository = repository ?? throw new ArgumentNullException(nameof(repository));
             this._validator = validator ?? throw new ArgumentNullException(nameof(validator));
@@ -104,13 +104,13 @@
         /// <inheritdoc />
         public IReadOnlyList<Transaction> GetAllTransactions()
         {
-            return this._repository.GetAll().ToList();
+            return this._repository.GetAll();
         }
 
         /// <inheritdoc />
         public ReportDto GenerateFinancialReport()
         {
-            IReadOnlyList<Transaction> transactions = this._repository.GetAll().ToList();
+            IReadOnlyList<Transaction> transactions = this._repository.GetAll();
             decimal totalIncome = 0;
             decimal totalExpense = 0;
 

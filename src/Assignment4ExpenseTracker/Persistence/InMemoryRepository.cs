@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.Persistence
+namespace Assignment4ExpenseTracker.Persistence
 {
     using Assignment4ExpenseTracker.Models;
 
@@ -25,7 +25,7 @@
         }
 
         /// <inheritdoc />
-        public IEnumerable<Transaction> GetAll()
+        public IReadOnlyList<Transaction> GetAll()
         {
             return this.CloneAll();
         }
@@ -83,10 +83,7 @@
             List<Transaction> clonedTransactions = new List<Transaction>();
             foreach (Transaction transaction in this._transactions)
             {
-                if (transaction != null)
-                {
-                    clonedTransactions.Add(new Transaction(transaction));
-                }
+                clonedTransactions.Add(new Transaction(transaction));
             }
 
             return clonedTransactions;

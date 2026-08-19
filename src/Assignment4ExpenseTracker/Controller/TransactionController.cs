@@ -129,9 +129,12 @@ namespace Assignment4ExpenseTracker.Controller
             };
 
             ValidationResult result = this._transactionService.UpdateTransaction(updatedTransaction);
-            this._consoleView.DisplayValidationResult(result);
 
-            if (result.IsValid)
+            if (!result.IsValid)
+            {
+                this._consoleView.DisplayValidationResult(result);
+            }
+            else
             {
                 this._consoleView.DisplayUpdateSuccessful();
             }
@@ -164,7 +167,6 @@ namespace Assignment4ExpenseTracker.Controller
             if (this._consoleView.ConfirmDelete(selectedRecord))
             {
                 ValidationResult result = this._transactionService.DeleteTransaction(selectedRecord.Id);
-
                 if (result.IsValid)
                 {
                     this._consoleView.DisplayDeleteSuccessful();

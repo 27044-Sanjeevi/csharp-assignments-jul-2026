@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.Models.DTOs
+namespace Assignment4ExpenseTracker.Models.DTOs
 {
     using System;
     using Assignment4ExpenseTracker.Models.Enums;

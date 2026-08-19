@@ -16,6 +16,20 @@ namespace Assignment4ExpenseTracker.View
         private const int KeepCurrentChoiceIndex = 1;
         private const int ChoiceWithKeepCurrentOffset = ChoiceToZeroBasedOffset + KeepCurrentChoiceIndex;
 
+        private static readonly IReadOnlyList<TransactionType> TransactionTypes = new List<TransactionType>
+        {
+            TransactionType.Income,
+            TransactionType.Expense,
+        };
+
+        private static readonly IReadOnlyList<PaymentMethod> PaymentMethods = new List<PaymentMethod>
+        {
+            PaymentMethod.Cash,
+            PaymentMethod.CreditCard,
+            PaymentMethod.DebitCard,
+            PaymentMethod.BankTransfer,
+        };
+
         private readonly IConsoleIO _consoleIo;
         private readonly ConsoleHelper _consoleHelper;
 
@@ -58,10 +72,10 @@ namespace Assignment4ExpenseTracker.View
                     return existingType.Value;
                 }
 
-                return (TransactionType)(index - ChoiceToZeroBasedOffset);
+                return TransactionTypes[index - ChoiceWithKeepCurrentOffset];
             }
 
-            return (TransactionType)index;
+            return TransactionTypes[index - ChoiceToZeroBasedOffset];
         }
 
         /// <inheritdoc />
@@ -87,10 +101,10 @@ namespace Assignment4ExpenseTracker.View
                     return existingMethod.Value;
                 }
 
-                return (PaymentMethod)(paymentIndex - ChoiceToZeroBasedOffset);
+                return PaymentMethods[paymentIndex - ChoiceWithKeepCurrentOffset];
             }
 
-            return (PaymentMethod)paymentIndex;
+            return PaymentMethods[paymentIndex - ChoiceToZeroBasedOffset];
         }
 
         /// <inheritdoc />

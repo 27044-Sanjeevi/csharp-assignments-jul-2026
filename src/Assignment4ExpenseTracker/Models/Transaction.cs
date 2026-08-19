@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.Models
+namespace Assignment4ExpenseTracker.Models
 {
     using Assignment4ExpenseTracker.Models.Enums;
 
@@ -27,9 +27,9 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Transaction"/> class by copying the properties from another transaction.
+        /// Initializes a new instance of the <see cref="Transaction"/> class by creating a defensive copy of another transaction.
         /// </summary>
-        /// <param name="transaction">The transaction to be copied.</param>
+        /// <param name="transaction">The transaction to copy.</param>
         /// <exception cref="ArgumentNullException">Thrown when the transaction object is null.</exception>
         public Transaction(Transaction transaction)
         {
@@ -38,7 +38,7 @@
                 throw new ArgumentNullException(nameof(transaction));
             }
 
-            // Copy the read-only ID and other fields from the other transaction
+            // Create a defensive copy of the transaction state
             this.Id = transaction.Id;
             this.Amount = transaction.Amount;
             this.Type = transaction.Type;

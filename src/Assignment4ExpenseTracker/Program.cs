@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker
+namespace Assignment4ExpenseTracker
 {
     using Assignment4ExpenseTracker.Controller;
     using Assignment4ExpenseTracker.IO;
@@ -29,7 +29,7 @@
             IView view = new ConsoleView(consoleIo, consoleHelper);
 
             // Validation
-            TransactionValidation validator = new TransactionValidation();
+            TransactionValidator validator = new TransactionValidator();
 
             // Service
             ITransactionService service = new TransactionService(repository, validator);
