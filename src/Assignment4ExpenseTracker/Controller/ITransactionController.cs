@@ -1,4 +1,6 @@
-﻿namespace Assignment4ExpenseTracker.Controller
+﻿using Assignment4ExpenseTracker.Models.Enums;
+
+namespace Assignment4ExpenseTracker.Controller
 {
     /// <summary>
     /// Defines contracts for the main application controller.
@@ -10,7 +12,7 @@
         /// </summary>
         /// <param name="choice">The menu option selected for transaction operations.</param>
         /// <returns>true if the user chose to exit; otherwise, false.</returns>
-        bool HandleMenu(int choice);
+        bool HandleMenu(MainMenuOption choice);
 
         /// <summary>
         /// Adds a transaction using user-provided details.

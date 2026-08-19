@@ -28,29 +28,17 @@ namespace Assignment4ExpenseTracker.Controller
         }
 
         /// <inheritdoc />
-        public bool HandleMenu(int choice)
+        public bool HandleMenu(MainMenuOption choice)
         {
             switch (choice)
             {
-                case 1:
-                    this.Add();
-                    break;
-                case 2:
-                    this.ViewAll();
-                    break;
-                case 3:
-                    this.Update();
-                    break;
-                case 4:
-                    this.Delete();
-                    break;
-                case 5:
-                    this.GenerateReport();
-                    break;
-                case 6:
-                    return true;
-                default:
-                    break;
+                case MainMenuOption.Add: this.Add(); break;
+                case MainMenuOption.ViewAll: this.ViewAll(); break;
+                case MainMenuOption.Update: this.Update(); break;
+                case MainMenuOption.Delete: this.Delete(); break;
+                case MainMenuOption.GenerateReport: this.GenerateReport(); break;
+                case MainMenuOption.Exit: return true;
+                default: break;
             }
 
             return false;

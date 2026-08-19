@@ -163,13 +163,23 @@ namespace Assignment4ExpenseTracker.View
         /// <summary>
         /// Prompts the user to make a menu selection.
         /// </summary>
-        /// <returns>The index of the choice.</returns>
-        int ReadChoice();
+        /// <returns>An enum specifying the menu option selected.</returns>
+        MainMenuOption ReadChoice();
 
         /// <summary>
         /// Pauses execution and prompts the user to return to the main screen.
         /// </summary>
         void PauseAndReturn();
+
+        /// <summary>
+        /// Displays a selection menu using arrow keys and returns the selected item itself.
+        /// </summary>
+        /// <typeparam name="T">The type of the choices.</typeparam>
+        /// <param name="title">The title prompt for selection.</param>
+        /// <param name="choices">The list of choices to display.</param>
+        /// <param name="displaySelector">Optional function to format how each choice is displayed as text.</param>
+        /// <returns>The selected item.</returns>
+        T ReadSelection<T>(string title, IEnumerable<T> choices, Func<T, string>? displaySelector = null);
 
         /// <summary>
         /// Displays an error message.

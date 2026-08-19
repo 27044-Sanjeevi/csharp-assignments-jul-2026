@@ -226,23 +226,6 @@ namespace Assignment4ExpenseTracker.Utilities
         }
 
         /// <summary>
-        /// Displays a selection menu using arrow keys and returns the index of the selected choice.
-        /// </summary>
-        /// <param name="title">The title prompt for selection.</param>
-        /// <param name="choices">The list of choices to display.</param>
-        /// <returns>The index of the selected choice (1-based).</returns>
-        public int ReadSelection(string title, List<string> choices)
-        {
-            var prompt = new SelectionPrompt<string>()
-                .Title(title)
-                .HighlightStyle(new Style(Color.Black, Color.Aqua))
-                .AddChoices(choices);
-
-            string selected = AnsiConsole.Prompt(prompt);
-            return choices.IndexOf(selected) + 1;
-        }
-
-        /// <summary>
         /// Handles aborting when input attempts are exceeded by printing a message and returning the abort exception.
         /// </summary>
         /// <returns>An OperationCanceledException to be thrown.</returns>

@@ -12,22 +12,41 @@ namespace Assignment4ExpenseTracker.View
     /// </summary>
     internal class ConsoleView : IView
     {
-        private const int ChoiceToZeroBasedOffset = 1;
-        private const int KeepCurrentChoiceIndex = 1;
-        private const int ChoiceWithKeepCurrentOffset = ChoiceToZeroBasedOffset + KeepCurrentChoiceIndex;
-
-        private static readonly IReadOnlyList<TransactionType> TransactionTypes = new List<TransactionType>
+        private readonly TransactionType[] _transactionType =
         {
             TransactionType.Income,
             TransactionType.Expense,
         };
 
-        private static readonly IReadOnlyList<PaymentMethod> PaymentMethods = new List<PaymentMethod>
+        private readonly PaymentMethod[] _paymentMethod =
         {
-            PaymentMethod.Cash,
-            PaymentMethod.CreditCard,
-            PaymentMethod.DebitCard,
-            PaymentMethod.BankTransfer,
+             PaymentMethod.Cash,
+             PaymentMethod.CreditCard,
+             PaymentMethod.DebitCard,
+             PaymentMethod.BankTransfer,
+        };
+
+        private readonly TransactionCategory[] _incomeCategory =
+        {
+             TransactionCategory.Salary,
+             TransactionCategory.Investment,
+             TransactionCategory.Freelance,
+             TransactionCategory.Business,
+             TransactionCategory.Gifts,
+             TransactionCategory.MiscellaneousIncome,
+        };
+
+        private readonly TransactionCategory[] _expenseCategory =
+        {
+            TransactionCategory.Transport,
+            TransactionCategory.Utilities,
+            TransactionCategory.Groceries,
+            TransactionCategory.Rent,
+            TransactionCategory.Food,
+            TransactionCategory.Shopping,
+            TransactionCategory.Healthcare,
+            TransactionCategory.Education,
+            TransactionCategory.MiscellaneousExpense,
         };
 
         private readonly IConsoleIO _consoleIo;
@@ -54,124 +73,25 @@ namespace Assignment4ExpenseTracker.View
         /// <inheritdoc />
         public TransactionType GetTransactionTypeChoice(TransactionType? existingType = null)
         {
-            List<string> typeChoices = new List<string>
-            {
-                "Income",
-                "Expense",
-            };
-            if (existingType.HasValue)
-            {
-                typeChoices.Insert(0, $"Keep current ({existingType.Value})");
-            }
-
-            int index = this._consoleHelper.ReadSelection("Select the cash flow type:", typeChoices);
-            if (existingType.HasValue)
-            {
-                if (index == KeepCurrentChoiceIndex)
-                {
-                    return existingType.Value;
-                }
-
-                return TransactionTypes[index - ChoiceWithKeepCurrentOffset];
-            }
-
-            return TransactionTypes[index - ChoiceToZeroBasedOffset];
+            return this.GetEnumSelection("Select the cash flow type:", this._transactionType, existingType);
         }
 
         /// <inheritdoc />
         public PaymentMethod GetPaymentMethod(PaymentMethod? existingMethod = null)
         {
-            List<string> paymentChoices = new List<string>
-            {
-                "Cash",
-                "Credit Card",
-                "Debit Card",
-                "Bank Transfer",
-            };
-            if (existingMethod.HasValue)
-            {
-                paymentChoices.Insert(0, $"Keep current ({existingMethod.Value})");
-            }
-
-            int paymentIndex = this._consoleHelper.ReadSelection("Select the payment method:", paymentChoices);
-            if (existingMethod.HasValue)
-            {
-                if (paymentIndex == KeepCurrentChoiceIndex)
-                {
-                    return existingMethod.Value;
-                }
-
-                return PaymentMethods[paymentIndex - ChoiceWithKeepCurrentOffset];
-            }
-
-            return PaymentMethods[paymentIndex - ChoiceToZeroBasedOffset];
+            return this.GetEnumSelection("Select the payment method:", this._paymentMethod, existingMethod);
         }
 
         /// <inheritdoc />
         public TransactionCategory GetIncomeCategory(TransactionCategory? existingCategory = null)
         {
-            IReadOnlyList<TransactionCategory> incomeCategories = new List<TransactionCategory>()
-            {
-                TransactionCategory.Salary,
-                TransactionCategory.Investment,
-                TransactionCategory.Freelance,
-                TransactionCategory.Business,
-                TransactionCategory.Gifts,
-                TransactionCategory.MiscellaneousIncome,
-            };
-            List<string> choices = incomeCategories.Select(c => c.ToString()).ToList();
-            if (existingCategory.HasValue)
-            {
-                choices.Insert(0, $"Keep current ({existingCategory.Value})");
-            }
-
-            int categoryIndex = this._consoleHelper.ReadSelection("Select the income category:", choices);
-            if (existingCategory.HasValue)
-            {
-                if (categoryIndex == KeepCurrentChoiceIndex)
-                {
-                    return existingCategory.Value;
-                }
-
-                return incomeCategories[categoryIndex - ChoiceWithKeepCurrentOffset];
-            }
-
-            return incomeCategories[categoryIndex - ChoiceToZeroBasedOffset];
+            return this.GetEnumSelection("Select the income category:", this._incomeCategory, existingCategory);
         }
 
         /// <inheritdoc />
         public TransactionCategory GetExpenseCategory(TransactionCategory? existingCategory = null)
         {
-            IReadOnlyList<TransactionCategory> expenseCategories = new List<TransactionCategory>()
-            {
-                TransactionCategory.Transport,
-                TransactionCategory.Utilities,
-                TransactionCategory.Groceries,
-                TransactionCategory.Rent,
-                TransactionCategory.Food,
-                TransactionCategory.Shopping,
-                TransactionCategory.Healthcare,
-                TransactionCategory.Education,
-                TransactionCategory.MiscellaneousExpense,
-            };
-            List<string> choices = expenseCategories.Select(c => c.ToString()).ToList();
-            if (existingCategory.HasValue)
-            {
-                choices.Insert(0, $"Keep current ({existingCategory.Value})");
-            }
-
-            int categoryIndex = this._consoleHelper.ReadSelection("Select the expense category:", choices);
-            if (existingCategory.HasValue)
-            {
-                if (categoryIndex == KeepCurrentChoiceIndex)
-                {
-                    return existingCategory.Value;
-                }
-
-                return expenseCategories[categoryIndex - ChoiceWithKeepCurrentOffset];
-            }
-
-            return expenseCategories[categoryIndex - ChoiceToZeroBasedOffset];
+            return this.GetEnumSelection("Select the expense category:", this._expenseCategory, existingCategory);
         }
 
         /// <inheritdoc />
@@ -199,14 +119,11 @@ namespace Assignment4ExpenseTracker.View
         public bool ConfirmDelete(Transaction transaction)
         {
             ArgumentNullException.ThrowIfNull(transaction, nameof(transaction));
-            List<string> choices = new List<string>()
-            {
-                "No, Cancel deletion",
-                "Yes, permanently Delete",
-            };
 
-            int choiceIndex = this._consoleHelper.ReadSelection($"Are you sure you want to permanently delete this {transaction.Type} transaction of {transaction.Amount:C}?", choices);
-            return choiceIndex == 2;
+            return this.ReadSelection(
+                $"Are you sure you want to permanently delete this {transaction.Type} transaction of {transaction.Amount:C}?",
+                new[] { false, true },
+                confirm => confirm ? "Yes, permanently Delete" : "No, Cancel deletion");
         }
 
         /// <inheritdoc />
@@ -411,20 +328,22 @@ namespace Assignment4ExpenseTracker.View
         /// <summary>
         /// Prompts the user continuously using arrow keys to select a menu option.
         /// </summary>
-        /// <returns>A valid choice integer corresponding to the selection index.</returns>
-        public int ReadChoice()
+        /// <returns>An enum specifying the main menu option.</returns>
+        public MainMenuOption ReadChoice()
         {
-            var choices = new List<string>
-            {
-                "1. Add a new transaction",
-                "2. View all transactions",
-                "3. Update an existing transaction",
-                "4. Delete a transaction",
-                "5. Generate Insights and Report",
-                "6. Exit the application",
-            };
-
-            return this._consoleHelper.ReadSelection("Select an operation to run:", choices);
+            return this.ReadSelection(
+                "Select an operation to run:",
+                Enum.GetValues<MainMenuOption>(),
+                option => option switch
+                {
+                    MainMenuOption.Add => "1. Add a new transaction",
+                    MainMenuOption.ViewAll => "2. View all transactions",
+                    MainMenuOption.Update => "3. Update an existing transaction",
+                    MainMenuOption.Delete => "4. Delete a transaction",
+                    MainMenuOption.GenerateReport => "5. Generate Insights and Report",
+                    MainMenuOption.Exit => "6. Exit the application",
+                    _ => option.ToString()
+                });
         }
 
         /// <inheritdoc />
@@ -448,6 +367,48 @@ namespace Assignment4ExpenseTracker.View
 
             AnsiConsole.Write(table);
             this._consoleHelper.WriteLine(string.Empty);
+        }
+
+        /// <inheritdoc />
+        public T ReadSelection<T>(string title, IEnumerable<T> choices, Func<T, string>? displaySelector = null)
+        {
+            ArgumentNullException.ThrowIfNull(choices);
+            Func<T, string> toDisplay = displaySelector ?? (item => item?.ToString() ?? string.Empty);
+
+            List<T> choiceList = choices.ToList();
+            List<string> displayChoices = choiceList.Select(toDisplay).ToList();
+
+            var prompt = new SelectionPrompt<string>()
+                .Title(title)
+                .HighlightStyle(new Style(Color.Black, Color.Aqua))
+                .AddChoices(displayChoices);
+
+            string selected = AnsiConsole.Prompt(prompt);
+
+            int index = displayChoices.IndexOf(selected);
+            return choiceList[index];
+        }
+
+        /// <summary>
+        /// Prompts the user to select an enum value, optionally allowing them to keep the current value.
+        /// </summary>
+        private T GetEnumSelection<T>(string title, IReadOnlyList<T> choices, T? existingValue = null)
+            where T : struct, Enum
+        {
+            if (existingValue == null)
+            {
+                return this.ReadSelection(title, choices);
+            }
+
+            List<T?> options = new List<T?> { null };
+            options.AddRange(choices.Cast<T?>());
+
+            T? selected = this.ReadSelection(
+                title,
+                options,
+                option => option == null ? $"Keep current ({existingValue.Value})" : option.Value.ToString());
+
+            return selected ?? existingValue.Value;
         }
     }
 }

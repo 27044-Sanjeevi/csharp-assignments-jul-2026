@@ -1,6 +1,7 @@
 namespace Assignment4ExpenseTracker
 {
     using Assignment4ExpenseTracker.Controller;
+    using Assignment4ExpenseTracker.Models.Enums;
     using Assignment4ExpenseTracker.View;
 
     /// <summary>
@@ -34,7 +35,7 @@ namespace Assignment4ExpenseTracker
                 {
                     this._view.ClearScreen();
                     this._view.ShowMainMenu();
-                    int choice = this._view.ReadChoice();
+                    MainMenuOption choice = this._view.ReadChoice();
                     this._view.ClearScreen();
 
                     exit = this._controller.HandleMenu(choice);
