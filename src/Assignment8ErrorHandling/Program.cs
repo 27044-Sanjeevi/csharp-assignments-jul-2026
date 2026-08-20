@@ -1,52 +1,56 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace Assignments
+namespace Assignment8ErrorHandling
 {
+    using System;
+    using Assignment8ErrorHandling.Controller;
+    using Assignment8ErrorHandling.IO;
+    using Assignment8ErrorHandling.Utilities;
+    using Assignment8ErrorHandling.View;
+
     /// <summary>
-    /// Provides methods for performing division operations and printing exception details.
+    /// Contains the Main entry point of the project.
     /// </summary>
     internal class Program
     {
         /// <summary>
-        /// Main entry
+        /// Main entry point of the program. Initializes dependencies and runs the controller.
         /// </summary>
-        public static void Main()
+        internal static void Main()
         {
-            try
-            {
-                double res = Divide(10, 0);
-                Console.WriteLine(res);
-            }
-            catch (DivideByZeroException ex)
-            {
-                PrintException(ex);
-            }
+            AppDomain.CurrentDomain.UnhandledException += GlobalUnhandledExceptionHandler;
 
-            Console.ReadKey();
+            // View
+            ConsoleIO consoleIo = new ConsoleIO();
+            ConsoleHelper consoleHelper = new ConsoleHelper(consoleIo);
+            ConsoleView view = new ConsoleView(consoleIo, consoleHelper);
+
+            // Controllers
+            ITaskController task1Controller = new Task1Controller(view);
+            ITaskController task2Controller = new Task2Controller(view);
+            ITaskController task3Controller = new Task3Controller(view);
+            ITaskController task4Controller = new Task4Controller(view);
+            ITaskController task5Controller = new Task5Controller(view, task4Controller);
+
+            MainController mainController = new MainController(
+                task1Controller,
+                task2Controller,
+                task3Controller,
+                task4Controller,
+                task5Controller);
+
+            // Application Runner
+            ApplicationRunner applicationRunner = new ApplicationRunner(view, mainController);
+
+            applicationRunner.RunApplication();
         }
 
-        /// <summary>
-        /// Divides the given two numbers.
-        /// </summary>
-        /// <param name="a">Dividend value</param>
-        /// <param name="b">Divisor Value</param>
-        /// <returns>Divided Value</returns>
-        public static double Divide(int a, int b)
+        private static void GlobalUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
-                return a / b;
-        }
+            Exception? exception = e.ExceptionObject as Exception;
 
-        /// <summary>
-        /// Prints exception
-        /// </summary>
-        /// <param name="ex">Exception object</param>
-        public static void PrintException(Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
-            Console.WriteLine(ex.Source);
-            Console.WriteLine(ex.InnerException);
-            Console.WriteLine(ex.TargetSite);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"\n[GLOBAL UNHANDLED EXCEPTION HANDLER] A global unhandled exception occurred: {exception?.Message}");
+            Console.WriteLine("Application is shutting down..");
+            Console.ResetColor();
         }
     }
 }

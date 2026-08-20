@@ -1,30 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assignment8ErrorHandling.IO;
-
-namespace Assignment8ErrorHandling.Utilities
+﻿namespace Assignment8ErrorHandling.Utilities
 {
+    using Assignment8ErrorHandling.IO;
+
     /// <summary>
     /// Provides the methods for console realted helper operations.
     /// </summary>
     internal class ConsoleHelper
     {
-        private readonly IConsoleIO _consoleIO;
+        private readonly ConsoleIO _consoleIO;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleHelper"/> class.
         /// </summary>
         /// <param name="consoleIO">The console input and output renderer.</param>
         /// <exception cref="ArgumentNullException">Thrown when the object passed is null.</exception>
-        internal ConsoleHelper(IConsoleIO consoleIO)
+        internal ConsoleHelper(ConsoleIO consoleIO)
         {
             this._consoleIO = consoleIO ?? throw new ArgumentNullException(nameof(consoleIO));
         }
 
-        public int? ReadPositiveInt(string prompt, bool isOptional = false)
+        /// <summary>
+        /// Reads an integer value from the console, optionally allowing an empty input to bypass validation.
+        /// </summary>
+        /// <param name="prompt">The prompt message to display.</param>
+        /// <returns>The parsed integer value, or null if the field was skipped.</returns>
+        public int ReadInt(string prompt)
         {
             const int MaxAttempts = 3;
             int attempt = 0;
@@ -32,13 +32,7 @@ namespace Assignment8ErrorHandling.Utilities
             while (attempt < MaxAttempts)
             {
                 string? input = this._consoleIO.ReadLine(prompt);
-
-                if (isOptional && string.IsNullOrEmpty(input))
-                {
-                    return null;
-                }
-
-                if (int.TryParse(input, out int value) && value > 0)
+                if (int.TryParse(input, out int value))
                 {
                     return value;
                 }
@@ -46,11 +40,12 @@ namespace Assignment8ErrorHandling.Utilities
                 attempt++;
                 if (attempt < MaxAttempts)
                 {
-                    this.DisplayWarning($"Please enter a Positive Integer Value ({attempt}/{MaxAttempts} attempts remaining).");
+                    this.DisplayWarning($"Please enter an Integer Value ({attempt}/{MaxAttempts} attempts remaining).");
                 }
             }
 
             this.AbortInputOperation();
+            return 0;
         }
 
         /// <summary>
@@ -71,11 +66,12 @@ namespace Assignment8ErrorHandling.Utilities
             this._consoleIO.WriteColored($"[WARNING] {message}\n", ConsoleColor.Yellow);
         }
 
-
-
+        /// <summary>
+        /// Aborts the input operation.
+        /// </summary>
         public void AbortInputOperation()
         {
-            this.DisplayError("Correct Value is not entered, aborting input operation.");
+            this._consoleIO.WriteColored("Correct Value is not entered, aborting input operation.", ConsoleColor.Red);
         }
     }
 }

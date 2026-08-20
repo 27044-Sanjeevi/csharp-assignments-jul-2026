@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment8ErrorHandling.IO
+﻿namespace Assignment8ErrorHandling.IO
 {
+    using System;
+
     /// <summary>
-    /// Provides methods console related input and output operations.
+    /// Provides concrete implementations of console input and output operations.
     /// </summary>
-    internal class ConsoleIO : IConsoleIO
+    internal class ConsoleIO
     {
-        /// <inheritdoc />
-        public string? ReadLine(string? prompt)
+        /// <summary>
+        /// Reads the next line of characters from the standard input stream.
+        /// </summary>
+        /// <param name="prompt">Prompts the optional message to the user.</param>
+        /// <returns>The next line of input from the console, or null if no lines are available.</returns>
+        public string? ReadLine(string? prompt = "")
         {
-            if (!string.IsNullOrEmpty(prompt))
+            if (prompt != null)
             {
                 this.Write(prompt);
             }
@@ -22,30 +22,63 @@ namespace Assignment8ErrorHandling.IO
             return Console.ReadLine();
         }
 
-        /// <inheritdoc />
-        public void WriteColored(string text, ConsoleColor color)
+        /// <summary>
+        /// Clears the console and writes a colored message.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="color">The color of the message.</param>
+        public void ClearAndWriteColored(string message, ConsoleColor color)
+        {
+            this.Clear();
+            this.WriteColored(message, color);
+        }
+
+        /// <summary>
+        /// Writes message to screen with custom color.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="color">The console color.</param>
+        public void WriteColored(string message, ConsoleColor color)
         {
             Console.ForegroundColor = color;
-            Console.Write(text);
+            this.Write(message);
             Console.ResetColor();
         }
 
-        /// <inheritdoc />
-        public void Write(string text)
+        /// <summary>
+        /// Writes the specified string value to the standard output stream.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
+        public void Write(string message)
         {
-            Console.Write(text);
+            Console.Write(message);
         }
 
-        /// <inheritdoc />
-        public void WriteLine(string text)
+        /// <summary>
+        /// Writes the specified string value, followed by the current line terminator, to the standard output stream.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
+        public void WriteLine(string message)
         {
-            Console.WriteLine(text);
+            Console.WriteLine(message);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Clears the console window.
+        /// </summary>
         public void Clear()
         {
             Console.Clear();
+        }
+
+        /// <summary>
+        /// Obtains the next character or function key pressed by the user.
+        /// </summary>
+        /// <param name="intercept">Determines whether to display the pressed key in the console window.</param>
+        /// <returns>An object that describes the key that was pressed.</returns>
+        public ConsoleKeyInfo ReadKey(bool intercept)
+        {
+            return Console.ReadKey(intercept);
         }
     }
 }

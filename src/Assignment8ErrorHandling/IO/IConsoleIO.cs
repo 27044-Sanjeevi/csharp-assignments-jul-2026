@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment8ErrorHandling.IO
+﻿namespace Assignment8ErrorHandling.IO
 {
     /// <summary>
     /// Specifies the contract for Console Input and Output operations.
     /// </summary>
     internal interface IConsoleIO
     {
-
         /// <summary>
         /// Prompts an optional message and reads a string from the user.
         /// </summary>
