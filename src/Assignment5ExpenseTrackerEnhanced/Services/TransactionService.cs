@@ -39,7 +39,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
                 Category = transactionDto.Category,
                 Method = transactionDto.Method,
                 Description = transactionDto.Description,
-                TimeStamp = DateTime.Now,
+                Timestamp = DateTime.Now,
             };
 
             ValidationResult validationResult = this._validator.ValidateTransaction(transaction);
@@ -84,7 +84,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
                 Category = updateDto.Category,
                 Method = updateDto.Method,
                 Description = updateDto.Description,
-                TimeStamp = updateDto.TimeStamp,
+                Timestamp = updateDto.Timestamp,
             };
 
             validationResult = this._validator.ValidateTransaction(updatedModel);
@@ -145,8 +145,8 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
             {
                 case SortBy.Date:
                     transactions = ascending
-                        ? transactions.OrderBy(t => t.TimeStamp).ToList()
-                        : transactions.OrderByDescending(t => t.TimeStamp).ToList();
+                        ? transactions.OrderBy(t => t.Timestamp).ToList()
+                        : transactions.OrderByDescending(t => t.Timestamp).ToList();
                     break;
                 case SortBy.Amount:
                     transactions = ascending

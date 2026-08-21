@@ -216,6 +216,17 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         public void DisplayFilterHeader() => this._consoleHelper.PrintHeader("FILTER TRANSACTIONS");
 
         /// <inheritdoc />
+        public bool ConfirmDelete(Transaction transaction)
+        {
+            ArgumentNullException.ThrowIfNull(transaction, nameof(transaction));
+
+            return this.ReadSelection(
+                $"Are you sure you want to permanently delete this {transaction.Type} transaction of {transaction.Amount:C}?",
+                new[] { false, true },
+                confirm => confirm ? "Yes, permanently Delete" : "No, Cancel deletion");
+        }
+
+        /// <inheritdoc />
         public FilterType GetFilterTypeChoice()
         {
             List<string> filterChoices = new List<string>
@@ -257,7 +268,7 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             this._consoleIo.WriteLine("Transaction Details:");
             this._consoleIo.WriteLine($"ID: {transaction.Id}");
             this._consoleIo.WriteLine($"Amount: {transaction.Amount:C}");
-            this._consoleIo.WriteLine($"Date: {transaction.TimeStamp:yyyy-MM-dd HH:mm}");
+            this._consoleIo.WriteLine($"Date: {transaction.Timestamp:yyyy-MM-dd HH:mm}");
             this._consoleIo.WriteLine($"Transaction Type: {transaction.Type}");
             this._consoleIo.WriteLine($"Payment Method: {transaction.Method}");
             this._consoleIo.WriteLine($"Category: {transaction.Category}");
@@ -296,7 +307,7 @@ namespace Assignment5ExpenseTrackerEnhanced.View
                 }
 
                 string displayId = index.ToString();
-                string formattedDate = transaction.TimeStamp.ToString("yyyy-MM-dd HH:mm");
+                string formattedDate = transaction.Timestamp.ToString("yyyy-MM-dd HH:mm");
                 string amountDisplay;
                 string typeDisplay;
 

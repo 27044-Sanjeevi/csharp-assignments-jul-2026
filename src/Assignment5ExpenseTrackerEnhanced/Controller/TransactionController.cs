@@ -131,7 +131,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
             {
                 Id = selectedRecord.Id,
                 Amount = amount,
-                TimeStamp = selectedRecord.TimeStamp,
+                Timestamp = selectedRecord.Timestamp,
                 Type = transactionType,
                 Category = category,
                 Method = paymentMethod,
@@ -166,15 +166,23 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
         {
             this._consoleView.DisplayDeleteHeader();
 
-            Transaction? selectedRecord = this.GetTransactionByIndex();
-
-            if (selectedRecord == null)
+            if (!this.TryGetSelectedTransaction(out Transaction? selectedRecord) || selectedRecord == null)
             {
                 return;
             }
 
-            this._transactionService.DeleteTransaction(selectedRecord.Id);
-            this._consoleView.DisplayDeleteSuccessful();
+            if (this._consoleView.ConfirmDelete(selectedRecord))
+            {
+                ValidationResult result = this._transactionService.DeleteTransaction(selectedRecord.Id);
+                if (result.IsValid)
+                {
+                    this._consoleView.DisplayDeleteSuccessful();
+                }
+                else
+                {
+                    this._consoleView.DisplayValidationResult(result);
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -191,7 +199,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
 
             string keyword = this._consoleView.GetSearchKeyword();
             results = this._transactionService.GetAllTransactions().Where(t =>
-            t.TimeStamp.ToString("yyyy-MM-dd HH:mm").Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+            t.Timestamp.ToString("yyyy-MM-dd HH:mm").Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
             (t.Description != null && t.Description.Contains(keyword, StringComparison.OrdinalIgnoreCase)) ||
             t.Amount.ToString().Equals(keyword) ||
             t.Category.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
@@ -289,6 +297,17 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
         private int GetAllTransactionsCount()
         {
             return this._transactionService.GetTransactionCount();
+        }
+
+        /// <summary>
+        /// Reusable flow helper to retrieve a selected transaction by index and perform validation.
+        /// </summary>
+        /// <param name="selectedRecord">The retrieved transaction if found; otherwise, null.</param>
+        /// <returns>True if a transaction was successfully selected; otherwise, false.</returns>
+        private bool TryGetSelectedTransaction(out Transaction? selectedRecord)
+        {
+            selectedRecord = this.GetTransactionByIndex();
+            return selectedRecord != null;
         }
     }
 }

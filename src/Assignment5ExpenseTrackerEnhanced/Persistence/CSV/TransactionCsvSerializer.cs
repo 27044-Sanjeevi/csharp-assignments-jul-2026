@@ -29,7 +29,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Persistence.Csv
                 transaction.Type,
                 transaction.Category,
                 transaction.Method,
-                transaction.TimeStamp.ToString("o", CultureInfo.InvariantCulture),
+                transaction.Timestamp.ToString("o", CultureInfo.InvariantCulture),
                 this.EscapeCsv(transaction.Description));
         }
 
@@ -99,7 +99,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Persistence.Csv
                     Type = type,
                     Category = category,
                     Method = method,
-                    TimeStamp = timestamp,
+                    Timestamp = timestamp,
                     Description = description,
                 };
             }

@@ -14,7 +14,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Persistence.Csv
     /// </summary>
     internal class CsvFileRepository : IRepository
     {
-        private const string CsvHeader = "Id,Amount,Type,Category,Method,TimeStamp,Description";
+        private const string CsvHeader = "Id,Amount,Type,Category,Method,Timestamp,Description";
 
         private readonly string _filePath;
         private readonly List<Transaction> _transactions;

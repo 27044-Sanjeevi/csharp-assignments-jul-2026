@@ -149,3 +149,5 @@ dotnet_diagnostic.SA1629.severity = silent
 dotnet_diagnostic.SA1309.severity = silent
 dotnet_diagnostic.SA1633.severity = silent
 dotnet_diagnostic.SA1200.severity = silent
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_prefer_system_threading_lock = true:suggestion

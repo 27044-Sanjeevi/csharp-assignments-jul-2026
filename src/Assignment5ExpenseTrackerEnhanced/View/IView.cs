@@ -73,6 +73,13 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         void DisplayAllTransactionsHeader();
 
         /// <summary>
+        /// Prompts the user to confirm deletion of the specified transaction.
+        /// </summary>
+        /// <param name="transaction">The transaction record to be deleted.</param>
+        /// <returns>True if the user confirmed deletion; otherwise, false.</returns>
+        bool ConfirmDelete(Transaction transaction);
+
+        /// <summary>
         /// Reads the flow type of the transaction.
         /// </summary>
         /// <param name="existingFlow">Holds the existing Flow type of the transaction.</param>
