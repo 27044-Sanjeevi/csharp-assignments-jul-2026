@@ -11,6 +11,7 @@ namespace Assignment8ErrorHandling.View
     {
         private readonly ConsoleIO _consoleIo;
         private readonly ConsoleHelper _consoleHelper;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleView"/> class.
         /// </summary>
