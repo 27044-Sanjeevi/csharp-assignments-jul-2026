@@ -1,7 +1,7 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Models
-{
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+﻿using Assignment5ExpenseTrackerEnhanced.Models.Enums;
 
+namespace Assignment5ExpenseTrackerEnhanced.Models
+{
     /// <summary>
     /// Represents the transaction in the expense tracker.
     /// </summary>

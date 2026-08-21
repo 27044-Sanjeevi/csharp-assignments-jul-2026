@@ -1,10 +1,10 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Persistence
-{
-    using System;
-    using System.Collections.Generic;
-    using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+﻿using System;
+using System.Collections.Generic;
+using Assignment5ExpenseTrackerEnhanced.Models;
+using Assignment5ExpenseTrackerEnhanced.Models.Enums;
 
+namespace Assignment5ExpenseTrackerEnhanced.Persistence
+{
     /// <summary>
     /// Defines data access contracts for financial transactions.
     /// </summary>

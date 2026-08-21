@@ -1,8 +1,8 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Models.DTOs
-{
-    using System;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+﻿using System;
+using Assignment5ExpenseTrackerEnhanced.Models.Enums;
 
+namespace Assignment5ExpenseTrackerEnhanced.Models.DTOs
+{
     /// <summary>
     /// Serves as a data transfer object carrying modification constraints for a transaction record.
     /// </summary>

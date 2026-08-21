@@ -1,11 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using Assignment5ExpenseTrackerEnhanced.Models;
+using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+
 namespace Assignment5ExpenseTrackerEnhanced.Persistence.Csv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
-
     /// <summary>
     /// Handles format-specific serialization and deserialization of Transaction objects to/from CSV.
     /// </summary>

@@ -1,9 +1,9 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Utilities
-{
-    using System.Collections.Generic;
-    using Assignment5ExpenseTrackerEnhanced.IO;
-    using Spectre.Console;
+﻿using System.Collections.Generic;
+using Assignment5ExpenseTrackerEnhanced.IO;
+using Spectre.Console;
 
+namespace Assignment5ExpenseTrackerEnhanced.Utilities
+{
     /// <summary>
     /// Provides general console UI operations including colored outputs, headers, dividers, and validated input parsing.
     /// </summary>

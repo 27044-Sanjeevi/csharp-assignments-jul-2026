@@ -1,13 +1,11 @@
+using Assignment5ExpenseTrackerEnhanced.IO;
+using Assignment5ExpenseTrackerEnhanced.Models;
+using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+using Assignment5ExpenseTrackerEnhanced.Utilities;
+using Spectre.Console;
+
 namespace Assignment5ExpenseTrackerEnhanced.View
 {
-    using System.Linq;
-    using System.Net.Sockets;
-    using Assignment5ExpenseTrackerEnhanced.IO;
-    using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
-    using Assignment5ExpenseTrackerEnhanced.Utilities;
-    using Spectre.Console;
-
     /// <summary>
     /// Handles console-based input and output operations for the Expense Tracker application.
     /// </summary>
@@ -214,10 +212,6 @@ namespace Assignment5ExpenseTrackerEnhanced.View
             return (sortBy, order);
         }
 
-        /// <summary>
-        /// Displays the details of a given transaction.
-        /// </summary>
-        /// <param name="transaction">The transaction object containing the details to be displayed.</param>
         /// <inheritdoc />
         public void DisplayTransactionDetails(Transaction transaction)
         {

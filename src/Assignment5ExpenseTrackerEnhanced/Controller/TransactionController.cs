@@ -1,12 +1,12 @@
+using Assignment5ExpenseTrackerEnhanced.Models;
+using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
+using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+using Assignment5ExpenseTrackerEnhanced.Services;
+using Assignment5ExpenseTrackerEnhanced.Services.Validation;
+using Assignment5ExpenseTrackerEnhanced.View;
+
 namespace Assignment5ExpenseTrackerEnhanced.Controller
 {
-    using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
-    using Assignment5ExpenseTrackerEnhanced.Services;
-    using Assignment5ExpenseTrackerEnhanced.Services.Validation;
-    using Assignment5ExpenseTrackerEnhanced.View;
-
     /// <summary>
     /// Coordinates operations between the View and the Service layer.
     /// </summary>

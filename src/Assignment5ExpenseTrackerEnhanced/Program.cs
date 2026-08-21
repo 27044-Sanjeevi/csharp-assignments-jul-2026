@@ -1,13 +1,13 @@
+using Assignment5ExpenseTrackerEnhanced.Controller;
+using Assignment5ExpenseTrackerEnhanced.IO;
+using Assignment5ExpenseTrackerEnhanced.Persistence;
+using Assignment5ExpenseTrackerEnhanced.Persistence.Csv;
+using Assignment5ExpenseTrackerEnhanced.Services;
+using Assignment5ExpenseTrackerEnhanced.Utilities;
+using Assignment5ExpenseTrackerEnhanced.View;
+
 namespace Assignment5ExpenseTrackerEnhanced
 {
-    using Assignment5ExpenseTrackerEnhanced.Controller;
-    using Assignment5ExpenseTrackerEnhanced.IO;
-    using Assignment5ExpenseTrackerEnhanced.Persistence;
-    using Assignment5ExpenseTrackerEnhanced.Persistence.Csv;
-    using Assignment5ExpenseTrackerEnhanced.Services;
-    using Assignment5ExpenseTrackerEnhanced.Utilities;
-    using Assignment5ExpenseTrackerEnhanced.View;
-
     /// <summary>
     /// Contains the Main entry point of the project.
     /// </summary>

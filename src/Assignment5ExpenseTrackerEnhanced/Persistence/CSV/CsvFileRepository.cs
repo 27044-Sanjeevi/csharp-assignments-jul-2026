@@ -1,14 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using Assignment5ExpenseTrackerEnhanced.Models;
+using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+using Assignment5ExpenseTrackerEnhanced.Persistence;
+
 namespace Assignment5ExpenseTrackerEnhanced.Persistence.Csv
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
-    using Assignment5ExpenseTrackerEnhanced.Persistence;
-
     /// <summary>
     /// Handles persisting transaction records to a CSV file.
     /// </summary>

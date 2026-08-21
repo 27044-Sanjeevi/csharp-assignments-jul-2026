@@ -1,7 +1,7 @@
+using Assignment5ExpenseTrackerEnhanced.Models;
+
 namespace Assignment5ExpenseTrackerEnhanced.Persistence.Csv
 {
-    using Assignment5ExpenseTrackerEnhanced.Models;
-
     /// <summary>
     /// Defines contracts for serializing and deserializing Transaction records in CSV format.
     /// </summary>

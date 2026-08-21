@@ -1,8 +1,8 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Services.Validation
-{
-    using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+﻿using Assignment5ExpenseTrackerEnhanced.Models;
+using Assignment5ExpenseTrackerEnhanced.Models.Enums;
 
+namespace Assignment5ExpenseTrackerEnhanced.Services.Validation
+{
     /// <summary>
     /// Provides validation logic for transaction objects to ensure data integrity and adherence to business rules.
     /// </summary>

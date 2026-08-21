@@ -1,13 +1,13 @@
+using System;
+using System.Collections.Generic;
+using Assignment5ExpenseTrackerEnhanced.Models;
+using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
+using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+using Assignment5ExpenseTrackerEnhanced.Persistence;
+using Assignment5ExpenseTrackerEnhanced.Services.Validation;
+
 namespace Assignment5ExpenseTrackerEnhanced.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
-    using Assignment5ExpenseTrackerEnhanced.Persistence;
-    using Assignment5ExpenseTrackerEnhanced.Services.Validation;
-
     /// <summary>
     /// Provides the business logic for the transactions in the expense tracker application.
     /// </summary>

@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using Assignment5ExpenseTrackerEnhanced.Models;
+using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
+using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+using Assignment5ExpenseTrackerEnhanced.Services.Validation;
+
 namespace Assignment5ExpenseTrackerEnhanced.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.DTOs;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
-    using Assignment5ExpenseTrackerEnhanced.Services.Validation;
-
     /// <summary>
     /// Defines business logic contracts for managing financial transactions.
     /// </summary>

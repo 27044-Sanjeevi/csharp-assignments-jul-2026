@@ -1,7 +1,7 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Models.DTOs
-{
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+﻿using Assignment5ExpenseTrackerEnhanced.Models.Enums;
 
+namespace Assignment5ExpenseTrackerEnhanced.Models.DTOs
+{
     /// <summary>
     /// Serves as a data transfer object for handling transaction inputs across application tiers.
     /// </summary>

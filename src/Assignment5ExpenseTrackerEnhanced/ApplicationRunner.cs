@@ -1,8 +1,8 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced
-{
-    using Assignment5ExpenseTrackerEnhanced.Controller;
-    using Assignment5ExpenseTrackerEnhanced.View;
+﻿using Assignment5ExpenseTrackerEnhanced.Controller;
+using Assignment5ExpenseTrackerEnhanced.View;
 
+namespace Assignment5ExpenseTrackerEnhanced
+{
     /// <summary>
     /// Coordinates the main application workflow.
     /// </summary>
