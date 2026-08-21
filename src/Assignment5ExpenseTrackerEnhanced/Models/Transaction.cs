@@ -38,7 +38,7 @@
                 throw new ArgumentNullException(nameof(transaction));
             }
 
-            // Copy the read-only ID and other fields from the other transaction
+            // Create a defensive copy of the transaction state
             this.Id = transaction.Id;
             this.Amount = transaction.Amount;
             this.Type = transaction.Type;

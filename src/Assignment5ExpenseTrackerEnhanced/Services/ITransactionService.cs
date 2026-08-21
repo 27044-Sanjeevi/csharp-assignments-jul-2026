@@ -53,9 +53,9 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
         /// Retrieves transaction records sorted by specified criteria.
         /// </summary>
         /// <param name="sortBy">The SortBy enum to sort by.</param>
-        /// <param name="ascending">True for ascending order; false for descending.</param>
+        /// <param name="order">The SortOrder enum for the order of sort.</param>
         /// <returns>The sorted list of transactions.</returns>
-        IReadOnlyList<Transaction> GetSortedTransactions(SortBy sortBy, bool ascending);
+        IReadOnlyList<Transaction> GetSortedTransactions(SortBy sortBy, SortOrder order);
 
         /// <summary>
         /// Filters transactions based on the specified flow type.

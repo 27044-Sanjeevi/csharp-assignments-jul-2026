@@ -6,7 +6,7 @@
     /// <summary>
     /// Provides validation logic for transaction objects to ensure data integrity and adherence to business rules.
     /// </summary>
-    internal class TransactionValidation
+    internal class TransactionValidator
     {
         private const string NullTransactionMessage = "Transaction data cannot be null.";
         private const string InvalidAmountMessage = "Amount must be greater than zero.";
@@ -15,6 +15,29 @@
         private const string InvalidCategoryMessage = "Invalid category for the given flow type.";
         private const string InvalidDeletionIdMessage = "A valid transaction identifier must be provided for deletion.";
         private const int MaxDescriptionLength = 50;
+
+        private static readonly HashSet<TransactionCategory> IncomeCategories = new HashSet<TransactionCategory>()
+        {
+            TransactionCategory.Salary,
+            TransactionCategory.Investment,
+            TransactionCategory.Freelance,
+            TransactionCategory.Business,
+            TransactionCategory.Gifts,
+            TransactionCategory.MiscellaneousIncome,
+        };
+
+        private static readonly HashSet<TransactionCategory> ExpenseCategories = new HashSet<TransactionCategory>()
+        {
+            TransactionCategory.Transport,
+            TransactionCategory.Utilities,
+            TransactionCategory.Groceries,
+            TransactionCategory.Rent,
+            TransactionCategory.Food,
+            TransactionCategory.Shopping,
+            TransactionCategory.Healthcare,
+            TransactionCategory.Education,
+            TransactionCategory.MiscellaneousExpense,
+        };
 
         /// <summary>
         /// Validates the given transaction object to ensure it meets the required criteria.
@@ -73,30 +96,12 @@
 
         private bool IsValidCategoryCombination(TransactionType type, TransactionCategory category)
         {
-            if (type == TransactionType.Income)
+            return type switch
             {
-                return category == TransactionCategory.Salary ||
-                       category == TransactionCategory.Investment ||
-                       category == TransactionCategory.Freelance ||
-                       category == TransactionCategory.Business ||
-                       category == TransactionCategory.Gifts ||
-                       category == TransactionCategory.MiscellaneousIncome;
-            }
-
-            if (type == TransactionType.Expense)
-            {
-                return category == TransactionCategory.Transport ||
-                       category == TransactionCategory.Utilities ||
-                       category == TransactionCategory.Groceries ||
-                       category == TransactionCategory.Rent ||
-                       category == TransactionCategory.Food ||
-                       category == TransactionCategory.Shopping ||
-                       category == TransactionCategory.Healthcare ||
-                       category == TransactionCategory.Education ||
-                       category == TransactionCategory.MiscellaneousExpense;
-            }
-
-            return false;
+                TransactionType.Income => IncomeCategories.Contains(category),
+                TransactionType.Expense => ExpenseCategories.Contains(category),
+                _ => false,
+            };
         }
     }
 }

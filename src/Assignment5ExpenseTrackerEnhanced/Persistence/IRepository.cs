@@ -20,7 +20,7 @@
         /// Extracts all transactions from the repository.
         /// </summary>
         /// <returns>All transaction records in the repository.</returns>
-        IEnumerable<Transaction> GetAll();
+        IReadOnlyList<Transaction> GetAll();
 
         /// <summary>
         /// Locates a single transaction record using its unique identifier.

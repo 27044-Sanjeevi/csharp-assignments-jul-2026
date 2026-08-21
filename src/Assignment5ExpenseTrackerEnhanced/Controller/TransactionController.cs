@@ -212,8 +212,8 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
         /// <inheritdoc />
         public void Sort()
         {
-            (SortBy sortBy, bool ascending) = this._consoleView.GetSortingCriteria();
-            IReadOnlyList<Transaction> results = this._transactionService.GetSortedTransactions(sortBy, ascending);
+            (SortBy sortBy, SortOrder order) = this._consoleView.GetSortingCriteria();
+            IReadOnlyList<Transaction> results = this._transactionService.GetSortedTransactions(sortBy, order);
 
             this._consoleView.DisplayAllTransactionsHeader();
             if (results == null || results.Count == 0)
@@ -237,7 +237,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Controller
             }
 
             FilterType filterType = this._consoleView.GetFilterTypeChoice();
-            TransactionType transactionType = this._consoleView.GetTransactionType();
+            TransactionType transactionType = this._consoleView.GetTransactionTypeChoice();
             if (filterType == FilterType.TransactionType)
             {
                 transactions = this._transactionService.FilterByTransactionType(transactionType);

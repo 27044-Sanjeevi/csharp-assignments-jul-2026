@@ -14,14 +14,14 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
     internal class TransactionService : ITransactionService
     {
         private readonly IRepository _repository;
-        private readonly TransactionValidation _validator;
+        private readonly TransactionValidator _validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionService"/> class.
         /// </summary>
         /// <param name="repository">The data persistence repository access tier.</param>
         /// <param name="validator">The engine used to enforce data rules.</param>
-        public TransactionService(IRepository repository, TransactionValidation validator)
+        public TransactionService(IRepository repository, TransactionValidator validator)
         {
             this._repository = repository ?? throw new ArgumentNullException(nameof(repository));
             this._validator = validator ?? throw new ArgumentNullException(nameof(validator));
@@ -104,7 +104,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
         /// <inheritdoc />
         public IReadOnlyList<Transaction> GetAllTransactions()
         {
-            return this._repository.GetAll().ToList();
+            return this._repository.GetAll();
         }
 
         /// <inheritdoc />
@@ -137,30 +137,30 @@ namespace Assignment5ExpenseTrackerEnhanced.Services
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<Transaction> GetSortedTransactions(SortBy sortBy, bool ascending)
+        public IReadOnlyList<Transaction> GetSortedTransactions(SortBy sortBy, SortOrder order)
         {
-            List<Transaction> transactions = this._repository.GetAll().ToList();
+            IEnumerable<Transaction> transactions = this._repository.GetAll();
 
             switch (sortBy)
             {
                 case SortBy.Date:
-                    transactions = ascending
-                        ? transactions.OrderBy(t => t.Timestamp).ToList()
-                        : transactions.OrderByDescending(t => t.Timestamp).ToList();
+                    transactions = order == SortOrder.Ascending
+                        ? transactions.OrderBy(t => t.Timestamp)
+                        : transactions.OrderByDescending(t => t.Timestamp);
                     break;
                 case SortBy.Amount:
-                    transactions = ascending
-                        ? transactions.OrderBy(t => t.Amount).ToList()
-                        : transactions.OrderByDescending(t => t.Amount).ToList();
+                    transactions = order == SortOrder.Ascending
+                        ? transactions.OrderBy(t => t.Amount)
+                        : transactions.OrderByDescending(t => t.Amount);
                     break;
                 case SortBy.Category:
-                    transactions = ascending
-                        ? transactions.OrderBy(t => t.Category.ToString()).ToList()
-                        : transactions.OrderByDescending(t => t.Category.ToString()).ToList();
+                    transactions = order == SortOrder.Ascending
+                        ? transactions.OrderBy(t => t.Category.ToString())
+                        : transactions.OrderByDescending(t => t.Category.ToString());
                     break;
             }
 
-            return transactions;
+            return transactions.ToList();
         }
 
         /// <inheritdoc />

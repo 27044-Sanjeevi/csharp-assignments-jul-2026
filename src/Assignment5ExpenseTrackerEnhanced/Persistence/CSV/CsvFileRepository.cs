@@ -42,7 +42,7 @@ namespace Assignment5ExpenseTrackerEnhanced.Persistence.Csv
         }
 
         /// <inheritdoc />
-        public IEnumerable<Transaction> GetAll()
+        public IReadOnlyList<Transaction> GetAll()
         {
             return this.CloneAll();
         }

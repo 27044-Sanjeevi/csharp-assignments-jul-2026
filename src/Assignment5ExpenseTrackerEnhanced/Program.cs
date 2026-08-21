@@ -5,7 +5,6 @@ namespace Assignment5ExpenseTrackerEnhanced
     using Assignment5ExpenseTrackerEnhanced.Persistence;
     using Assignment5ExpenseTrackerEnhanced.Persistence.Csv;
     using Assignment5ExpenseTrackerEnhanced.Services;
-    using Assignment5ExpenseTrackerEnhanced.Services.Validation;
     using Assignment5ExpenseTrackerEnhanced.Utilities;
     using Assignment5ExpenseTrackerEnhanced.View;
 

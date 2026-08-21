@@ -38,6 +38,13 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         void DisplayDeleteSuccessful();
 
         /// <summary>
+        /// Prompts the user to confirm deletion of the specified transaction.
+        /// </summary>
+        /// <param name="transaction">The transaction record to be deleted.</param>
+        /// <returns>True if the user confirmed deletion; otherwise, false.</returns>
+        bool ConfirmDelete(Transaction transaction);
+
+        /// <summary>
         /// Displays the header for the deletion operation.
         /// </summary>
         void DisplayDeleteHeader();
@@ -53,9 +60,9 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         void DisplayUpdateHeader();
 
         /// <summary>
-        /// Displays the header for the report operation.
+        /// Displays the header for the search operation.
         /// </summary>
-        void DisplayReportHeader();
+        void DisplaySearchHeader();
 
         /// <summary>
         /// Displays the header for the filter operation.
@@ -63,9 +70,9 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         void DisplayFilterHeader();
 
         /// <summary>
-        /// Displays the header for the search operation.
+        /// Displays the header for the report operation.
         /// </summary>
-        void DisplaySearchHeader();
+        void DisplayReportHeader();
 
         /// <summary>
         /// Displays the header for the view all operation.
@@ -73,18 +80,18 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         void DisplayAllTransactionsHeader();
 
         /// <summary>
-        /// Prompts the user to confirm deletion of the specified transaction.
-        /// </summary>
-        /// <param name="transaction">The transaction record to be deleted.</param>
-        /// <returns>True if the user confirmed deletion; otherwise, false.</returns>
-        bool ConfirmDelete(Transaction transaction);
-
-        /// <summary>
         /// Reads the flow type of the transaction.
         /// </summary>
         /// <param name="existingFlow">Holds the existing Flow type of the transaction.</param>
         /// <returns>The flow type chosen by the user.</returns>
         TransactionType GetTransactionTypeChoice(TransactionType? existingFlow = null);
+
+        /// <summary>
+        /// Retrieves the parameter for filtering the transactions.
+        /// </summary>
+        /// <param name="existingType">Holds the existing Filter type of the transaction.</param>
+        /// <returns>The parameter to be filtered by.</returns>
+        FilterType GetFilterTypeChoice(FilterType? existingType = null);
 
         /// <summary>
         /// Reads the current payment method.
@@ -108,10 +115,10 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         TransactionCategory GetExpenseCategory(TransactionCategory? existingCategory = null);
 
         /// <summary>
-        /// Retrieves the parameter for filtering the transactions.
+        /// Retrieves the keyword to be searched across all the transactions from the user.
         /// </summary>
-        /// <returns>The parameter to be filtered by.</returns>
-        FilterType GetFilterTypeChoice();
+        /// <returns>The string containing the keyword to be searched.</returns>
+        public string GetSearchKeyword();
 
         /// <summary>
         /// Reads the optional description of the transaction from user input.
@@ -120,10 +127,10 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         string? GetTransactionDescription();
 
         /// <summary>
-        /// Retrieves the keyword to be searched across all the transactions from the user.
+        /// Collects sorting criteria from the user.
         /// </summary>
-        /// <returns>The string containing the keyword to be searched.</returns>
-        public string GetSearchKeyword();
+        /// <returns>A tuple containing the SortBy and SortOrder enums.</returns>
+        public (SortBy sortBy, SortOrder order) GetSortingCriteria();
 
         /// <summary>
         /// Retrieves an updated transaction description based on the provided existing description.
@@ -150,6 +157,18 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         /// <param name="maxIndex">The maximum valid row number for selection.</param>
         /// <returns>The zero-based index of the selected row.</returns>
         int GetIndexFromTable(int maxIndex);
+
+        /// <summary>
+        /// Displays a table of transactions after applying filters.
+        /// </summary>
+        /// <param name="transactions">The filtered list of transactions to display.</param>
+        void DisplayFilteredTable(IReadOnlyList<Transaction> transactions);
+
+        /// <summary>
+        /// Renders visualized charts (breakdown/bar) of the transaction data.
+        /// </summary>
+        /// <param name="transactions">The collection of transaction data objects to visualize.</param>
+        void DisplayVisualCharts(IReadOnlyList<Transaction> transactions);
 
         /// <summary>
         /// Renders a collection of transaction records as a formatted table grid.
@@ -185,8 +204,8 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         /// <summary>
         /// Prompts the user to make a menu selection.
         /// </summary>
-        /// <returns>The index of the choice.</returns>
-        int ReadChoice();
+        /// <returns>An enum specifying the menu option selected.</returns>
+        MainMenuOption ReadChoice();
 
         /// <summary>
         /// Pauses execution and prompts the user to return to the main screen.
@@ -194,29 +213,14 @@ namespace Assignment5ExpenseTrackerEnhanced.View
         void PauseAndReturn();
 
         /// <summary>
-        /// Reads the flow type of the transaction.
+        /// Displays a selection menu using arrow keys and returns the selected item itself.
         /// </summary>
-        /// <param name="existingType">Holds the existing Flow type of the transaction.</param>
-        /// <returns>The flow type chosen by the user.</returns>
-        TransactionType GetTransactionType(TransactionType? existingType = null);
-
-        /// <summary>
-        /// Collects sorting criteria from the user.
-        /// </summary>
-        /// <returns>A tuple containing the SortBy enum and whether it is ascending.</returns>
-        (SortBy sortBy, bool ascending) GetSortingCriteria();
-
-        /// <summary>
-        /// Renders visualized charts (breakdown/bar) of the transaction data.
-        /// </summary>
-        /// <param name="transactions">The collection of transaction data objects to visualize.</param>
-        void DisplayVisualCharts(IReadOnlyList<Transaction> transactions);
-
-        /// <summary>
-        /// Displays a table of transactions after applying filters.
-        /// </summary>
-        /// <param name="transactions">The filtered list of transactions to display.</param>
-        void DisplayFilteredTable(IReadOnlyList<Transaction> transactions);
+        /// <typeparam name="T">The type of the choices.</typeparam>
+        /// <param name="title">The title prompt for selection.</param>
+        /// <param name="choices">The list of choices to display.</param>
+        /// <param name="displaySelector">Optional function to format how each choice is displayed as text.</param>
+        /// <returns>The selected item.</returns>
+        T ReadSelection<T>(string title, IEnumerable<T> choices, Func<T, string>? displaySelector = null);
 
         /// <summary>
         /// Displays an error message.
