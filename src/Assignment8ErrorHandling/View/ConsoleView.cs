@@ -123,7 +123,7 @@ namespace Assignment8ErrorHandling.View
         /// </summary>
         public void PauseAndReturn()
         {
-            this.Write("\nPress any key to return to Main Page...");
+            this.Write("\nPress any key to return to main page...");
             this._consoleIo.ReadKey(true);
         }
 

@@ -31,6 +31,7 @@ namespace Assignment8ErrorHandling
             ITaskController task5Controller = new Task5Controller(view, task4Controller);
 
             MainController mainController = new MainController(
+                view,
                 task1Controller,
                 task2Controller,
                 task3Controller,

@@ -1,7 +1,7 @@
 namespace Assignment8ErrorHandling.Controller
 {
     using System;
-    using Assignment8ErrorHandling.Models.Exceptions;
+    using Assignment8ErrorHandling.Exceptions;
     using Assignment8ErrorHandling.View;
 
     /// <summary>

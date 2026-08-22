@@ -1,4 +1,4 @@
-namespace Assignment8ErrorHandling.Models.Exceptions
+namespace Assignment8ErrorHandling.Exceptions
 {
     using System;
 
