@@ -178,7 +178,6 @@ namespace Assignment4ExpenseTracker.Utilities
             throw this.AbortInputAttempts();
         }
 
-
         /// <summary>
         /// Writes message in a custom console color.
         /// </summary>
