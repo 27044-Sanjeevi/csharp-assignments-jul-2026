@@ -10,7 +10,7 @@
     /// </summary>
     internal class ContactValidator
     {
-        private const int MaxNotesLengthAllowed = 30;
+        private const int MaxNotesLengthAllowed = 1000;
         private static readonly Regex PhoneStructureRegex = new (@"^\+?[0-9\s\-]{7,20}$", RegexOptions.Compiled);
         private static readonly EmailAddressAttribute FrameworkEmailValidator = new ();
 
