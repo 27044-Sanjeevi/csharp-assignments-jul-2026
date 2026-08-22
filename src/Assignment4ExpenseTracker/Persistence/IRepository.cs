@@ -1,9 +1,7 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Persistence
+namespace Assignment4ExpenseTracker.Persistence
 {
-    using System;
-    using System.Collections.Generic;
-    using Assignment5ExpenseTrackerEnhanced.Models;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+    using Assignment4ExpenseTracker.Models;
+    using Assignment4ExpenseTracker.Models.Enums;
 
     /// <summary>
     /// Defines data access contracts for financial transactions.
@@ -20,7 +18,7 @@
         /// Extracts all transactions from the repository.
         /// </summary>
         /// <returns>All transaction records in the repository.</returns>
-        IEnumerable<Transaction> GetAll();
+        IReadOnlyList<Transaction> GetAll();
 
         /// <summary>
         /// Locates a single transaction record using its unique identifier.
@@ -42,5 +40,25 @@
         /// <param name="id">Id of the transaction record to be updated.</param>
         /// <returns>true if the target record is deleted successfully; otherwise false.</returns>
         bool Delete(Guid id);
+
+        /// <summary>
+        /// Filters transactions based on the specified flow type.
+        /// </summary>
+        /// <param name="type">The type to filter.</param>
+        /// <returns>An enumerable collection of transactions that match the flow type criteria.</returns>
+        IReadOnlyList<Transaction> FilterByTransactionType(TransactionType type);
+
+        /// <summary>
+        /// Filters transactions based on the specified category.
+        /// </summary>
+        /// <param name="category">The category to filter.</param>
+        /// <returns>An enumerable collection of transactions that match the category criteria.</returns>
+        IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category);
+
+        /// <summary>
+        /// Retrieves the count of transactions in the repository.
+        /// </summary>
+        /// <returns>An integer representing the count of transactions in the repository.</returns>
+        int GetTransactionCount();
     }
 }

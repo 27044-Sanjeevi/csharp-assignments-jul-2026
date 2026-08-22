@@ -1,4 +1,4 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Models.Enums
+namespace Assignment4ExpenseTracker.Models.Enums
 {
     /// <summary>
     /// Specifies the category of transaction including income and expense.
@@ -8,7 +8,7 @@
         // Income Sources
 
         /// <summary>
-        /// Sepcifies the income through salary.
+        /// Specifies the income through salary.
         /// </summary>
         Salary = 1,
 
@@ -18,43 +18,70 @@
         Investment = 2,
 
         /// <summary>
+        /// Specifies the income through Freelance work.
+        /// </summary>
+        Freelance = 3,
+
+        /// <summary>
+        /// Specifies the income through Business operations.
+        /// </summary>
+        Business = 4,
+
+        /// <summary>
+        /// Specifies the income through Gifts.
+        /// </summary>
+        Gifts = 5,
+
+        /// <summary>
         /// Specifies any Miscellaneous income.
         /// </summary>
-        MiscellaneousIncome = 3,
+        MiscellaneousIncome = 6,
+
+        // Expense Categories
 
         /// <summary>
         /// Specifies the expense for transportation.
         /// </summary>
-        Transport = 4,
+        Transport = 7,
 
         /// <summary>
         /// Specifies the expense for Utilities.
         /// </summary>
-        Utilities = 5,
+        Utilities = 8,
 
         /// <summary>
         /// Specifies the expense for Groceries.
         /// </summary>
-        Groceries = 6,
+        Groceries = 9,
 
         /// <summary>
         /// Specifies the expense for Rent.
         /// </summary>
-        Rent = 7,
+        Rent = 10,
 
         /// <summary>
         /// Specifies the expense for Food.
         /// </summary>
-        Food = 8,
+        Food = 11,
 
         /// <summary>
         /// Specifies the expense for Shopping.
         /// </summary>
-        Shopping = 9,
+        Shopping = 12,
+
+        /// <summary>
+        /// Specifies the expense for Healthcare.
+        /// </summary>
+        Healthcare = 13,
+
+        /// <summary>
+        /// Specifies the expense for Education.
+        /// </summary>
+        Education = 14,
 
         /// <summary>
         /// Specifies any Miscellaneous expense.
         /// </summary>
-        MiscellaneousExpense = 10,
+        MiscellaneousExpense = 15,
     }
 }

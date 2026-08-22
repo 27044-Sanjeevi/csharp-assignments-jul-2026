@@ -1,7 +1,6 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Utilities
+namespace Assignment4ExpenseTracker.Utilities
 {
-    using System.Collections.Generic;
-    using Assignment5ExpenseTrackerEnhanced.IO;
+    using Assignment4ExpenseTracker.IO;
     using Spectre.Console;
 
     /// <summary>
@@ -9,14 +8,14 @@
     /// </summary>
     internal class ConsoleHelper
     {
-        private readonly IIo _consoleIo;
+        private readonly IConsoleIO _consoleIo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleHelper"/> class.
         /// </summary>
         /// <param name="consoleIo">The console I/O wrapper dependency.</param>
         /// <exception cref="ArgumentNullException">Thrown when consoleIo is null.</exception>
-        public ConsoleHelper(IIo consoleIo)
+        public ConsoleHelper(IConsoleIO consoleIo)
         {
             this._consoleIo = consoleIo ?? throw new ArgumentNullException(nameof(consoleIo));
         }
@@ -29,7 +28,9 @@
         /// <returns>The parsed integer value, or null if the field was skipped.</returns>
         public int? ReadPositiveInt(string prompt, bool isOptional = false)
         {
-            while (true)
+            int attempts = 0;
+            const int MaxAttempts = 3;
+            while (attempts < MaxAttempts)
             {
                 string? input = this.ReadLine(prompt);
                 if (isOptional && string.IsNullOrWhiteSpace(input))
@@ -42,8 +43,14 @@
                     return value;
                 }
 
-                this.WriteColored("[INPUT ERROR] Invalid number. Please enter a positive integer value.\n", ConsoleColor.Red);
+                attempts++;
+                if (attempts < MaxAttempts)
+                {
+                    this.WriteColored($"[INPUT ERROR] Invalid number. Please enter a positive integer value. ({attempts}/{MaxAttempts} attempts)\n", ConsoleColor.Red);
+                }
             }
+
+            throw this.AbortInputAttempts();
         }
 
         /// <summary>
@@ -54,7 +61,9 @@
         /// <returns>The trimmed string input, or null if skipped.</returns>
         public string? ReadString(string prompt, bool isOptional = false)
         {
-            while (true)
+            int attempts = 0;
+            const int MaxAttempts = 3;
+            while (attempts < MaxAttempts)
             {
                 string? input = this.ReadLine(prompt)?.Trim();
 
@@ -65,23 +74,32 @@
                         return null;
                     }
 
-                    this.WriteColored("[INPUT ERROR] Input cannot be empty. Please try again.\n", ConsoleColor.Red);
+                    attempts++;
+                    if (attempts < MaxAttempts)
+                    {
+                        this.WriteColored($"[INPUT ERROR] Input cannot be empty. Please try again. ({attempts}/{MaxAttempts} attempts)\n", ConsoleColor.Red);
+                    }
+
                     continue;
                 }
 
                 return input;
             }
+
+            throw this.AbortInputAttempts();
         }
 
         /// <summary>
-        /// Reads a oositive decimal value from the console, optionally allowing an empty input to bypass validation.
+        /// Reads a positive decimal value from the console, optionally allowing an empty input to bypass validation.
         /// </summary>
         /// <param name="prompt">The prompt message to display.</param>
         /// <param name="isOptional">If true, pressing Enter returns null. If false, it loops until a valid decimal is entered.</param>
         /// <returns>The parsed decimal value, or null if the field was skipped.</returns>
         public decimal? ReadPositiveDecimal(string prompt, bool isOptional = false)
         {
-            while (true)
+            int attempts = 0;
+            const int MaxAttempts = 3;
+            while (attempts < MaxAttempts)
             {
                 string? input = this.ReadLine(prompt);
 
@@ -95,8 +113,69 @@
                     return value;
                 }
 
-                this.WriteColored("[INPUT ERROR] Invalid number. Please enter a positive decimal value.\n", ConsoleColor.Red);
+                attempts++;
+                if (attempts < MaxAttempts)
+                {
+                    this.WriteColored($"[INPUT ERROR] Invalid number. Please enter a positive decimal value. ({attempts}/{MaxAttempts} attempts)\n", ConsoleColor.Red);
+                }
             }
+
+            throw this.AbortInputAttempts();
+        }
+
+        /// <summary>
+        /// Reads the date and time from then user.
+        /// </summary>
+        /// <param name="prompt">Prompt to be displayed.</param>
+        /// <param name="existingDateTime">Existing date time of the transaction.</param>
+        /// <param name="isOptional">If true, pressing Enter returns null instead of a validation error</param>
+        /// <returns>The parsed DateTime, or null if the field was skipped.</returns>
+        public DateTime? ReadDateTime(string prompt, DateTime? existingDateTime = null, bool isOptional = false)
+        {
+            int attempts = 0;
+            const int MaxAttempts = 3;
+
+            while (attempts < MaxAttempts)
+            {
+                attempts++;
+                string? input = this.ReadLine(prompt)?.Trim();
+
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    if (existingDateTime != null && isOptional)
+                    {
+                        return null;
+                    }
+
+                    if (existingDateTime.HasValue)
+                    {
+                        return existingDateTime;
+                    }
+
+                    this.DisplayError("This field is required. Please enter a valid date.");
+                    continue;
+                }
+
+                if (DateTime.TryParse(input, out DateTime parsedDate))
+                {
+                    if (parsedDate > DateTime.Now)
+                    {
+                        this.DisplayError("Transaction date cannot be in the future.");
+                        continue;
+                    }
+
+                    return parsedDate;
+                }
+                else
+                {
+                    if (attempts < MaxAttempts)
+                    {
+                        this.DisplayError("Invalid format. Please use YYYY-MM-DD (e.g., 2026-03-15).");
+                    }
+                }
+            }
+
+            throw this.AbortInputAttempts();
         }
 
         /// <summary>
@@ -167,9 +246,18 @@
         }
 
         /// <summary>
-        /// Prints a goodbye message.
+        /// Displays the success message in green color.
         /// </summary>
-        public void PrintGoodbye()
+        /// <param name="message">The message to be displayed,</param>
+        public void DisplaySuccessMessage(string message)
+        {
+            this.WriteColored($"\n[SUCCESS] {message}\n", ConsoleColor.Green);
+        }
+
+        /// <summary>
+        /// Prints an exit message.
+        /// </summary>
+        public void DisplayExitMessage()
         {
             this.WriteLine("Press any key to exit the application...");
         }
@@ -206,6 +294,16 @@
 
             string selected = AnsiConsole.Prompt(prompt);
             return choices.IndexOf(selected) + 1;
+        }
+
+        /// <summary>
+        /// Handles aborting when input attempts are exceeded by printing a message and returning the abort exception.
+        /// </summary>
+        /// <returns>An OperationCanceledException to be thrown.</returns>
+        private Exception AbortInputAttempts()
+        {
+            this.WriteColored("\n[ABORT] Maximum input attempts exceeded.\n", ConsoleColor.Red);
+            return new OperationCanceledException("Input attempts exceeded.");
         }
     }
 }

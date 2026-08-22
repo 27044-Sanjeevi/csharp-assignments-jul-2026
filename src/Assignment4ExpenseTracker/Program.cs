@@ -1,12 +1,14 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced
+namespace Assignment4ExpenseTracker
 {
-    using Assignment5ExpenseTrackerEnhanced.Controller;
-    using Assignment5ExpenseTrackerEnhanced.IO;
-    using Assignment5ExpenseTrackerEnhanced.Persistence;
-    using Assignment5ExpenseTrackerEnhanced.Services;
-    using Assignment5ExpenseTrackerEnhanced.Services.Validation;
-    using Assignment5ExpenseTrackerEnhanced.Utilities;
-    using Assignment5ExpenseTrackerEnhanced.View;
+    using Assignment4ExpenseTracker.Controller;
+    using Assignment4ExpenseTracker.IO;
+    using Assignment4ExpenseTracker.Persistence;
+    using Assignment4ExpenseTracker.Persistence.Csv;
+    using Assignment4ExpenseTracker.Services;
+    using Assignment4ExpenseTracker.Services.Validation;
+    using Assignment4ExpenseTracker.Utilities;
+    using Assignment4ExpenseTracker.View;
+    using Assignment4ExpenseTracker.View.Interfaces;
 
     /// <summary>
     /// Contains the Main entry point of the project.
@@ -16,27 +18,29 @@
         /// <summary>
         /// Main entry point of the program. Initializes dependencies and runs the controller.
         /// </summary>
-        /// <param name="args">Optional CLI arguments.</param>
-        public static void Main(string[] args)
+        public static void Main()
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8; // Used for rendering the Rupees symbol.
 
+            // Serialization
+            ITransactionCsvSerializer csvSerializer = new TransactionCsvSerializer();
+
             // Repository
-            IRepository repository = new InMemoryRepository();
+            IRepository repository = new CsvFileRepository("transactions.csv", csvSerializer);
 
             // View and Utilities
-            IIo consoleIo = new ConsoleIO();
+            IConsoleIO consoleIo = new ConsoleIO();
             ConsoleHelper consoleHelper = new ConsoleHelper(consoleIo);
             IView view = new ConsoleView(consoleIo, consoleHelper);
 
             // Validation
-            ITransactionValidation validator = new TransactionValidation();
+            TransactionValidator validator = new TransactionValidator();
 
             // Service
             ITransactionService service = new TransactionService(repository, validator);
 
             // Controller
-            IFinanceController controller = new FinanceController(service, view);
+            ITransactionController controller = new TransactionController(service, view);
 
             // Application Runner
             ApplicationRunner applicationRunner = new ApplicationRunner(view, controller);

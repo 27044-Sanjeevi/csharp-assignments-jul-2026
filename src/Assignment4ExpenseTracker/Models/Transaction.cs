@@ -1,6 +1,6 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Models
+namespace Assignment4ExpenseTracker.Models
 {
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+    using Assignment4ExpenseTracker.Models.Enums;
 
     /// <summary>
     /// Represents the transaction in the expense tracker.
@@ -14,7 +14,7 @@
         {
             this.Id = Guid.NewGuid();
             this.Description = string.Empty;
-            this.TimeStamp = DateTime.Now;
+            this.Timestamp = DateTime.Now;
         }
 
         /// <summary>
@@ -38,13 +38,13 @@
                 throw new ArgumentNullException(nameof(transaction));
             }
 
-            // Copy the read-only ID and other fields from the other transaction
+            // Create a defensive copy of the transaction state
             this.Id = transaction.Id;
             this.Amount = transaction.Amount;
             this.Type = transaction.Type;
             this.Category = transaction.Category;
             this.Method = transaction.Method;
-            this.TimeStamp = transaction.TimeStamp;
+            this.Timestamp = transaction.Timestamp;
             this.Description = transaction.Description;
         }
 
@@ -81,8 +81,8 @@
         /// <summary>
         /// Gets or sets the date and time of the transaction.
         /// </summary>
-        /// <value name="TimeStamp">The date and time of the transaction.</value>
-        public DateTime TimeStamp { get; set; }
+        /// <value name="Timestamp">The date and time of the transaction.</value>
+        public DateTime Timestamp { get; set; }
 
         /// <summary>
         /// Gets or sets the description for the transaction.

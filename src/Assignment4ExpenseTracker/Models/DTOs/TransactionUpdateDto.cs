@@ -1,7 +1,6 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Models.DTOs
+namespace Assignment4ExpenseTracker.Models.DTOs
 {
-    using System;
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+    using Assignment4ExpenseTracker.Models.Enums;
 
     /// <summary>
     /// Serves as a data transfer object carrying modification constraints for a transaction record.
@@ -23,8 +22,8 @@
         /// <summary>
         /// Gets the timestamp of when the transaction occurred.
         /// </summary>
-        /// <value name="TimeStamp">Timestamp of the transaction.</value>
-        public DateTime TimeStamp { get; init; }
+        /// <value name="Timestamp">Timestamp of the transaction.</value>
+        public DateTime Timestamp { get; init; }
 
         /// <summary>
         /// Gets the flow type of the transaction.

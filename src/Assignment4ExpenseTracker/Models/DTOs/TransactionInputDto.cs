@@ -1,6 +1,6 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.Models.DTOs
+namespace Assignment4ExpenseTracker.Models.DTOs
 {
-    using Assignment5ExpenseTrackerEnhanced.Models.Enums;
+    using Assignment4ExpenseTracker.Models.Enums;
 
     /// <summary>
     /// Serves as a data transfer object for handling transaction inputs across application tiers.
@@ -30,6 +30,12 @@
         /// </summary>
         /// <value name="Method">Payment Method of the transaction.</value>
         public PaymentMethod Method { get; init; }
+
+        /// <summary>
+        /// Gets or sets the date and time of the transaction.
+        /// </summary>
+        /// <value name="Timestamp">Holds the date and time of the transaction.</value>
+        public DateTime? Timestamp { get; set; }
 
         /// <summary>
         /// Gets the description for the transaction.

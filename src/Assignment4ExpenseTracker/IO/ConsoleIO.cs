@@ -1,9 +1,9 @@
-﻿namespace Assignment5ExpenseTrackerEnhanced.IO
+namespace Assignment4ExpenseTracker.IO
 {
     /// <summary>
     /// Provides concrete implementations of console input and output operations.
     /// </summary>
-    internal class ConsoleIO : IIo
+    internal class ConsoleIO : IConsoleIO
     {
         /// <inheritdoc />
         public string? ReadLine(string? prompt)
