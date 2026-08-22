@@ -215,6 +215,12 @@ namespace Assignment4ExpenseTracker.Controller
         /// <inheritdoc />
         public void Sort()
         {
+            if (this.GetAllTransactionsCount() <= 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
+
             (SortBy sortBy, SortOrder order) = this._consoleView.GetSortingCriteria();
             IReadOnlyList<Transaction> results = this._transactionService.GetSortedTransactions(sortBy, order);
 

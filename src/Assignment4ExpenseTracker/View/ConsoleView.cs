@@ -1,5 +1,6 @@
 namespace Assignment4ExpenseTracker.View
 {
+    using System.Dynamic;
     using Assignment4ExpenseTracker.IO;
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.Enums;
@@ -167,7 +168,7 @@ namespace Assignment4ExpenseTracker.View
         /// <inheritdoc />
         public DateTime? GetDateTime(DateTime? existingDateTime, bool isOptional)
         {
-            return this._consoleHelper.ReadDateTime("\nEnter transaction date (YYYY-MM-DD) or press Enter for current date: ", isOptional: isOptional);
+            return this._consoleHelper.ReadDateTime("\nEnter transaction date (YYYY-MM-DD) or press Enter for current date: ", existingDateTime: existingDateTime, isOptional: isOptional);
         }
 
         /// <inheritdoc />

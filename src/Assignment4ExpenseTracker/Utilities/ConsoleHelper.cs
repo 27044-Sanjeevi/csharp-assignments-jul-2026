@@ -142,14 +142,14 @@ namespace Assignment4ExpenseTracker.Utilities
 
                 if (string.IsNullOrWhiteSpace(input))
                 {
-                    if (existingDateTime != null && isOptional)
+                    if (existingDateTime == null && isOptional)
                     {
-                        return null;
+                        return DateTime.Now;
                     }
 
                     if (existingDateTime.HasValue)
                     {
-                        return existingDateTime;
+                        return existingDateTime.Value;
                     }
 
                     this.DisplayError("This field is required. Please enter a valid date.");
@@ -177,6 +177,7 @@ namespace Assignment4ExpenseTracker.Utilities
 
             throw this.AbortInputAttempts();
         }
+
 
         /// <summary>
         /// Writes message in a custom console color.
