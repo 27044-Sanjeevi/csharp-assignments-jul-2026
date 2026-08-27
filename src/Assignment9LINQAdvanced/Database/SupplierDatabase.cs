@@ -12,8 +12,6 @@ namespace Assignment9LINQAdvanced.Database
         private const int _electronicsSupplierId = 3;
         private const int _booksSupplierId = 4;
 
-        private static int _productId = 0;
-
         private readonly List<Supplier> _suppliers;
 
         /// <summary>

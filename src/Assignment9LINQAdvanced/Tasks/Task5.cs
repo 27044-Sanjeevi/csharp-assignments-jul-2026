@@ -45,8 +45,7 @@ namespace Assignment9LINQAdvanced.Tasks
                     product.Id,
                     product.Name,
                     $"{product.Price:C}",
-                    product.Category
-                );
+                    product.Category);
             }
 
             table.Configure(options => options.EnableCount = false).Write();

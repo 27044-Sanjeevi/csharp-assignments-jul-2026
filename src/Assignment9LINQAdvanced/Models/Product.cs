@@ -7,8 +7,6 @@ namespace Assignment9LINQAdvanced.Models
     /// </summary>
     internal class Product
     {
-        private static int _idCounter = 0;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Product"/> class.
         /// </summary>

@@ -86,20 +86,17 @@ namespace Assignment9LINQAdvanced.Tasks
             comparisonTable.AddRow(
                 "1. Immediate (.ToList())",
                 toListStopwatch.Elapsed.TotalMilliseconds.ToString("F4"),
-                toListStopwatch.ElapsedTicks
-            );
+                toListStopwatch.ElapsedTicks);
 
             comparisonTable.AddRow(
                 "2. Deferred (IEnumerable Loop)",
                 iEnumerableStopWatch.Elapsed.TotalMilliseconds.ToString("F4"),
-                iEnumerableStopWatch.ElapsedTicks
-            );
+                iEnumerableStopWatch.ElapsedTicks);
 
             comparisonTable.AddRow(
                 "3. Indexed Lookup (.ToLookup())",
                 lookupWatch.Elapsed.TotalMilliseconds.ToString("F4"),
-                lookupWatch.ElapsedTicks
-            );
+                lookupWatch.ElapsedTicks);
 
             comparisonTable.Configure(opt => opt.EnableCount = false).Write();
         }

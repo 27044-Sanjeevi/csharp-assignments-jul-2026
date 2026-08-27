@@ -78,8 +78,7 @@ namespace Assignment9LINQAdvanced.Tasks
                         ProductName = product.Name,
                         SupplierName = supplier.SupplierName,
                         SupplierId = supplier.SupplierId,
-                    }
-                );
+                    });
 
             Console.WriteLine("\nJoined Table (products and suppliers):\n");
             ConsoleTable
