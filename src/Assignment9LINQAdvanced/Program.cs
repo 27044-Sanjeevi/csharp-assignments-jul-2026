@@ -25,7 +25,7 @@
             Task4 task4 = new Task4(productDatabase);
 
             // task3.RunTask3();
-            task4.RunTask4();
+            task2.RunTask2();
             Console.ReadKey();
         }
     }

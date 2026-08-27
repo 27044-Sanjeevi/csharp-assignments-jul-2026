@@ -5,6 +5,7 @@
     using System.Linq;
     using Assignment9LINQAdvanced.Database;
     using Assignment9LINQAdvanced.Models.Enums;
+    using ConsoleTables;
 
     /// <summary>
     /// Represents the Task 1 of the application.
@@ -39,12 +40,10 @@
 
             // Display results
             Console.WriteLine("Task 1\n");
-            Console.WriteLine($"{"Name",-20} | {"Price",10}");
-            Console.WriteLine(new string('-', 33));
-            foreach (var product in selectedProducts)
-            {
-                Console.WriteLine($"{product.Name,-20} | {product.Price,10:C}");
-            }
+            ConsoleTable
+                .From(selectedProducts)
+                .Configure(options => options.EnableCount = false)
+                .Write();
 
             Console.WriteLine($"\nAVERAGE PRICE = {average:C}");
         }

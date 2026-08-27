@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Assignment9LINQAdvanced.Database;
 using Assignment9LINQAdvanced.Models;
+using ConsoleTables;
 
 namespace Assignment9LINQAdvanced.Tasks
 {
@@ -39,17 +40,23 @@ namespace Assignment9LINQAdvanced.Tasks
                 .GroupBy(product => product.Category);
 
             Console.WriteLine("\nTask 2\n");
-            Console.WriteLine($"{"Id",-3} | {"Name",-20} | {"Price",15} | {"Category",-15} |");
-            Console.WriteLine(new string('-', 50));
-
+            Console.WriteLine("Grouped Products:\n");
+            var table = new ConsoleTable("Id", "Name", "Price", "Category");
             foreach (var group in groupByQuery)
             {
-                Console.WriteLine($"\nCATEGORY: {group.Key}");
                 foreach (var product in group)
                 {
-                    Console.WriteLine($"{product.Id,-3} | {product.Name,-20} | {product.Price,15:C} | {product.Category,-15} |");
+                    table.AddRow(
+                    product.Id,
+                    product.Name,
+                    product.Price,
+                    product.Category);
                 }
             }
+
+            table
+                .Configure(options => options.EnableCount = false)
+                .Write();
 
             var projectionQuery = groupByQuery
                 .Select(group => new
@@ -60,12 +67,11 @@ namespace Assignment9LINQAdvanced.Tasks
                     ExpensiveItemName = group.OrderByDescending(p => p.Price).First().Name,
                 });
 
-            Console.WriteLine($"\n{"Category Name",-15} | {"Product Count",-12} | {"Expensive Item Name",-19} | {"Expensive Item Price",15}");
-            Console.WriteLine(new string('-', 65));
-            foreach (var query in projectionQuery)
-            {
-                Console.WriteLine($"{query.CategoryName,-15} | {query.ProductCount,-12} | {query.ExpensiveItemName,-19} | {query.ExpensiveItemPrice,15:C}");
-            }
+            Console.WriteLine("Expensive Item in each group:\n");
+            ConsoleTable
+                .From(projectionQuery)
+                .Configure(options => options.EnableCount = false)
+                .Write();
 
             var joinQuery = suppliers
                 .Join(
@@ -81,13 +87,11 @@ namespace Assignment9LINQAdvanced.Tasks
                     }
                 );
 
-            Console.WriteLine("\nJoined Table:\n");
-            Console.WriteLine($"{"Product Id",-10} | {"Product Name",-15} | {"Supplier ID",-10} | {"Supplier Name",-20}");
-            Console.WriteLine(new string('-', 65));
-            foreach (var result in joinQuery)
-            {
-                Console.WriteLine($"{result.ProductId,-10} | {result.ProductName,-15} | {result.SupplierId,-10} | {result.SupplierName,-20}");
-            }
+            Console.WriteLine("\nJoined Table (products and suppliers):\n");
+            ConsoleTable
+                .From(joinQuery)
+                .Configure(options => options.EnableCount = false)
+                .Write();
         }
     }
 }
