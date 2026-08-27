@@ -1,19 +1,24 @@
-﻿namespace Assignment9LINQAdvanced
+﻿using Assignment9LINQAdvanced.Models.Enums;
+
+namespace Assignment9LINQAdvanced.Models
 {
     /// <summary>
     /// Represents a product.
     /// </summary>
     internal class Product
     {
+        private static int _idCounter = 0;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Product"/> class.
         /// </summary>
+        /// <param name="id">Unique ID of the </param>
         /// <param name="name">Name of the product.</param>
         /// <param name="price">Price of the product.</param>
         /// <param name="category">Category of the product.</param>
-        internal Product(string name, decimal price, ProductCategory category)
+        internal Product(int id, string name, decimal price, ProductCategory category)
         {
-            ++this.Id;
+            this.Id = id;
             this.Name = name;
             this.Price = price;
             this.Category = category;
@@ -23,13 +28,12 @@
         /// Gets the unique identifier of the product.
         /// </summary>
         /// <value>A unique integer value for identifying the product..</value>
-        public int Id { get; } = 0;
+        public int Id { get; }
 
         /// <summary>
         /// Gets or sets the name of the product.
         /// </summary>
         /// <value>A string holding the name of the product.</value>
-
         public string Name { get; set; } = string.Empty;
 
         /// <summary>

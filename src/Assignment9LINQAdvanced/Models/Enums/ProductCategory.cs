@@ -1,4 +1,4 @@
-﻿namespace Assignment9LINQAdvanced
+﻿namespace Assignment9LINQAdvanced.Models.Enums
 {
     /// <summary>
     /// SPecifies the category of the product.
