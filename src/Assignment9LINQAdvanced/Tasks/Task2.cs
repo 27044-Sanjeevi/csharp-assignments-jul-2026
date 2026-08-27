@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using Assignment9LINQAdvanced.Database;
+﻿using Assignment9LINQAdvanced.Database;
 using Assignment9LINQAdvanced.Models;
 using ConsoleTables;
 
@@ -21,8 +15,8 @@ namespace Assignment9LINQAdvanced.Tasks
         /// <summary>
         /// Initializes a new instance of the <see cref="Task2"/> class.
         /// </summary>
-        /// <param name="productDatabase"></param>
-        /// <param name="supplierDatabase"></param>
+        /// <param name="productDatabase">The product database instance used to query products.</param>
+        /// <param name="supplierDatabase">The supplier database instance used to query suppliers.</param>
         public Task2(ProductDatabase productDatabase, SupplierDatabase supplierDatabase)
         {
             this._productDatabase = productDatabase;

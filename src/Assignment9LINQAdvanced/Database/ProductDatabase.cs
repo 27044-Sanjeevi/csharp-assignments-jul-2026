@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Assignment9LINQAdvanced.Models;
+﻿using Assignment9LINQAdvanced.Models;
 using Assignment9LINQAdvanced.Models.Enums;
 
 namespace Assignment9LINQAdvanced.Database

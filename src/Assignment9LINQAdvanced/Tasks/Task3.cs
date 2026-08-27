@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment9LINQAdvanced.Tasks
+﻿namespace Assignment9LINQAdvanced.Tasks
 {
+    /// <summary>
+    /// Represents Task 3 of the application.
+    /// </summary>
     internal class Task3
     {
+        /// <summary>
+        /// Runs Task 3 of the application.
+        /// </summary>
         public void RunTask3()
         {
             int[] numbers = { 12, 3, 5, 8, -2, 5, 10, 0, 7, 3, 14, 2, 8, -2, 6, 4 };
@@ -20,7 +20,7 @@ namespace Assignment9LINQAdvanced.Tasks
                 .ToString();
 
             var pairsAddingToTarget = numbers
-                .SelectMany((number1, index1) => numbers.Select((int number2, int index2) => new { num1= number1, num2=number2, index1, index2 }))
+                .SelectMany((number1, index1) => numbers.Select((number2, index2) => new { num1= number1, num2=number2, index1, index2 }))
                 .Where(pair => pair.index1 < pair.index2 && pair.num1 + pair.num2 == targetSum)
                 .Select(applicablePair => $"({applicablePair.num1}, {applicablePair.num2})")
                 .Distinct();
