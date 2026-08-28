@@ -27,11 +27,12 @@
             Task2 task2 = new Task2(productDatabase, supplierDatabase);
             Task3 task3 = new Task3();
             Task4 task4 = new Task4(productDatabase);
-            Task5 task5 = new Task5(productDatabase);
+            Task5 task5 = new Task5(productDatabase, supplierDatabase);
 
             MenuChoice menuChoice;
             do
             {
+                Console.Clear();
                 Console.WriteLine("ADVANCED LINQ\n");
 
                 DisplayTasksMenu();
@@ -63,7 +64,6 @@
                 if (menuChoice != MenuChoice.Exit)
                 {
                     ConsoleHelpers.Pause();
-                    Console.Clear();
                 }
             }
             while (menuChoice != MenuChoice.Exit);
@@ -73,9 +73,9 @@
         {
             Console.WriteLine("Available Tasks: ");
             var choices = Enum.GetValues<MenuChoice>();
-            for (int i = 0; i < choices.Length; i++)
+            foreach (MenuChoice choice in choices)
             {
-                Console.WriteLine($"Task [{i + 1}] : {choices[i]}");
+                Console.WriteLine($"Task [{(int)choice}] : {choice}");
             }
         }
     }

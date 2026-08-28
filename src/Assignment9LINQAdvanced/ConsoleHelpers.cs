@@ -26,7 +26,7 @@ namespace Assignment9LINQAdvanced
                 Console.Write(message);
             }
 
-            while (!int.TryParse(Console.ReadLine(), out result) || result > max)
+            while (!int.TryParse(Console.ReadLine(), out result) || result < 1 || result > max)
             {
                 Console.Write($"[INPUT ERROR] Invalid Choice. Choose an integer between 1 to {max}: ");
             }

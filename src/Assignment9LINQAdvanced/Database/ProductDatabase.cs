@@ -43,7 +43,7 @@ namespace Assignment9LINQAdvanced.Database
                 new Product(++this._idCounter, "Asus Laptop", 70000, ProductCategory.Electronics),
                 new Product(++this._idCounter, "Dell Laptop", 56000, ProductCategory.Electronics),
                 new Product(++this._idCounter, "Lenovo Laptop", 83000, ProductCategory.Electronics),
-                new Product(++this._idCounter, "Mac Laptop", 100000, ProductCategory.Electronics),
+                new Product(++this._idCounter, "Apple Laptop", 100000, ProductCategory.Electronics),
                 new Product(++this._idCounter, "Samsung Laptop", 66000, ProductCategory.Electronics),
                 new Product(++this._idCounter, "HP Laptop", 55000, ProductCategory.Electronics),
 

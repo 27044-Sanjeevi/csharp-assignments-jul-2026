@@ -34,15 +34,15 @@ namespace Assignment9LINQAdvanced.Database
             }
 
             // 17 Electronics products (IDs 12 to 28)
-            for (int i = 12; i <= 28; i++)
+            for (int i = 12; i <= 29; i++)
             {
                 this._suppliers.Add(new Supplier(_electronicsSupplierId, "Electronics Supplier", i));
             }
 
             // 6 Books products (IDs 29 to 34)
-            for (int i = 29; i <= 34; i++)
+            for (int i = 30; i <= 35; i++)
             {
-                this._suppliers.Add(new Supplier(_booksSupplierId, "Books Suppler", i));
+                this._suppliers.Add(new Supplier(_booksSupplierId, "Books Supplier", i));
             }
         }
 

@@ -35,4 +35,4 @@ Given a List<Product>, write two LINQ queries:
 - An optimized version of the above query.
 
 ## Task 5: Query Builder 
-Created a query builder utility that allows users to construct complex LINQ queries using a fluent API pattern. This utility supports filtering and sorting data. 
+Created a query builder utility that allows users to construct complex LINQ queries using a fluent API pattern. This utility supports filtering, sorting and joining data. 
