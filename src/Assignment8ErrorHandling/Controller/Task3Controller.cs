@@ -27,6 +27,11 @@ namespace Assignment8ErrorHandling.Controller
             try
             {
                 int size = this._view.ReadInt("Enter the size of the array: ");
+                if (size <= 0)
+                {
+                    throw new InvalidUserInputException("Invalid User Input.");
+                }
+
                 int[] numbers = new int[size];
                 for (int i = 0; i < size; i++)
                 {

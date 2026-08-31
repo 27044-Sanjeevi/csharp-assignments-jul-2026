@@ -40,7 +40,7 @@
                 attempt++;
                 if (attempt < MaxAttempts)
                 {
-                    this.DisplayWarning($"Please enter an integer value ({attempt}/{MaxAttempts} attempts remaining).");
+                    this.DisplayWarning($"Please enter an integer value ({MaxAttempts - attempt} attempts remaining).");
                 }
             }
 
