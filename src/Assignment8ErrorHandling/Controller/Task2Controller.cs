@@ -45,8 +45,8 @@ namespace Assignment8ErrorHandling.Controller
             try
             {
                 this._view.WriteLine($"Trying to access element at index {index} of array (size: {array.Length})");
-                int val = array[index];
-                this._view.WriteLine($"Value: {val}");
+                int value = array[index];
+                this._view.WriteLine($"Value: {value}");
             }
             catch (IndexOutOfRangeException ex)
             {
