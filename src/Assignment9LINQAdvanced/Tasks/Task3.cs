@@ -13,14 +13,14 @@
             int[] numbers = { 12, 3, 5, 8, -2, 5, 10, 0, 7, 3, 14, 2, 8, -2, 6, 4 };
             int targetSum = 10;
 
-            var secondHighestNumber = numbers
+            string secondHighestNumber = numbers
                 .OrderByDescending(x => x)
                 .Skip(1)
                 .First()
                 .ToString();
 
             var pairsAddingToTarget = numbers
-                .SelectMany((number1, index1) => numbers.Select((number2, index2) => new { num1= number1, num2=number2, index1, index2 }))
+                .SelectMany((number1, index1) => numbers.Select((number2, index2) => new {num1= number1, num2=number2, index1, index2 }))
                 .Where(pair => pair.index1 < pair.index2 && pair.num1 + pair.num2 == targetSum)
                 .Select(applicablePair => $"({applicablePair.num1}, {applicablePair.num2})")
                 .Distinct();

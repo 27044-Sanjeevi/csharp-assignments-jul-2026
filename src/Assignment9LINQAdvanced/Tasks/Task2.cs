@@ -1,6 +1,7 @@
 ﻿using Assignment9LINQAdvanced.Repository;
 using Assignment9LINQAdvanced.Models;
 using ConsoleTables;
+using Assignment9LINQAdvanced.Models.Enums;
 
 namespace Assignment9LINQAdvanced.Tasks
 {
@@ -30,7 +31,7 @@ namespace Assignment9LINQAdvanced.Tasks
         {
             List<Product> products = this._productRepository.GetAllProducts();
             List<Supplier> suppliers = this._supplierRepository.GetAllSuppliers();
-            var groupByQuery = products
+            IEnumerable<IGrouping<ProductCategory, Product>> groupByQuery = products
                 .GroupBy(product => product.Category);
 
             Console.WriteLine("\nTask 2\n");
@@ -52,39 +53,41 @@ namespace Assignment9LINQAdvanced.Tasks
                 .Configure(options => options.EnableCount = false)
                 .Write();
 
-            var projectionQuery = groupByQuery
-                .Select(group => new
-                {
-                    CategoryName = group.Key,
-                    ProductCount = group.Count(),
-                    ExpensiveItemPrice = group.Max(p => p.Price),
-                    ExpensiveItemName = group.OrderByDescending(p => p.Price).First().Name,
-                });
+            IEnumerable<(ProductCategory Key, int Count, decimal ExpensiveProductPrice, string ExpensiveProductName)> projectionQuery = groupByQuery
+                .Select(group => (
+                    group.Key,
+                    group.Count(),
+                    group.Max(p => p.Price),
+                    group.OrderByDescending(p => p.Price).First().Name));
 
             Console.WriteLine("Expensive Item in each group:\n");
-            ConsoleTable
-                .From(projectionQuery)
-                .Configure(options => options.EnableCount = false)
-                .Write();
+            var projectionTable = new ConsoleTable("Category", "Count", "Expensive Product Price", "Expensive Product Name");
+            foreach (var projection in projectionQuery)
+            {
+                projectionTable.AddRow(projection.Key, projection.Count, projection.ExpensiveProductPrice, projection.ExpensiveProductName);
+            }
 
-            var joinQuery = suppliers
+            projectionTable.Configure(options => options.EnableCount = false).Write();
+
+            IEnumerable<(int ProductId, string ProductName, string SupplierName, int SupplierId)> joinQuery = suppliers
                 .Join(
                     products,
                     supplier => supplier.ProductId,
                     product => product.Id,
-                    (supplier, product) => new
-                    {
-                        ProductId = product.Id,
-                        ProductName = product.Name,
-                        SupplierName = supplier.SupplierName,
-                        SupplierId = supplier.SupplierId,
-                    });
+                    (supplier, product) => (
+                        product.Id,
+                        product.Name,
+                        supplier.SupplierName,
+                        supplier.SupplierId));
 
             Console.WriteLine("\nJoined Table (products and suppliers):\n");
-            ConsoleTable
-                .From(joinQuery)
-                .Configure(options => options.EnableCount = false)
-                .Write();
+            var joinTable = new ConsoleTable("Product Id", "Product Name", "Supplier Name", "Supplier Id");
+            foreach (var join in joinQuery)
+            {
+                joinTable.AddRow(join.ProductId, join.ProductName, join.SupplierName, join.SupplierId);
+            }
+
+            joinTable.Configure(options => options.EnableCount = false).Write();
         }
     }
 }

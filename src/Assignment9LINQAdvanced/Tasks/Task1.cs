@@ -1,6 +1,8 @@
 ﻿using Assignment9LINQAdvanced.Repository;
 using Assignment9LINQAdvanced.Models.Enums;
 using ConsoleTables;
+using System.Reflection;
+using Assignment9LINQAdvanced.Models;
 
 namespace Assignment9LINQAdvanced.Tasks
 {
@@ -25,20 +27,22 @@ namespace Assignment9LINQAdvanced.Tasks
         /// </summary>
         internal void RunTask1()
         {
-            var selectedProducts = this._productRepository.GetAllProducts()
+            IEnumerable<(string Name, decimal Price)> selectedProducts = this._productRepository.GetAllProducts()
                 .Where(p => p.Category == ProductCategory.Electronics && p.Price > 500)
-                .Select(p => new { p.Name, p.Price })
+                .Select(p => (p.Name, p.Price ))
                 .OrderByDescending(p => p.Price)
                 .ToList();
 
             decimal average = selectedProducts.Average(p => p.Price);
 
+            ConsoleTable table = new ConsoleTable("Name", "Price");
             Console.WriteLine("Task 1\n");
-            ConsoleTable
-                .From(selectedProducts)
-                .Configure(options => options.EnableCount = false)
-                .Write();
+            foreach (var product in selectedProducts)
+            {
+                table.AddRow(product.Name, product.Price);
+            }
 
+            table.Configure(opt => opt.EnableCount = false).Write();
             Console.WriteLine($"\nAVERAGE PRICE = {average:C}");
         }
     }
