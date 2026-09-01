@@ -31,7 +31,7 @@ namespace Assignment9LINQAdvanced.Tasks
         /// <summary>
         /// Applies the filter query.
         /// </summary>
-        /// <param name="predicate">An expression tree representing the evalucation condition.</param>
+        /// <param name="predicate">An expression tree representing the evaluation condition.</param>
         /// <returns>The current instance of the <see cref="QueryBuilder{T}"/> to enable fluent method chaining.</returns>
         public QueryBuilder<T> Filter(Expression<Func<T, bool>> predicate)
         {

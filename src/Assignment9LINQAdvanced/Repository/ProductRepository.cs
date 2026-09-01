@@ -1,23 +1,37 @@
 ﻿using Assignment9LINQAdvanced.Models;
 using Assignment9LINQAdvanced.Models.Enums;
 
-namespace Assignment9LINQAdvanced.Database
+namespace Assignment9LINQAdvanced.Repository
 {
     /// <summary>
-    /// Represents the database for all tasks.
+    /// Represents the repository for products.
     /// </summary>
-    internal class ProductDatabase
+    internal class ProductRepository
     {
-        private readonly List<Product> _products;
+        private List<Product> _products;
 
         private int _idCounter = 0;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProductDatabase"/> class.
+        /// Initializes a new instance of the <see cref="ProductRepository"/> class.
         /// </summary>
-        public ProductDatabase()
+        public ProductRepository()
         {
-            this._products = new List<Product>()
+            this._products = new List<Product>(this.LoadData());
+        }
+
+        /// <summary>
+        /// Retrieves all products in the repository.
+        /// </summary>
+        /// <returns>A list of products.</returns>
+        public List<Product> GetAllProducts()
+        {
+            return this._products;
+        }
+
+        private List<Product> LoadData()
+        {
+            var products = new List<Product>()
             {
                 new Product(++this._idCounter, "Pen (black)", 20, ProductCategory.Stationery),
                 new Product(++this._idCounter, "Pencil", 8, ProductCategory.Stationery),
@@ -60,15 +74,8 @@ namespace Assignment9LINQAdvanced.Database
                 new Product(++this._idCounter, "Harry Potter", 1239, ProductCategory.Book),
                 new Product(++this._idCounter, "Lord of the Rings", 899, ProductCategory.Book),
             };
-        }
 
-        /// <summary>
-        /// Retrieves all products in the database.
-        /// </summary>
-        /// <returns>A list of products.</returns>
-        public List<Product> GetAllProducts()
-        {
-            return this._products;
+            return products;
         }
     }
 }

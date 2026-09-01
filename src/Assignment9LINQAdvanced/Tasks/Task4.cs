@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Assignment9LINQAdvanced.Database;
+﻿using System.Diagnostics;
+using Assignment9LINQAdvanced.Repository;
 using Assignment9LINQAdvanced.Models;
 using Assignment9LINQAdvanced.Models.Enums;
 using ConsoleTables;
@@ -14,15 +11,15 @@ namespace Assignment9LINQAdvanced.Tasks
     /// </summary>
     internal class Task4
     {
-        private readonly ProductDatabase _productDatabase = new ProductDatabase();
+        private readonly ProductRepository _productRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Task4"/> class.
         /// </summary>
-        /// <param name="productDatabase">The product database instance used to query products.</param>
-        public Task4(ProductDatabase productDatabase)
+        /// <param name="productRepository">The product repository instance used to query products.</param>
+        public Task4(ProductRepository productRepository)
         {
-            this._productDatabase = productDatabase;
+            this._productRepository = productRepository;
         }
 
         /// <summary>
@@ -30,7 +27,7 @@ namespace Assignment9LINQAdvanced.Tasks
         /// </summary>
         internal void RunTask4()
         {
-            List<Product> products = this._productDatabase.GetAllProducts();
+            List<Product> products = this._productRepository.GetAllProducts();
 
             // Console Tables Configuration
             ConsoleTableOptions options = new ConsoleTableOptions { EnableCount = false };

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Assignment9LINQAdvanced.Database;
+﻿using Assignment9LINQAdvanced.Repository;
 using Assignment9LINQAdvanced.Models;
 using Assignment9LINQAdvanced.Models.Enums;
 using ConsoleTables;
@@ -12,18 +10,18 @@ namespace Assignment9LINQAdvanced.Tasks
     /// </summary>
     internal class Task5
     {
-        private readonly ProductDatabase _productDatabase;
-        private readonly SupplierDatabase _supplierDatabase;
+        private readonly ProductRepository _productRepository;
+        private readonly SupplierRepository _supplierRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Task5"/> class.
         /// </summary>
-        /// <param name="productDatabase">An instance of the product database.</param>
-        /// <param name="supplierDatabase">An instance of the supplier database.</param>
-        public Task5(ProductDatabase productDatabase, SupplierDatabase supplierDatabase)
+        /// <param name="productRepository">An instance of the product repository.</param>
+        /// <param name="supplierRepository">An instance of the supplier repository.</param>
+        public Task5(ProductRepository productRepository, SupplierRepository supplierRepository)
         {
-            this._productDatabase = productDatabase;
-            this._supplierDatabase = supplierDatabase;
+            this._productRepository = productRepository;
+            this._supplierRepository = supplierRepository;
         }
 
         /// <summary>
@@ -31,8 +29,8 @@ namespace Assignment9LINQAdvanced.Tasks
         /// </summary>
         internal void RunTask5()
         {
-            List<Product> products = this._productDatabase.GetAllProducts();
-            List<Supplier> suppliers = this._supplierDatabase.GetAllSuppliers();
+            List<Product> products = this._productRepository.GetAllProducts();
+            List<Supplier> suppliers = this._supplierRepository.GetAllSuppliers();
 
             Console.WriteLine("Task 5\n");
             var productQueryBuilder = new QueryBuilder<Product>(products);

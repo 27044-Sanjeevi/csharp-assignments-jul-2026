@@ -1,4 +1,4 @@
-﻿using Assignment9LINQAdvanced.Database;
+﻿using Assignment9LINQAdvanced.Repository;
 using Assignment9LINQAdvanced.Models.Enums;
 using ConsoleTables;
 
@@ -9,15 +9,15 @@ namespace Assignment9LINQAdvanced.Tasks
     /// </summary>
     internal class Task1
     {
-        private readonly ProductDatabase _productDatabase;
+        private readonly ProductRepository _productRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Task1"/> class.
         /// </summary>
-        /// <param name="productDatabase">The product database instance used to query product.</param>
-        public Task1(ProductDatabase productDatabase)
+        /// <param name="productRepository">The product repository instance used to query product.</param>
+        public Task1(ProductRepository productRepository)
         {
-            this._productDatabase = productDatabase;
+            this._productRepository = productRepository;
         }
 
         /// <summary>
@@ -25,9 +25,7 @@ namespace Assignment9LINQAdvanced.Tasks
         /// </summary>
         internal void RunTask1()
         {
-            ProductDatabase database = new ProductDatabase();
-
-            var selectedProducts = database.GetAllProducts()
+            var selectedProducts = this._productRepository.GetAllProducts()
                 .Where(p => p.Category == ProductCategory.Electronics && p.Price > 500)
                 .Select(p => new { p.Name, p.Price })
                 .OrderByDescending(p => p.Price)

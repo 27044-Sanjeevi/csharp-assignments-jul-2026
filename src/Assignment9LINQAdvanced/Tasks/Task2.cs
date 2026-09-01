@@ -1,4 +1,4 @@
-﻿using Assignment9LINQAdvanced.Database;
+﻿using Assignment9LINQAdvanced.Repository;
 using Assignment9LINQAdvanced.Models;
 using ConsoleTables;
 
@@ -9,18 +9,18 @@ namespace Assignment9LINQAdvanced.Tasks
     /// </summary>
     internal class Task2
     {
-        private readonly ProductDatabase _productDatabase = new ProductDatabase();
-        private readonly SupplierDatabase _supplierDatabase = new SupplierDatabase();
+        private readonly ProductRepository _productRepository = new ProductRepository();
+        private readonly SupplierRepository _supplierRepository = new SupplierRepository();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Task2"/> class.
         /// </summary>
-        /// <param name="productDatabase">The product database instance used to query products.</param>
-        /// <param name="supplierDatabase">The supplier database instance used to query suppliers.</param>
-        public Task2(ProductDatabase productDatabase, SupplierDatabase supplierDatabase)
+        /// <param name="productRepository">The product repository instance used to query products.</param>
+        /// <param name="supplierRepository">The supplier repository instance used to query suppliers.</param>
+        public Task2(ProductRepository productRepository, SupplierRepository supplierRepository)
         {
-            this._productDatabase = productDatabase;
-            this._supplierDatabase = supplierDatabase;
+            this._productRepository = productRepository;
+            this._supplierRepository = supplierRepository;
         }
 
         /// <summary>
@@ -28,8 +28,8 @@ namespace Assignment9LINQAdvanced.Tasks
         /// </summary>
         internal void RunTask2()
         {
-            List<Product> products = this._productDatabase.GetAllProducts();
-            List<Supplier> suppliers = this._supplierDatabase.GetAllSuppliers();
+            List<Product> products = this._productRepository.GetAllProducts();
+            List<Supplier> suppliers = this._supplierRepository.GetAllSuppliers();
             var groupByQuery = products
                 .GroupBy(product => product.Category);
 

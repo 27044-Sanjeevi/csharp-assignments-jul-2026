@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment9LINQAdvanced.Models.Enums
+﻿namespace Assignment9LINQAdvanced.Models.Enums
 {
     /// <summary>
     /// Specifies the menu choices.
@@ -37,8 +31,13 @@ namespace Assignment9LINQAdvanced.Models.Enums
         QueryBuilder = 5,
 
         /// <summary>
+        /// Specifies the view data option of the application.
+        /// </summary>
+        ViewData = 6,
+
+        /// <summary>
         /// Exits the application.
         /// </summary>
-        Exit = 6,
+        Exit = 7,
     }
 }

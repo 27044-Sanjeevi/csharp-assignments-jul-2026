@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment9LINQAdvanced
+﻿namespace Assignment9LINQAdvanced
 {
     /// <summary>
     /// Contains the helper methods for console operations.
