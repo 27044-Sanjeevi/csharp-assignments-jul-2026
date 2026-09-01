@@ -1,6 +1,6 @@
-﻿using Assignment9LINQAdvanced.Repository;
-using Assignment9LINQAdvanced.Models;
+﻿using Assignment9LINQAdvanced.Models;
 using Assignment9LINQAdvanced.Models.Enums;
+using Assignment9LINQAdvanced.Repository;
 using ConsoleTables;
 
 namespace Assignment9LINQAdvanced.Tasks
@@ -43,9 +43,9 @@ namespace Assignment9LINQAdvanced.Tasks
                 {
                     ProductId = product.Id,
                     ProductName = product.Name,
-                    SupplierName = supplier.SupplierName,
-                    Category = product.Category,
-                    Price = product.Price,
+                    supplier.SupplierName,
+                    product.Category,
+                    product.Price,
                 })
                 .Filter(joined => joined.Category == ProductCategory.Electronics)
                 .Filter(joined => joined.Price > 1000m)
@@ -65,7 +65,7 @@ namespace Assignment9LINQAdvanced.Tasks
 
             table.Configure(options => options.EnableCount = false).Write();
             productQueryBuilder = new QueryBuilder<Product>(products);
-            var containsResult = productQueryBuilder
+            List<Product> containsResult = productQueryBuilder
                 .Contains("Name", "Laptop")
                 .GreaterThanOrEqualTo("Price", 50000m)
                 .LessThanOrEqualTo("Price", 75000m)
@@ -83,7 +83,7 @@ namespace Assignment9LINQAdvanced.Tasks
             containsTable.Configure(options => options.EnableCount = false).Write();
 
             productQueryBuilder = new QueryBuilder<Product>(products);
-            var startsWithResult = productQueryBuilder
+            List<Product> startsWithResult = productQueryBuilder
                 .StartsWith("Name", "Apple")
                 .Execute();
             var startsWithTable = new ConsoleTable("Apple Product Name", "Product Category");
@@ -99,7 +99,7 @@ namespace Assignment9LINQAdvanced.Tasks
 
             productQueryBuilder = new QueryBuilder<Product>(products);
 
-            var endsWithResult = productQueryBuilder
+            List<Product> endsWithResult = productQueryBuilder
                 .EndsWith("Name", "Earphones")
                 .Execute();
 

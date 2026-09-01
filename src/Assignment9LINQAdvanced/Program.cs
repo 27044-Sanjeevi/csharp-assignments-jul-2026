@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Assignment9LINQAdvanced;
+﻿using Assignment9LINQAdvanced;
 using Assignment9LINQAdvanced.Models;
 using Assignment9LINQAdvanced.Models.Enums;
 using Assignment9LINQAdvanced.Repository;
@@ -13,7 +12,7 @@ namespace Assignments
     /// </summary>
     internal class Program
     {
-        private static int _maxChoice = 7;
+        private static readonly int _maxChoice = 7;
 
         /// <summary>
         /// Entry point of the application.

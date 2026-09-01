@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using Assignment9LINQAdvanced.Repository;
 using Assignment9LINQAdvanced.Models;
 using Assignment9LINQAdvanced.Models.Enums;
+using Assignment9LINQAdvanced.Repository;
 using ConsoleTables;
 
 namespace Assignment9LINQAdvanced.Tasks
@@ -33,11 +33,11 @@ namespace Assignment9LINQAdvanced.Tasks
             ConsoleTableOptions options = new ConsoleTableOptions { EnableCount = false };
 
             // Warm up to ensure JIT compilation overhead doesn't skew results
-            var warmUp = products.Where(product => product.Category == ProductCategory.Book).ToList();
+            List<Product> warmUp = products.Where(product => product.Category == ProductCategory.Book).ToList();
 
             Stopwatch toListStopwatch = Stopwatch.StartNew();
 
-            var toListResult = products
+            List<Product> toListResult = products
                 .Where(product => product.Category == ProductCategory.Book)
                 .OrderBy(product => product.Price)
                 .ToList();
@@ -51,7 +51,7 @@ namespace Assignment9LINQAdvanced.Tasks
 
             Stopwatch iEnumerableStopWatch = Stopwatch.StartNew();
 
-            var enumerableQuery = products
+            IEnumerable<Product> enumerableQuery = products
                 .Where(product => product.Category == ProductCategory.Book)
                 .OrderBy(product => product.Price);
 
@@ -70,8 +70,8 @@ namespace Assignment9LINQAdvanced.Tasks
 
             Stopwatch lookupWatch = Stopwatch.StartNew();
 
-            var categoryLookup = products.ToLookup(p => p.Category);
-            var lookupResult = categoryLookup[ProductCategory.Book]
+            ILookup<ProductCategory, Product> categoryLookup = products.ToLookup(p => p.Category);
+            List<Product> lookupResult = categoryLookup[ProductCategory.Book]
                 .OrderBy(product => product.Price)
                 .ToList();
             lookupWatch.Stop();

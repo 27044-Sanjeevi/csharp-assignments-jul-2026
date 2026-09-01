@@ -19,8 +19,8 @@
                 .First()
                 .ToString();
 
-            var pairsAddingToTarget = numbers
-                .SelectMany((number1, index1) => numbers.Select((number2, index2) => new {num1= number1, num2=number2, index1, index2 }))
+            IEnumerable<string> pairsAddingToTarget = numbers
+                .SelectMany((number1, index1) => numbers.Select((number2, index2) => new { num1= number1, num2=number2, index1, index2 }))
                 .Where(pair => pair.index1 < pair.index2 && pair.num1 + pair.num2 == targetSum)
                 .Select(applicablePair => $"({applicablePair.num1}, {applicablePair.num2})")
                 .Distinct();

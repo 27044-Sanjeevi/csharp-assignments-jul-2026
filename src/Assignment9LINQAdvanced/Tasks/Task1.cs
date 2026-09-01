@@ -1,8 +1,6 @@
-﻿using Assignment9LINQAdvanced.Repository;
-using Assignment9LINQAdvanced.Models.Enums;
+﻿using Assignment9LINQAdvanced.Models.Enums;
+using Assignment9LINQAdvanced.Repository;
 using ConsoleTables;
-using System.Reflection;
-using Assignment9LINQAdvanced.Models;
 
 namespace Assignment9LINQAdvanced.Tasks
 {
@@ -29,7 +27,7 @@ namespace Assignment9LINQAdvanced.Tasks
         {
             IEnumerable<(string Name, decimal Price)> selectedProducts = this._productRepository.GetAllProducts()
                 .Where(p => p.Category == ProductCategory.Electronics && p.Price > 500)
-                .Select(p => (p.Name, p.Price ))
+                .Select(p => (p.Name, p.Price))
                 .OrderByDescending(p => p.Price)
                 .ToList();
 

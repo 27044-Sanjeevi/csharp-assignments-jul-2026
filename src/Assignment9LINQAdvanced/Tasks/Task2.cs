@@ -1,7 +1,7 @@
-﻿using Assignment9LINQAdvanced.Repository;
-using Assignment9LINQAdvanced.Models;
-using ConsoleTables;
+﻿using Assignment9LINQAdvanced.Models;
 using Assignment9LINQAdvanced.Models.Enums;
+using Assignment9LINQAdvanced.Repository;
+using ConsoleTables;
 
 namespace Assignment9LINQAdvanced.Tasks
 {
