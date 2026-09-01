@@ -35,8 +35,10 @@ Available operations:
 3. Update Transaction
 4. Delete Transaction
 5. Filter Transactions
-6. Generate Report
-7. Exit
+6. Sort Transactions
+7. Search Transactions
+8. Generate Report
+9. Exit
 
 ### Adding a Transaction
 1. Select "Add Transaction" from the main menu.
@@ -68,12 +70,25 @@ Select "View Transactions" to display all recorded transactions in a formatted t
 4. If filtering by Category, first select the flow type, then select the specific category.
 5. Matching transactions are displayed in a filtered table.
 
+### Sorting Transactions
+1. Select "Sort transactions" from the main menu.
+2. Choose the field to sort by: Date, Amount or Category.
+3. Choose the sort order : Ascending or Descending.
+4. The sorted transactions will be displayed as table.
+
+### Searching Transactions
+1. Select the "Search across transactions" from the main menu.
+2. Enter a keyword to search across all the transactions.
+3. The resultant transactions will be displayed which contains the keyword.
+
 ### Generating Reports
-Select "Generate Report" to view a summary panel displaying:
+Select "Generate Insights and Report" to view a summary panel displaying:
 - Total number of transactions
 - Total income
 - Total expenses
 - Net balance (positive values shown in green, negative in red)
+- Cash flow breakdown (income vs expense) chart will be displayed.
+- Category wise expense will be displayed as chart.
 
 ## Architecture Overview
 
