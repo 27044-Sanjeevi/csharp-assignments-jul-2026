@@ -1,30 +1,39 @@
-﻿using Assignment10UnderstandingDotnet;
+﻿using Assignment10UnderstandingDotnet.Models;
+using Assignment10UnderstandingDotnet.Utilities;
+using Assignment10UnderstandingDotnet.View;
 
 namespace Assignments
 {
+    /// <summary>
+    /// Contains the Main entry point of the project.
+    /// </summary>
     internal class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Main entry point of the program. Initializes dependencies and runs the controller.
+        /// </summary>
+        internal static void Main()
         {
             try
             {
-                View view = new ();
-
+                ConsoleView consoleView = new ();
+                consoleView.DisplayApplicationTitle();
                 MathOperation operation = new MathOperation()
                 {
-                    FirstNumber = view.GetFirstNumber(),
-                    SecondNumber = view.GetSecondNumber(),
-                    Operator = view.GetOperator(),
+                    FirstNumber = consoleView.GetFirstNumber(),
+                    SecondNumber = consoleView.GetSecondNumber(),
+                    Operator = consoleView.GetOperator(),
                 };
 
-                int result = operation.Calculate();
-                view.DisplayResult(operation);
+                double result = operation.Calculate();
+                consoleView.DisplayResult(operation, result);
             }
             catch (DivideByZeroException ex)
             {
                 ConsoleHelpers.DisplayException(ex.Message);
             }
 
+            Console.WriteLine("\nPress any key to exit the application..");
             Console.ReadKey();
         }
     }
