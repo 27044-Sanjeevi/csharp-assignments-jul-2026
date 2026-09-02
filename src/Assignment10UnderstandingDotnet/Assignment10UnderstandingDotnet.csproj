@@ -7,10 +7,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="TheoryQuestionsAndAnswers.md" />
-  </ItemGroup>
-
   <ItemGroup Label="CSharpAnalyser">
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
