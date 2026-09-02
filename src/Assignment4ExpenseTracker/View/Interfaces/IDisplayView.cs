@@ -3,6 +3,9 @@ namespace Assignment4ExpenseTracker.View.Interfaces
     using Assignment4ExpenseTracker.Models.Enums;
     using Assignment4ExpenseTracker.Services.Validation;
 
+    /// <summary>
+    /// Defines the contract for display methods.
+    /// </summary>
     internal interface IDisplayView
     {
         /// <summary>
@@ -24,7 +27,7 @@ namespace Assignment4ExpenseTracker.View.Interfaces
         /// Retrieves the keyword to be searched across all the transactions from the user.
         /// </summary>
         /// <returns>The string containing the keyword to be searched.</returns>
-        public string GetSearchKeyword();
+        string GetSearchKeyword();
 
         /// <summary>
         /// Reads the optional description of the transaction from user input.
@@ -36,7 +39,7 @@ namespace Assignment4ExpenseTracker.View.Interfaces
         /// Collects sorting criteria from the user.
         /// </summary>
         /// <returns>A tuple containing the SortBy and SortOrder enums.</returns>
-        public (SortBy sortBy, SortOrder order) GetSortingCriteria();
+        (SortBy sortBy, SortOrder order) GetSortingCriteria();
 
         /// <summary>
         /// Retrieves an updated transaction description based on the provided existing description.

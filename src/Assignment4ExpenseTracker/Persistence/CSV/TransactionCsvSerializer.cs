@@ -39,9 +39,9 @@ namespace Assignment4ExpenseTracker.Persistence.Csv
                 return null;
             }
 
-            List<string> fields = new List<string>();
-            string field = string.Empty;
-            bool inQuotes = false;
+            var fields = new List<string>();
+            var field = string.Empty;
+            var inQuotes = false;
 
             for (int i = 0; i < line.Length; i++)
             {
@@ -78,13 +78,13 @@ namespace Assignment4ExpenseTracker.Persistence.Csv
 
             try
             {
-                Guid id = Guid.Parse(fields[0]);
-                decimal amount = decimal.Parse(fields[1], CultureInfo.InvariantCulture);
-                TransactionType type = Enum.Parse<TransactionType>(fields[2]);
-                TransactionCategory category = Enum.Parse<TransactionCategory>(fields[3]);
-                PaymentMethod method = Enum.Parse<PaymentMethod>(fields[4]);
-                DateTime timestamp = DateTime.Parse(fields[5], null, DateTimeStyles.RoundtripKind);
-                string? description = fields.Count > FieldCount ? fields[FieldCount] : null;
+                var id = Guid.Parse(fields[0]);
+                var amount = decimal.Parse(fields[1], CultureInfo.InvariantCulture);
+                var type = Enum.Parse<TransactionType>(fields[2]);
+                var category = Enum.Parse<TransactionCategory>(fields[3]);
+                var method = Enum.Parse<PaymentMethod>(fields[4]);
+                var timestamp = DateTime.Parse(fields[5], null, DateTimeStyles.RoundtripKind);
+                var description = fields.Count > FieldCount ? fields[FieldCount] : null;
 
                 if (string.IsNullOrEmpty(description))
                 {
@@ -119,9 +119,9 @@ namespace Assignment4ExpenseTracker.Persistence.Csv
                 return string.Empty;
             }
 
-            bool containsComma = value.Contains(",");
-            bool containsQuote = value.Contains("\"");
-            bool containsNewline = value.Contains("\n") || value.Contains("\r");
+            var containsComma = value.Contains(",");
+            var containsQuote = value.Contains("\"");
+            var containsNewline = value.Contains("\n") || value.Contains("\r");
 
             if (containsComma || containsQuote || containsNewline)
             {

@@ -3,6 +3,9 @@ namespace Assignment4ExpenseTracker.View.Interfaces
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.Enums;
 
+    /// <summary>
+    /// Defines the contract for the input methods.
+    /// </summary>
     internal interface IInputView
     {
         /// <summary>

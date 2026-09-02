@@ -9,7 +9,16 @@ namespace Assignment4ExpenseTracker.Persistence.Csv
     /// </summary>
     internal class CsvFileRepository : IRepository
     {
-        private const string CsvHeader = "Id,Amount,Type,Category,Method,Timestamp,Description";
+        private static readonly string[] CsvColumns =
+        {
+            "Id",
+            "Amount",
+            "Type",
+            "Category",
+            "Method",
+            "Timestamp",
+            "Description",
+        };
 
         private readonly string _filePath;
         private readonly List<Transaction> _transactions;
@@ -25,15 +34,17 @@ namespace Assignment4ExpenseTracker.Persistence.Csv
             this._filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
             this._csvSerializer = csvSerializer ?? throw new ArgumentNullException(nameof(csvSerializer));
             this._transactions = new List<Transaction>();
-            this.Load();
+            this.LoadTransactions();
         }
+
+        private static string CsvHeader => string.Join(",", CsvColumns);
 
         /// <inheritdoc />
         public void Add(Transaction transaction)
         {
             ArgumentNullException.ThrowIfNull(transaction, nameof(transaction));
             this._transactions.Add(new Transaction(transaction));
-            this.Save();
+            this.SaveTransactions();
         }
 
         /// <inheritdoc />
@@ -60,7 +71,7 @@ namespace Assignment4ExpenseTracker.Persistence.Csv
             }
 
             this._transactions[index] = new Transaction(transaction);
-            this.Save();
+            this.SaveTransactions();
             return true;
         }
 
@@ -74,7 +85,7 @@ namespace Assignment4ExpenseTracker.Persistence.Csv
             }
 
             this._transactions.RemoveAt(index);
-            this.Save();
+            this.SaveTransactions();
             return true;
         }
 
@@ -128,7 +139,7 @@ namespace Assignment4ExpenseTracker.Persistence.Csv
         /// <summary>
         /// Loads transaction records from the CSV file.
         /// </summary>
-        private void Load()
+        private void LoadTransactions()
         {
             if (!File.Exists(this._filePath))
             {
@@ -167,7 +178,7 @@ namespace Assignment4ExpenseTracker.Persistence.Csv
         /// <summary>
         /// Saves transaction records to the CSV file.
         /// </summary>
-        private void Save()
+        private void SaveTransactions()
         {
             try
             {

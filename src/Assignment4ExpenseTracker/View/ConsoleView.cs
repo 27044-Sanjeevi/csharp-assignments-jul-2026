@@ -1,6 +1,5 @@
 namespace Assignment4ExpenseTracker.View
 {
-    using System.Dynamic;
     using Assignment4ExpenseTracker.IO;
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.Enums;
@@ -13,6 +12,14 @@ namespace Assignment4ExpenseTracker.View
     /// </summary>
     internal class ConsoleView : IView
     {
+        private const string CashFlowPrompt = "Select the cash flow type:";
+        private const string FilterTypePrompt = "Select the filtering parameter:";
+        private const string PaymentMethodPrompt = "Select the payment method:";
+        private const string IncomeCategoryPrompt = "Select the income category:";
+        private const string ExpenseCategoryPrompt = "Select the expense category:";
+        private const string SortByPrompt = "Select field to sort by:";
+        private const string SortOrderPrompt = "Select sort order:";
+
         private readonly TransactionType[] _transactionType =
         {
             TransactionType.Income,
@@ -93,31 +100,31 @@ namespace Assignment4ExpenseTracker.View
         /// <inheritdoc />
         public TransactionType GetTransactionTypeChoice(TransactionType? existingType = null)
         {
-            return this.GetEnumSelection("Select the cash flow type:", this._transactionType, existingType);
+            return this.GetEnumSelection(CashFlowPrompt, this._transactionType, existingType);
         }
 
         /// <inheritdoc />
         public FilterType GetFilterTypeChoice(FilterType? existingType = null)
         {
-            return this.GetEnumSelection("Select the filtering parameter:", this._filterType, existingType);
+            return this.GetEnumSelection(FilterTypePrompt, this._filterType, existingType);
         }
 
         /// <inheritdoc />
         public PaymentMethod GetPaymentMethod(PaymentMethod? existingMethod = null)
         {
-            return this.GetEnumSelection("Select the payment method:", this._paymentMethod, existingMethod);
+            return this.GetEnumSelection(PaymentMethodPrompt, this._paymentMethod, existingMethod);
         }
 
         /// <inheritdoc />
         public TransactionCategory GetIncomeCategory(TransactionCategory? existingCategory = null)
         {
-            return this.GetEnumSelection("Select the income category:", this._incomeCategory, existingCategory);
+            return this.GetEnumSelection(IncomeCategoryPrompt, this._incomeCategory, existingCategory);
         }
 
         /// <inheritdoc />
         public TransactionCategory GetExpenseCategory(TransactionCategory? existingCategory = null)
         {
-            return this.GetEnumSelection("Select the expense category:", this._expenseCategory, existingCategory);
+            return this.GetEnumSelection(ExpenseCategoryPrompt, this._expenseCategory, existingCategory);
         }
 
         /// <inheritdoc />
@@ -146,7 +153,9 @@ namespace Assignment4ExpenseTracker.View
             return this.ReadSelection(
                 $"Are you sure you want to permanently delete this {transaction.Type} transaction of {transaction.Amount:C}?",
                 new[] { false, true },
-                confirm => confirm ? "Yes, permanently Delete" : "No, Cancel deletion");
+                confirm
+                => confirm
+                ? "Yes, permanently Delete" : "No, Cancel deletion");
         }
 
         /// <inheritdoc />
@@ -215,8 +224,8 @@ namespace Assignment4ExpenseTracker.View
         public (SortBy sortBy, SortOrder order) GetSortingCriteria()
         {
             this._consoleHelper.PrintHeader("SORT TRANSACTIONS");
-            SortBy sortBy = this.GetEnumSelection("Select field to sort by:", this._sortBy, SortBy.Date);
-            SortOrder order = this.GetEnumSelection("Select sort order:", this._sortOrder, SortOrder.Ascending);
+            SortBy sortBy = this.GetEnumSelection(SortByPrompt, this._sortBy, SortBy.Date);
+            SortOrder order = this.GetEnumSelection(SortOrderPrompt, this._sortOrder, SortOrder.Ascending);
             return (sortBy, order);
         }
 

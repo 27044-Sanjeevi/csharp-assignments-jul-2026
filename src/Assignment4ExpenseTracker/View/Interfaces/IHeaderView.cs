@@ -1,5 +1,8 @@
 namespace Assignment4ExpenseTracker.View.Interfaces
 {
+    /// <summary>
+    /// Defines the contract for the header methods.
+    /// </summary>
     internal interface IHeaderView
     {
         /// <summary>
