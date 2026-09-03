@@ -9,7 +9,7 @@ namespace Assignments
     {
         private const int OriginalTemperature = 10;
         private const int ModifiedTemperature = 20;
-        private const int ArrayLength = 20000;
+        private const int ArrayLength = 2000000;
 
         /// <summary>
         /// Entry point of the application.
