@@ -23,7 +23,6 @@ namespace Assignments
         private void DisplayMemoryDetails()
         {
             long memoryInBytes = GC.GetTotalMemory(forceFullCollection: false);
-            
         }
     }
 }
