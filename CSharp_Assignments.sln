@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment4ExpenseTracker",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment10UnderstandingDotnet", "src\Assignment10UnderstandingDotnet\Assignment10UnderstandingDotnet.csproj", "{CC679FED-9D19-412B-ACB1-5C60D73B3181}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "src\Utilities\Utilities.csproj", "{7060349B-C138-4756-8024-62969FC9CA62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "src\Utilities\Utilities.csproj", "{8CC12888-B1E5-4F29-8156-AF64BA493EF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +43,10 @@ Global
 		{CC679FED-9D19-412B-ACB1-5C60D73B3181}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC679FED-9D19-412B-ACB1-5C60D73B3181}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC679FED-9D19-412B-ACB1-5C60D73B3181}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7060349B-C138-4756-8024-62969FC9CA62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7060349B-C138-4756-8024-62969FC9CA62}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7060349B-C138-4756-8024-62969FC9CA62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7060349B-C138-4756-8024-62969FC9CA62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CC12888-B1E5-4F29-8156-AF64BA493EF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CC12888-B1E5-4F29-8156-AF64BA493EF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CC12888-B1E5-4F29-8156-AF64BA493EF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CC12888-B1E5-4F29-8156-AF64BA493EF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
