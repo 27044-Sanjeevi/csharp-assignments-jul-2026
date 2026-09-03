@@ -1,6 +1,5 @@
 namespace Assignment4ExpenseTracker.Utilities
 {
-    using System.Collections.Generic;
     using Assignment4ExpenseTracker.IO;
     using Spectre.Console;
 
@@ -125,6 +124,61 @@ namespace Assignment4ExpenseTracker.Utilities
         }
 
         /// <summary>
+        /// Reads the date and time from then user.
+        /// </summary>
+        /// <param name="prompt">Prompt to be displayed.</param>
+        /// <param name="existingDateTime">Existing date time of the transaction.</param>
+        /// <param name="isOptional">If true, pressing Enter returns null instead of a validation error</param>
+        /// <returns>The parsed DateTime, or null if the field was skipped.</returns>
+        public DateTime? ReadDateTime(string prompt, DateTime? existingDateTime = null, bool isOptional = false)
+        {
+            int attempts = 0;
+            const int MaxAttempts = 3;
+
+            while (attempts < MaxAttempts)
+            {
+                attempts++;
+                string? input = this.ReadLine(prompt)?.Trim();
+
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    if (existingDateTime == null && isOptional)
+                    {
+                        return DateTime.Now;
+                    }
+
+                    if (existingDateTime.HasValue)
+                    {
+                        return existingDateTime.Value;
+                    }
+
+                    this.DisplayError("This field is required. Please enter a valid date.");
+                    continue;
+                }
+
+                if (DateTime.TryParse(input, out DateTime parsedDate))
+                {
+                    if (parsedDate > DateTime.Now)
+                    {
+                        this.DisplayError("Transaction date cannot be in the future.");
+                        continue;
+                    }
+
+                    return parsedDate;
+                }
+                else
+                {
+                    if (attempts < MaxAttempts)
+                    {
+                        this.DisplayError("Invalid format. Please use YYYY-MM-DD (e.g., 2026-03-15).");
+                    }
+                }
+            }
+
+            throw this.AbortInputAttempts();
+        }
+
+        /// <summary>
         /// Writes message in a custom console color.
         /// </summary>
         /// <param name="message">The text to write.</param>
@@ -201,9 +255,9 @@ namespace Assignment4ExpenseTracker.Utilities
         }
 
         /// <summary>
-        /// Prints a goodbye message.
+        /// Prints an exit message.
         /// </summary>
-        public void PrintGoodbye()
+        public void DisplayExitMessage()
         {
             this.WriteLine("Press any key to exit the application...");
         }
@@ -223,6 +277,23 @@ namespace Assignment4ExpenseTracker.Utilities
         public void ClearScreen()
         {
             this._consoleIo.Clear();
+        }
+
+        /// <summary>
+        /// Displays a selection menu using arrow keys and returns the index of the selected choice.
+        /// </summary>
+        /// <param name="title">The title prompt for selection.</param>
+        /// <param name="choices">The list of choices to display.</param>
+        /// <returns>The index of the selected choice (1-based).</returns>
+        public int ReadSelection(string title, List<string> choices)
+        {
+            var prompt = new SelectionPrompt<string>()
+                .Title(title)
+                .HighlightStyle(new Style(Color.Black, Color.Aqua))
+                .AddChoices(choices);
+
+            string selected = AnsiConsole.Prompt(prompt);
+            return choices.IndexOf(selected) + 1;
         }
 
         /// <summary>

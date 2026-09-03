@@ -10,6 +10,10 @@ A console-based finance application for tracking income and expenses and generat
 - Update existing transaction details with partial update support (leave fields blank to retain current values)
 - Delete transaction records permanently
 
+### Filtering and Search
+- Filter transactions by flow type (Income or Expense)
+- Filter transactions by category (Salary, Investment, Transport, Utilities, Groceries, Rent, Food, Shopping, etc.)
+
 ### Financial Reporting
 - Generate financial insights including total income, total expenses, net balance, and transaction count
 - Color-coded display distinguishing income (green) from expenses (red)
@@ -30,8 +34,11 @@ Available operations:
 2. View Transactions
 3. Update Transaction
 4. Delete Transaction
-5. Generate Report
-6. Exit
+5. Filter Transactions
+6. Sort Transactions
+7. Search Transactions
+8. Generate Report
+9. Exit
 
 ### Adding a Transaction
 1. Select "Add Transaction" from the main menu.
@@ -56,12 +63,32 @@ Select "View Transactions" to display all recorded transactions in a formatted t
 2. A table of all transactions is displayed. Enter the row number of the transaction to delete.
 3. The transaction is permanently removed from the system.
 
+### Filtering Transactions
+1. Select "Filter Transactions" from the main menu.
+2. Choose the filter parameter: Flow Type or Category.
+3. If filtering by Flow Type, select Income or Expense.
+4. If filtering by Category, first select the flow type, then select the specific category.
+5. Matching transactions are displayed in a filtered table.
+
+### Sorting Transactions
+1. Select "Sort transactions" from the main menu.
+2. Choose the field to sort by: Date, Amount or Category.
+3. Choose the sort order : Ascending or Descending.
+4. The sorted transactions will be displayed as table.
+
+### Searching Transactions
+1. Select the "Search across transactions" from the main menu.
+2. Enter a keyword to search across all the transactions.
+3. The resultant transactions will be displayed which contains the keyword.
+
 ### Generating Reports
-Select "Generate Report" to view a summary panel displaying:
+Select "Generate Insights and Report" to view a summary panel displaying:
 - Total number of transactions
 - Total income
 - Total expenses
 - Net balance (positive values shown in green, negative in red)
+- Cash flow breakdown (income vs expense) chart will be displayed.
+- Category wise expense will be displayed as chart.
 
 ## Architecture Overview
 

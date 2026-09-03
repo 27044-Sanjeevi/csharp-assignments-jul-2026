@@ -1,7 +1,5 @@
 namespace Assignment4ExpenseTracker.Services.Validation
 {
-    using System;
-    using System.Collections.Generic;
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.Enums;
 

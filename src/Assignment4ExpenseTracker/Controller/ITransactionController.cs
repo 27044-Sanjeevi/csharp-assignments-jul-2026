@@ -1,7 +1,7 @@
-﻿using Assignment4ExpenseTracker.Models.Enums;
-
 namespace Assignment4ExpenseTracker.Controller
 {
+    using Assignment4ExpenseTracker.Models.Enums;
+
     /// <summary>
     /// Defines contracts for the main application controller.
     /// </summary>
@@ -35,8 +35,23 @@ namespace Assignment4ExpenseTracker.Controller
         void Delete();
 
         /// <summary>
+        /// Searches and filters transactions by dynamic criteria.
+        /// </summary>
+        void Search();
+
+        /// <summary>
+        /// Sorts and displays transactions by dynamic criteria.
+        /// </summary>
+        void Sort();
+
+        /// <summary>
+        /// Filters transactions based on the selected filter type.
+        /// </summary>
+        void Filter();
+
+        /// <summary>
         /// Generates and displays financial insights and reports.
         /// </summary>
-        void GenerateReport();
+        void DisplayReport();
     }
 }

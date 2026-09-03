@@ -1,9 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Assignment4ExpenseTracker.Models.Enums
 {
     /// <summary>
@@ -32,13 +26,28 @@ namespace Assignment4ExpenseTracker.Models.Enums
         Delete = 4,
 
         /// <summary>
+        /// Specifies the filter operation.
+        /// </summary>
+        Filter = 5,
+
+        /// <summary>
+        /// Specifies the sort operation.
+        /// </summary>
+        Sort = 6,
+
+        /// <summary>
+        /// Specifies the search operation.
+        /// </summary>
+        Search = 7,
+
+        /// <summary>
         /// Specifies report generation operation.
         /// </summary>
-        GenerateReport = 5,
+        GenerateReport = 8,
 
         /// <summary>
         /// Specifies exit operation.
         /// </summary>
-        Exit = 6,
+        Exit = 9,
     }
 }

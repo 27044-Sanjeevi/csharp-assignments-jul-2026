@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.IO
+namespace Assignment4ExpenseTracker.IO
 {
     /// <summary>
     /// Provides concrete implementations of console input and output operations.

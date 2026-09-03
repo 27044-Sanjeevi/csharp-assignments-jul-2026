@@ -1,10 +1,10 @@
 namespace Assignment4ExpenseTracker.View
 {
-    using System.Linq;
     using Assignment4ExpenseTracker.IO;
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.Enums;
     using Assignment4ExpenseTracker.Utilities;
+    using Assignment4ExpenseTracker.View.Interfaces;
     using Spectre.Console;
 
     /// <summary>
@@ -12,6 +12,14 @@ namespace Assignment4ExpenseTracker.View
     /// </summary>
     internal class ConsoleView : IView
     {
+        private const string CashFlowPrompt = "Select the cash flow type:";
+        private const string FilterTypePrompt = "Select the filtering parameter:";
+        private const string PaymentMethodPrompt = "Select the payment method:";
+        private const string IncomeCategoryPrompt = "Select the income category:";
+        private const string ExpenseCategoryPrompt = "Select the expense category:";
+        private const string SortByPrompt = "Select field to sort by:";
+        private const string SortOrderPrompt = "Select sort order:";
+
         private readonly TransactionType[] _transactionType =
         {
             TransactionType.Income,
@@ -49,6 +57,25 @@ namespace Assignment4ExpenseTracker.View
             TransactionCategory.MiscellaneousExpense,
         };
 
+        private readonly FilterType[] _filterType =
+        {
+            FilterType.TransactionType,
+            FilterType.Category,
+        };
+
+        private readonly SortBy[] _sortBy =
+        {
+            SortBy.Date,
+            SortBy.Amount,
+            SortBy.Category,
+        };
+
+        private readonly SortOrder[] _sortOrder =
+        {
+            SortOrder.Ascending,
+            SortOrder.Descending,
+        };
+
         private readonly IConsoleIO _consoleIo;
         private readonly ConsoleHelper _consoleHelper;
 
@@ -73,25 +100,31 @@ namespace Assignment4ExpenseTracker.View
         /// <inheritdoc />
         public TransactionType GetTransactionTypeChoice(TransactionType? existingType = null)
         {
-            return this.GetEnumSelection("Select the cash flow type:", this._transactionType, existingType);
+            return this.GetEnumSelection(CashFlowPrompt, this._transactionType, existingType);
+        }
+
+        /// <inheritdoc />
+        public FilterType GetFilterTypeChoice(FilterType? existingType = null)
+        {
+            return this.GetEnumSelection(FilterTypePrompt, this._filterType, existingType);
         }
 
         /// <inheritdoc />
         public PaymentMethod GetPaymentMethod(PaymentMethod? existingMethod = null)
         {
-            return this.GetEnumSelection("Select the payment method:", this._paymentMethod, existingMethod);
+            return this.GetEnumSelection(PaymentMethodPrompt, this._paymentMethod, existingMethod);
         }
 
         /// <inheritdoc />
         public TransactionCategory GetIncomeCategory(TransactionCategory? existingCategory = null)
         {
-            return this.GetEnumSelection("Select the income category:", this._incomeCategory, existingCategory);
+            return this.GetEnumSelection(IncomeCategoryPrompt, this._incomeCategory, existingCategory);
         }
 
         /// <inheritdoc />
         public TransactionCategory GetExpenseCategory(TransactionCategory? existingCategory = null)
         {
-            return this.GetEnumSelection("Select the expense category:", this._expenseCategory, existingCategory);
+            return this.GetEnumSelection(ExpenseCategoryPrompt, this._expenseCategory, existingCategory);
         }
 
         /// <inheritdoc />
@@ -101,10 +134,7 @@ namespace Assignment4ExpenseTracker.View
         public string? GetTransactionDescriptionToUpdate(string? existingDescription) => this._consoleHelper.ReadString($"Enter a description for the transaction [Current: {existingDescription ?? "None"}] (Press Enter to keep current): ", isOptional: true) ?? existingDescription;
 
         /// <inheritdoc />
-        public void DisplayTransactionsNotFound()
-        {
-            this._consoleHelper.WriteColored("\nNo transactions found.\n", ConsoleColor.Yellow);
-        }
+        public void DisplayTransactionsNotFound() => this._consoleHelper.WriteColored("\nNo transactions found.\n", ConsoleColor.Yellow);
 
         /// <inheritdoc />
         public void DisplayAddSuccessful() => this._consoleHelper.DisplaySuccessMessage("Transaction Added Successfully.");
@@ -123,7 +153,9 @@ namespace Assignment4ExpenseTracker.View
             return this.ReadSelection(
                 $"Are you sure you want to permanently delete this {transaction.Type} transaction of {transaction.Amount:C}?",
                 new[] { false, true },
-                confirm => confirm ? "Yes, permanently Delete" : "No, Cancel deletion");
+                confirm
+                => confirm
+                ? "Yes, permanently Delete" : "No, Cancel deletion");
         }
 
         /// <inheritdoc />
@@ -143,34 +175,31 @@ namespace Assignment4ExpenseTracker.View
         }
 
         /// <inheritdoc />
-        public void DisplayDeleteHeader()
+        public DateTime? GetDateTime(DateTime? existingDateTime, bool isOptional)
         {
-            this._consoleHelper.PrintHeader("DELETE TRANSACTION");
+            return this._consoleHelper.ReadDateTime("\nEnter transaction date (YYYY-MM-DD) or press Enter for current date: ", existingDateTime: existingDateTime, isOptional: isOptional);
         }
 
         /// <inheritdoc />
-        public void DisplayAddHeader()
-        {
-            this._consoleHelper.PrintHeader("ADD NEW TRANSACTION");
-        }
+        public void DisplayDeleteHeader() => this._consoleHelper.PrintHeader("DELETE TRANSACTION");
 
         /// <inheritdoc />
-        public void DisplayUpdateHeader()
-        {
-            this._consoleHelper.PrintHeader("UPDATE TRANSACTION");
-        }
+        public void DisplayAddHeader() => this._consoleHelper.PrintHeader("ADD NEW TRANSACTION");
 
         /// <inheritdoc />
-        public void DisplayReportHeader()
-        {
-            this._consoleHelper.PrintHeader("FINANCIAL INSIGHTS & REPORT");
-        }
+        public void DisplayUpdateHeader() => this._consoleHelper.PrintHeader("UPDATE TRANSACTION");
 
         /// <inheritdoc />
-        public void DisplayAllTransactionsHeader()
-        {
-            this._consoleHelper.PrintHeader("TRANSACTION DASHBOARD");
-        }
+        public void DisplaySearchHeader() => this._consoleHelper.PrintHeader("SEARCH ACROSS TRANSACTIONS");
+
+        /// <inheritdoc />
+        public void DisplayReportHeader() => this._consoleHelper.PrintHeader("FINANCIAL INSIGHTS & REPORT");
+
+        /// <inheritdoc />
+        public void DisplayAllTransactionsHeader() => this._consoleHelper.PrintHeader("TRANSACTION DASHBOARD");
+
+        /// <inheritdoc />
+        public void DisplayFilterHeader() => this._consoleHelper.PrintHeader("FILTER TRANSACTIONS");
 
         /// <inheritdoc />
         public int GetIndexFromTable(int maxIndex)
@@ -188,10 +217,18 @@ namespace Assignment4ExpenseTracker.View
             }
         }
 
-        /// <summary>
-        /// Displays the details of a given transaction.
-        /// </summary>
-        /// <param name="transaction">The transaction object containing the details to be displayed.</param>
+        /// <inheritdoc />
+        public string GetSearchKeyword() => this._consoleHelper.ReadString("Enter the keyword to search across all your transactions : ")?.Trim().ToLower() ?? string.Empty;
+
+        /// <inheritdoc />
+        public (SortBy sortBy, SortOrder order) GetSortingCriteria()
+        {
+            this._consoleHelper.PrintHeader("SORT TRANSACTIONS");
+            SortBy sortBy = this.GetEnumSelection(SortByPrompt, this._sortBy, SortBy.Date);
+            SortOrder order = this.GetEnumSelection(SortOrderPrompt, this._sortOrder, SortOrder.Ascending);
+            return (sortBy, order);
+        }
+
         /// <inheritdoc />
         public void DisplayTransactionDetails(Transaction transaction)
         {
@@ -204,6 +241,13 @@ namespace Assignment4ExpenseTracker.View
             this._consoleIo.WriteLine($"Payment Method: {transaction.Method}");
             this._consoleIo.WriteLine($"Category: {transaction.Category}");
             this._consoleIo.WriteLine($"Description: {Markup.Escape(transaction.Description ?? "N/A")}");
+        }
+
+        /// <inheritdoc />
+        public void DisplayFilteredTable(IReadOnlyList<Transaction> transactions)
+        {
+            this._consoleHelper.PrintSubHeader("Filtered Transactions");
+            this.DisplayAsTable(transactions);
         }
 
         /// <inheritdoc />
@@ -271,6 +315,80 @@ namespace Assignment4ExpenseTracker.View
             AnsiConsole.WriteLine();
         }
 
+        /// <inheritdoc />
+        public void DisplayVisualCharts(IReadOnlyList<Transaction> transactions)
+        {
+            var validTransactions = transactions?
+                .Where(t => t != null)
+                .ToList() ?? new List<Transaction>();
+
+            if (validTransactions.Count == 0)
+            {
+                return;
+            }
+
+            decimal totalIncome = validTransactions
+                .Where(t => t.Type == TransactionType.Income)
+                .Sum(t => Math.Abs(t.Amount));
+
+            decimal totalExpense = validTransactions
+                .Where(t => t.Type != TransactionType.Income)
+                .Sum(t => Math.Abs(t.Amount));
+
+            var expenseByCategory = validTransactions
+                .Where(t => t.Type != TransactionType.Income)
+                .GroupBy(t => t.Category)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Sum(t => Math.Abs(t.Amount)));
+
+            // 1. Cash Flow Breakdown Chart
+            AnsiConsole.MarkupLine("[bold yellow]Cash Flow Breakdown[/]");
+            var flowChart = new BreakdownChart().Width(60);
+
+            if (totalIncome > 0)
+            {
+                flowChart.AddItem("Income", (double)totalIncome, Color.Green);
+            }
+
+            if (totalExpense > 0)
+            {
+                flowChart.AddItem("Expense", (double)totalExpense, Color.Red);
+            }
+
+            if (totalIncome > 0 || totalExpense > 0)
+            {
+                AnsiConsole.Write(flowChart);
+                AnsiConsole.WriteLine();
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[grey]No data available for Cash Flow breakdown.[/]\n");
+            }
+
+            // 2. Expenses by Category Chart
+            AnsiConsole.MarkupLine("[bold yellow]Expenses by Category[/]");
+            if (expenseByCategory.Count > 0)
+            {
+                var categoryChart = new BarChart()
+                    .Width(60)
+                    .Label("[red]Category Expenses (Amount)[/]");
+
+                foreach (var pair in expenseByCategory.OrderByDescending(p => p.Value))
+                {
+                    Color color = this.GetCategoryColor(pair.Key);
+                    categoryChart.AddItem(pair.Key.ToString(), (double)pair.Value, color);
+                }
+
+                AnsiConsole.Write(categoryChart);
+                AnsiConsole.WriteLine();
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[grey]No expenses recorded to display category breakdown.[/]\n");
+            }
+        }
+
         /// <summary>
         /// Displays an error message in red.
         /// </summary>
@@ -302,7 +420,7 @@ namespace Assignment4ExpenseTracker.View
         /// </summary>
         public void PrintGoodbye()
         {
-            this._consoleHelper.PrintGoodbye();
+            this._consoleHelper.DisplayExitMessage();
         }
 
         /// <inheritdoc />
@@ -340,8 +458,11 @@ namespace Assignment4ExpenseTracker.View
                     MainMenuOption.ViewAll => "2. View all transactions",
                     MainMenuOption.Update => "3. Update an existing transaction",
                     MainMenuOption.Delete => "4. Delete a transaction",
-                    MainMenuOption.GenerateReport => "5. Generate Insights and Report",
-                    MainMenuOption.Exit => "6. Exit the application",
+                    MainMenuOption.Filter => "5. Filter transactions",
+                    MainMenuOption.Sort => "6. Sort transactions",
+                    MainMenuOption.Search => "7. Search across transactions",
+                    MainMenuOption.GenerateReport => "8. Generate Insights and Report",
+                    MainMenuOption.Exit => "9. Exit the application",
                     _ => option.ToString()
                 });
         }
@@ -362,8 +483,11 @@ namespace Assignment4ExpenseTracker.View
             table.AddRow("2", "View Transactions", "Displays all recorded transactions in a dashboard.");
             table.AddRow("3", "Update Transaction", "Modifies the details of an existing transaction.");
             table.AddRow("4", "Delete Transaction", "Permanently removes a transaction record.");
-            table.AddRow("5", "Generate Report", "Displays financial insights and net balance summary.");
-            table.AddRow("6", "Exit", "Exits the Application.");
+            table.AddRow("5", "Filter Transactions", "Filters transactions by transaction type or category.");
+            table.AddRow("6", "Sort Transactions", "Sort transactions by amount, date or category.");
+            table.AddRow("7", "Search Transactions", "Search by any fields of the transaction.");
+            table.AddRow("8", "Display Report", "Displays financial insights and net balance summary.");
+            table.AddRow("9", "Exit", "Exits the Application.");
 
             AnsiConsole.Write(table);
             this._consoleHelper.WriteLine(string.Empty);
@@ -387,6 +511,32 @@ namespace Assignment4ExpenseTracker.View
 
             int index = displayChoices.IndexOf(selected);
             return choiceList[index];
+        }
+
+        /// <summary>
+        /// Maps an Expense/Income category to a unique color for charts.
+        /// </summary>
+        private Color GetCategoryColor(TransactionCategory category)
+        {
+            return category switch
+            {
+                TransactionCategory.Salary => Color.Green,
+                TransactionCategory.Investment => Color.Teal,
+                TransactionCategory.Freelance => Color.LightGreen,
+                TransactionCategory.Business => Color.DarkGreen,
+                TransactionCategory.Gifts => Color.Pink1,
+                TransactionCategory.MiscellaneousIncome => Color.GreenYellow,
+                TransactionCategory.Transport => Color.SkyBlue1,
+                TransactionCategory.Utilities => Color.Purple,
+                TransactionCategory.Groceries => Color.DarkOrange,
+                TransactionCategory.Rent => Color.Red,
+                TransactionCategory.Food => Color.Yellow,
+                TransactionCategory.Shopping => Color.Purple3,
+                TransactionCategory.Healthcare => Color.Red3,
+                TransactionCategory.Education => Color.Blue,
+                TransactionCategory.MiscellaneousExpense => Color.Grey,
+                _ => Color.White
+            };
         }
 
         /// <summary>

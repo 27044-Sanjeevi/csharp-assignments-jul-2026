@@ -1,7 +1,5 @@
 namespace Assignment4ExpenseTracker.Services
 {
-    using System;
-    using System.Collections.Generic;
     using Assignment4ExpenseTracker.Models;
     using Assignment4ExpenseTracker.Models.DTOs;
     using Assignment4ExpenseTracker.Models.Enums;
@@ -39,7 +37,7 @@ namespace Assignment4ExpenseTracker.Services
                 Category = transactionDto.Category,
                 Method = transactionDto.Method,
                 Description = transactionDto.Description,
-                Timestamp = DateTime.Now,
+                Timestamp = transactionDto.Timestamp ?? DateTime.Now,
             };
 
             ValidationResult validationResult = this._validator.ValidateTransaction(transaction);
@@ -105,6 +103,80 @@ namespace Assignment4ExpenseTracker.Services
         public IReadOnlyList<Transaction> GetAllTransactions()
         {
             return this._repository.GetAll();
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> SearchTransactions(TransactionType? type, TransactionCategory? category, PaymentMethod? method, string? keyword)
+        {
+            IEnumerable<Transaction> query = this._repository.GetAll();
+
+            if (type.HasValue)
+            {
+                query = query.Where(t => t.Type == type.Value);
+            }
+
+            if (category.HasValue)
+            {
+                query = query.Where(t => t.Category == category.Value);
+            }
+
+            if (method.HasValue)
+            {
+                query = query.Where(t => t.Method == method.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(t => t.Description != null
+                                         && t.Description.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return query.ToList();
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> GetSortedTransactions(SortBy sortBy, SortOrder order)
+        {
+            IEnumerable<Transaction> transactions = this._repository.GetAll();
+
+            switch (sortBy)
+            {
+                case SortBy.Date:
+                    transactions = order == SortOrder.Ascending
+                        ? transactions.OrderBy(t => t.Timestamp)
+                        : transactions.OrderByDescending(t => t.Timestamp);
+                    break;
+                case SortBy.Amount:
+                    transactions = order == SortOrder.Ascending
+                        ? transactions.OrderBy(t => t.Amount)
+                        : transactions.OrderByDescending(t => t.Amount);
+                    break;
+                case SortBy.Category:
+                    transactions = order == SortOrder.Ascending
+                        ? transactions.OrderBy(t => t.Category.ToString())
+                        : transactions.OrderByDescending(t => t.Category.ToString());
+                    break;
+            }
+
+            return transactions.ToList();
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByTransactionType(TransactionType type)
+        {
+            return this._repository.FilterByTransactionType(type);
+        }
+
+        /// <inheritdoc />
+        public IReadOnlyList<Transaction> FilterByCategory(TransactionCategory category)
+        {
+            return this._repository.FilterByCategory(category);
+        }
+
+        /// <inheritdoc />
+        public int GetTransactionCount()
+        {
+            return this._repository.GetTransactionCount();
         }
 
         /// <inheritdoc />
