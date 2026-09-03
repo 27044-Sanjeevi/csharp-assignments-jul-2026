@@ -1,6 +1,6 @@
 # Math Calculator Console Application
 
-A simple C# console application that performs basic operations (Addition, Subtraction, Division, Multiplication) based on the user input.
+A simple C# console application that performs basic operations (Addition, Subtraction, Multiplication, Division) based on the user input.
 This is developed as a part of Assignment 10: Understanding .NET.
 
 ## Features

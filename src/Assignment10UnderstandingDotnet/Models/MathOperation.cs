@@ -1,5 +1,4 @@
 ﻿using Assignment10UnderstandingDotnet.Models.Enums;
-using Assignment10UnderstandingDotnet.Utilities;
 
 namespace Assignment10UnderstandingDotnet.Models
 {
@@ -25,27 +24,5 @@ namespace Assignment10UnderstandingDotnet.Models
         /// </summary>
         /// <value>An enum which represents the operator involved in the mathematical operation.</value>
         public MathOperator Operator { get; set; }
-
-        /// <summary>
-        /// Calculates the result of the mathematical operation based on the specified operator and operands.
-        /// </summary>
-        /// <returns>An integer holding the resultant value of the mathematical operation.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when invalid operator is chosen.</exception>
-        public double Calculate()
-        {
-            return this.Operator switch
-            {
-                MathOperator.Addition =>
-                    MathUtils.Add(this.FirstNumber, this.SecondNumber),
-                MathOperator.Subtraction =>
-                    MathUtils.Subtract(this.FirstNumber, this.SecondNumber),
-                MathOperator.Multiplication =>
-                    MathUtils.Multiply(this.FirstNumber, this.SecondNumber),
-                MathOperator.Division =>
-                    MathUtils.Divide(this.FirstNumber, this.SecondNumber),
-                _ =>
-                    throw new InvalidOperationException("Invalid operator"),
-            };
-        }
     }
 }

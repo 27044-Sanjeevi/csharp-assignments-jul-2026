@@ -10,22 +10,12 @@ namespace Assignment10UnderstandingDotnet.View
     internal class ConsoleView
     {
         /// <summary>
-        /// Reads the first number for a mathematical operation.
+        /// Reads an integer for mathematical operation.
         /// </summary>
+        /// <param name="prompt">Prompt to be displayed to the user.,</param>
         /// <returns>The retrieved integer from the user.</returns>
-        public int GetFirstNumber()
-        {
-            return ConsoleHelpers.ReadInt("Enter first number (integer): ");
-        }
-
-        /// <summary>
-        /// Reads the second number for a mathematical operation.
-        /// </summary>
-        /// <returns>The retrieved integer from the user.</returns>
-        public int GetSecondNumber()
-        {
-            return ConsoleHelpers.ReadInt("Enter second number (integer): ");
-        }
+        public int GetInteger(string prompt) =>
+            ConsoleHelpers.ReadInt(prompt);
 
         /// <summary>
         /// Reads the operator for mathematical operation from the user.
@@ -41,11 +31,14 @@ namespace Assignment10UnderstandingDotnet.View
 
                 switch (selectedOperator)
                 {
-                    case '+': return MathOperator.Addition;
-                    case '-': return MathOperator.Subtraction;
-                    case '*': return MathOperator.Multiplication;
-                    case '/': return MathOperator.Division;
-
+                    case '+':
+                        return MathOperator.Addition;
+                    case '-':
+                        return MathOperator.Subtraction;
+                    case '*':
+                        return MathOperator.Multiplication;
+                    case '/':
+                        return MathOperator.Division;
                     default:
                         ConsoleHelpers.WriteColored("Invalid operator. Please enter one of the following: +, -, *, /.", ConsoleColor.Red);
                         break;
@@ -67,10 +60,12 @@ namespace Assignment10UnderstandingDotnet.View
                 MathOperator.Subtraction => "-",
                 MathOperator.Multiplication => "*",
                 MathOperator.Division => "/",
-                _ => throw new InvalidOperationException("Invalid operator"),
+                _ => throw new InvalidOperationException("Invalid operator")
             };
 
-            string numberFormat = (operatorSymbol == "/") ? "F4" : "F0";
+            string numberFormat = (operatorSymbol == "/")
+                ? "0.####"
+                : "F0";
 
             ConsoleHelpers.WriteColored(
                 $"\nResult: {operation.FirstNumber} {operatorSymbol} {operation.SecondNumber} = {result.ToString(numberFormat)}",
@@ -80,9 +75,7 @@ namespace Assignment10UnderstandingDotnet.View
         /// <summary>
         /// Displays the title of the application.
         /// </summary>
-        public void DisplayApplicationTitle()
-        {
+        public void DisplayApplicationTitle() =>
             ConsoleHelpers.WriteColored("--- CALCULATOR ---\n", ConsoleColor.Cyan);
-        }
     }
 }

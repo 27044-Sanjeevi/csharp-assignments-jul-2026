@@ -22,11 +22,11 @@
         public static int Subtract(int firstNumber, int secondNumber) => firstNumber - secondNumber;
 
         /// <summary>
-        /// Calculates the mulitplication of two integers.
+        /// Calculates the multiplication of two integers.
         /// </summary>
-        /// <param name="firstNumber">The first integer for mulitplication.</param>
-        /// <param name="secondNumber">The second integer for mulitplication.</param>
-        /// <returns>An integer holding the mulitplied value of first and second numbers.</returns>
+        /// <param name="firstNumber">The first integer for multiplication.</param>
+        /// <param name="secondNumber">The second integer for multiplication.</param>
+        /// <returns>An integer holding the multiplied value of first and second numbers.</returns>
         public static int Multiply(int firstNumber, int secondNumber) => firstNumber * secondNumber;
 
         /// <summary>
@@ -42,7 +42,7 @@
                 throw new DivideByZeroException("The divisor should not be 0 for division.");
             }
 
-            return (double) firstNumber / secondNumber;
+            return (double)firstNumber / secondNumber;
         }
     }
 }

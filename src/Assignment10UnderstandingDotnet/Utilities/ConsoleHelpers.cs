@@ -1,30 +1,27 @@
 ﻿namespace Assignment10UnderstandingDotnet.Utilities
 {
     /// <summary>
-    /// Provides the methods for console realted helper operations.
+    /// Provides the methods for console related helper operations.
     /// </summary>
-    internal class ConsoleHelpers
+    internal static class ConsoleHelpers
     {
         /// <summary>
-        /// Reads an integer value from the console, optionally allowing an empty input to bypass validation.
+        /// Reads an integer value from the console.
         /// </summary>
         /// <param name="prompt">The prompt message to display.</param>
-        /// <returns>The parsed integer value, or null if the field was skipped.</returns>
+        /// <returns>The parsed integer value.</returns>
         public static int ReadInt(string prompt)
         {
-            int result;
             while (true)
             {
                 Console.Write(prompt);
                 string? input = Console.ReadLine();
-                if (int.TryParse(input, out result))
+                if (int.TryParse(input, out int result))
                 {
                     return result;
                 }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter a valid integer.");
-                }
+
+                Console.WriteLine("Invalid input. Please enter a valid integer.");
             }
         }
 
@@ -46,7 +43,7 @@
         /// <param name="message">The exception message to be displayed.</param>
         public static void DisplayException(string message)
         {
-            WriteColored($"[EXCEPTION] {message}", ConsoleColor.Red);
+            WriteColored($"{message}", ConsoleColor.Red);
         }
     }
 }
