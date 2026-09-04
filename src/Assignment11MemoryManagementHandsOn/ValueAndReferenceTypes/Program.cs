@@ -19,7 +19,7 @@ namespace Assignments
             TemperatureClass temperatureClass = new TemperatureClass(OriginalTemperature);
             TemperatureStruct temperatureStruct = new TemperatureStruct(OriginalTemperature);
 
-            Console.WriteLine("--- VALUE TYPE VS REFERNCE TYPE ---\n");
+            Console.WriteLine("--- TASK 1: VALUE TYPE VS REFERNCE TYPE ---\n");
             Console.WriteLine("Before Calling Modify Method:");
             temperatureClass.PrintTemperature();
             temperatureStruct.PrintTemperature();
@@ -34,6 +34,7 @@ namespace Assignments
                 "\n- The changes made to the value type (struct) variable in the Modify method does not affect the original variable in the main method." +
                 "\n- Whereas the changes made to the reference type (class) object in the Modify method affected the original instance in the main method.");
 
+            Console.WriteLine("\n--- TASK 2: STACK AND HEAP ---\n");
             CreateIntegersOnHeap();
             CreateIntegersOnStack();
             Console.ReadKey();
@@ -56,11 +57,28 @@ namespace Assignments
             {
                 integerArray[i] = i;
             }
+
+            Console.WriteLine($"Created an integer array of size {ArrayLength}. Since this is reference type, it gets stored in heap.\n");
         }
 
         private static void CreateIntegersOnStack()
         {
-            int v1 = 1, v2 = 2, v3 = 3, v4 = 4, v5 = 5;
+            int number1 = 1,
+                number2 = 2,
+                number3 = 3,
+                number4 = 4,
+                number5 = 5,
+                number6 = 6,
+                number7 = 7,
+                number8 = 8,
+                number9 = 9,
+                number10 = 10,
+                number11 = 11,
+                number12 = 12;
+
+            int result = number1 + number2 + number3 + number4 + number5 + number6 + number7 + number8 + number9 + number10 + number11 + number12;
+
+            Console.WriteLine("Created multiple value type integers. This occupies the space in stack.");
         }
     }
 }
