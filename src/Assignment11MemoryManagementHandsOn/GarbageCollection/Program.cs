@@ -7,7 +7,8 @@ namespace Assignments
     /// </summary>
     internal class Program
     {
-        private const int NumberOfObjects = 1000000;
+        private const int NumberOfObjects = 100;
+        private static List<DummyReceipt>? _dummyReceipts = new List<DummyReceipt>();
 
         /// <summary>
         /// Entry point of the application.
@@ -23,6 +24,8 @@ namespace Assignments
             Console.WriteLine($"\n[STATUS] After the creation of {NumberOfObjects} Dummy Objects.");
             DisplayMemoryDetails();
 
+            _dummyReceipts = null;
+
             GC.Collect();
             Console.WriteLine("\n[STATUS] After garbage collection.");
             DisplayMemoryDetails();
@@ -31,10 +34,12 @@ namespace Assignments
 
         private static void CreateDummyObjects()
         {
-            var dummyObject = new DummyReceipt(1, "Nil");
             for (int i = 1; i <= NumberOfObjects; i++)
             {
-                dummyObject = new DummyReceipt(i, "Nil");
+                if (_dummyReceipts != null)
+                {
+                    _dummyReceipts.Add(new DummyReceipt(i, "Nil"));
+                }
             }
         }
 
