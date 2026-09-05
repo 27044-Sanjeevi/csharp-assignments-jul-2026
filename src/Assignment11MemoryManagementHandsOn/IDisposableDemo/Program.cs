@@ -21,11 +21,11 @@ namespace Assignments
 
             Console.WriteLine("Trying to access the file after the write operation:");
             string content = File.ReadAllText(filePath);
-            Console.WriteLine(new string('-', 50));
+            PrintLine();
             Console.WriteLine(filePath);
-            Console.WriteLine(new string('-', 50));
+            PrintLine();
             Console.Write(content);
-            Console.WriteLine(new string('-', 50));
+            PrintLine();
             Console.ReadKey();
         }
 
@@ -42,6 +42,14 @@ namespace Assignments
 
             // The dispose method is not called manually here.
             // Since using keyword is used, it automatically calls the dispose() method in the instance once the scope of using statement gets over.
+        }
+
+        /// <summary>
+        /// Prints dashed line into the console.
+        /// </summary>
+        private static void PrintLine()
+        {
+            Console.WriteLine(new string('-', 50));
         }
     }
 }
