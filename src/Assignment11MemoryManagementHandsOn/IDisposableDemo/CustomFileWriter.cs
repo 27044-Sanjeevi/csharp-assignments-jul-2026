@@ -1,7 +1,5 @@
 ﻿namespace IDisposableDemo
 {
-    using System;
-
     /// <summary>
     /// Represents a custom file writer with IDisposable interface implementation.
     /// </summary>

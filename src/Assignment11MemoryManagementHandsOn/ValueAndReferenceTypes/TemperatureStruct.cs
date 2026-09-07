@@ -18,7 +18,7 @@
         /// Gets the temperature value.
         /// </summary>
         /// <value>A double holding the temperature value.</value>
-        public readonly double Temperature { get; }
+        public double Temperature { get; }
 
         /// <summary>
         /// Prints the temperature value.

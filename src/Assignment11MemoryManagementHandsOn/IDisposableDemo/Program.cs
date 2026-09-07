@@ -1,5 +1,4 @@
-﻿using System;
-using IDisposableDemo;
+﻿using IDisposableDemo;
 
 namespace Assignments
 {
@@ -17,7 +16,7 @@ namespace Assignments
 
             Console.WriteLine("--- TASk 4: EXPLORING IDISPOSABLE ---\n");
 
-            WriteIntoFile(filePath);
+            WriteFile(filePath);
 
             Console.WriteLine("Trying to access the file after the write operation:");
             string content = File.ReadAllText(filePath);
@@ -33,7 +32,7 @@ namespace Assignments
         /// Writes into the file using custom write class.
         /// </summary>
         /// <param name="filePath">The path of the file to write into.</param>
-        internal static void WriteIntoFile(string filePath)
+        internal static void WriteFile(string filePath)
         {
             Console.WriteLine("Initializing a custom writer instance.");
             using var writer = new CustomFileWriter(filePath);
