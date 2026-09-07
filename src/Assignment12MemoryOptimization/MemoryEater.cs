@@ -15,6 +15,7 @@
             while (true)
             {
                 this._memAlloc.Add(new int[1000]);
+                Console.WriteLine("Added new 1000-element array to the List");
 
                 // operations on memAlloc
                 Thread.Sleep(10);

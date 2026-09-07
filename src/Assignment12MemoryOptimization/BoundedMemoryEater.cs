@@ -19,7 +19,7 @@ namespace Assignment12MemoryOptimization
         private readonly List<int[]> _memAlloc = new List<int[]>();
 
         /// <summary>
-        /// Continuously allocates a new integer array and adds it to the memory allocation list, clearing the list if the maximum count is reached.
+        /// Continuously allocates a new integer array and adds it to the memory allocation list, removes the first element if the maximum count is reached.
         /// </summary>
         public void Allocate()
         {
@@ -27,7 +27,7 @@ namespace Assignment12MemoryOptimization
             {
                 if (this._memAlloc.Count >= MaxListCount)
                 {
-                    this._memAlloc.Clear();
+                    this._memAlloc.RemoveAt(0);
                 }
 
                 this._memAlloc.Add(new int[IntegerArraySize]);
