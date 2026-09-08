@@ -1,6 +1,5 @@
-﻿using System.ComponentModel.Design;
-using System.Reflection.Metadata;
-using Assignment12MemoryOptimization;
+﻿using Assignment12MemoryOptimization;
+using Assignment12MemoryOptimization.Tasks;
 
 namespace Assignments
 {
@@ -21,45 +20,71 @@ namespace Assignments
             {
                 Console.Clear();
                 view.DisplayMenu();
+                view.DisplayExitInstruction();
                 option = view.GetMenuChoice();
+                Console.Clear();
                 switch (option)
                 {
                     case MenuOptions.OriginalUnoptimizedCode:
                         RunTask1();
                         break;
                     case MenuOptions.FixedSizedList:
-                        RunTask2();
+                        RunTask2Technique1();
                         break;
                     case MenuOptions.BoundedMemoryWithMaxListCount:
+                        RunTask2Technique2();
+                        break;
+                    case MenuOptions.DisplayInferences:
                         RunTask3();
                         break;
                     case MenuOptions.Exit:
-                        break;
+                        return;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(option));
                 }
-            }
 
-            Console.ReadKey();
+                view.Pause();
+            }
         }
 
-        // internal static 
+        /// <summary>
+        /// Runs task 1 of the appication.
+        /// </summary>
         internal static void RunTask1()
         {
             var eater = new MemoryEater();
             eater.Allocate();
         }
 
-        internal static void RunTask2()
+        /// <summary>
+        /// Runs task 2 with first technique of the appication.
+        /// </summary>
+        internal static void RunTask2Technique1()
         {
             var eater = new BoundedMemoryEater();
             eater.Allocate();
         }
 
-        internal static void RunTask3()
+        /// <summary>
+        /// Runs task 2 with second technique of the appication.
+        /// </summary>
+        internal static void RunTask2Technique2()
         {
             var eater = new FixedSizeMemoryEater();
             eater.Allocate();
+        }
+
+        /// <summary>
+        /// Runs task 3 of the application.
+        /// </summary>
+        internal static void RunTask3()
+        {
+            var eater = new MemoryEater();
+            var boundedMemoryEater = new BoundedMemoryEater();
+            var fixedSizeMemoryEater = new FixedSizeMemoryEater();
+            eater.DisplayInferences();
+            fixedSizeMemoryEater.DisplayInferences();
+            boundedMemoryEater.DisplayInferences();
         }
     }
 }

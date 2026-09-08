@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Assignment12MemoryOptimization
 {
+    /// <summary>
+    /// Represents the console view for rendering UI.
+    /// </summary>
     internal class View
     {
         private const string AppName = "Assignment 11 - Memory Optimization Techniques";
@@ -14,6 +13,9 @@ namespace Assignment12MemoryOptimization
         // used array instead of an enum for simplicity.
         private static readonly string[] Options = Enum.GetNames(typeof(MenuOptions));
 
+        /// <summary>
+        /// Displays the menu to the user.
+        /// </summary>
         public void DisplayMenu()
         {
             this.WriteColored(AppName + "\n", ConsoleColor.Cyan);
@@ -23,6 +25,10 @@ namespace Assignment12MemoryOptimization
             }
         }
 
+        /// <summary>
+        /// Retrieves the menu choice from the user.
+        /// </summary>
+        /// <returns>An enum specifying the menu option.</returns>
         public MenuOptions GetMenuChoice()
         {
             return (MenuOptions)this.ReadChoice(Options.Length, "\n" + GetChoicePrompt);
@@ -51,6 +57,28 @@ namespace Assignment12MemoryOptimization
             return result;
         }
 
+        /// <summary>
+        /// Displays the exit instruction to the user.
+        /// </summary>
+        public void DisplayExitInstruction()
+        {
+            this.WriteColored("\nNOTE: Press Ctrl + C to stop the application after choosing a task to stop the infinite loop.", ConsoleColor.Yellow);
+        }
+
+        /// <summary>
+        /// Pauses for the user input to return to the main menu.
+        /// </summary>
+        public void Pause()
+        {
+            Console.WriteLine("\nPress any key to exit to the main menu...");
+            Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Converts the given text in Pascal Case to human-friendly spaced string.
+        /// </summary>
+        /// <param name="text">The text in Pascal case.</param>
+        /// <returns>A human-friendly spaced string.</returns>
         private string ToHumanFriendlyString(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -75,6 +103,11 @@ namespace Assignment12MemoryOptimization
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Writes the given message in the given console color.
+        /// </summary>
+        /// <param name="message">The message to be displayed.</param>
+        /// <param name="color">The color of the message.</param>
         private void WriteColored(string message, ConsoleColor color)
         {
             Console.ForegroundColor = color;
