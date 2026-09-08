@@ -12,13 +12,13 @@ Here the class `MemmoryEater` contains the method `Allocate()` which continuousl
 ### Task 2 - Memory Management Best Practices
 #### Technique 1: Fixed Size Memory Eater
 - The original 'MemoryEater' leaks memory infinitely until an OutOfMemoryException crashes the app.
-- This version enforces a ceiling at {maxTheoreticalCapMb:F2} MB.
+- This version enforces a maximum ceiling memeory usage.
 - This optimized version uses a fixed-size list initialized with capacity, making it stable.
 - Once capacity hits its max ceiling, memory stops growing because no additional arrays are added.
 
 #### Technique 2: Bounded Memory Eater
 - The original 'MemoryEater' leaks memory infinitely until an OutOfMemoryException crashes the app.
-- This version enforces a ceiling at {maxTheoreticalCapMb:F2} MB.
+- This version enforces a ceiling at a maximum capacity.
 - This optimized version uses a sliding window boundary, making it stable.
 - Once capacity hits its max ceiling, memory stops growing.
 - O(N) operation: List.RemoveAt(0) forces an internal memory copy array-shift operation.

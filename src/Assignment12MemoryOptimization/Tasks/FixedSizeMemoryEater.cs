@@ -43,8 +43,7 @@
             Console.WriteLine("\nO(1) ADVANTAGE: Unlike RemoveAt(0), this approach avoids O(N) array-shift operations.");
             Console.WriteLine("By eliminating index shifting, no cycles are wasted copying internal memory references.");
 
-            Console.WriteLine("\nGENERATIONAL CHURN ELIMINATION: Because the list fills up to its threshold and stops allocating new arrays,");
-            Console.WriteLine("the Garbage Collector can completely rest, reducing Gen 0/1/2 allocation spikes to zero over time.");
+            Console.WriteLine("\nGENERATIONAL CHURN ELIMINATION: Because the list fills up to its threshold and stops allocating new arrays, the Garbage Collector can completely rest, reducing Gen 0/1/2 allocation spikes to zero over time.");
             Console.WriteLine();
         }
     }
