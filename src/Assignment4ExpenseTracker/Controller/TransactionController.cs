@@ -5,7 +5,7 @@ namespace Assignment4ExpenseTracker.Controller
     using Assignment4ExpenseTracker.Models.Enums;
     using Assignment4ExpenseTracker.Services;
     using Assignment4ExpenseTracker.Services.Validation;
-    using Assignment4ExpenseTracker.View;
+    using Assignment4ExpenseTracker.View.Interfaces;
 
     /// <summary>
     /// Coordinates operations between the View and the Service layer.
@@ -32,13 +32,34 @@ namespace Assignment4ExpenseTracker.Controller
         {
             switch (choice)
             {
-                case MainMenuOption.Add: this.Add(); break;
-                case MainMenuOption.ViewAll: this.ViewAll(); break;
-                case MainMenuOption.Update: this.Update(); break;
-                case MainMenuOption.Delete: this.Delete(); break;
-                case MainMenuOption.GenerateReport: this.GenerateReport(); break;
-                case MainMenuOption.Exit: return true;
-                default: break;
+                case MainMenuOption.Add:
+                    this.Add();
+                    break;
+                case MainMenuOption.ViewAll:
+                    this.ViewAll();
+                    break;
+                case MainMenuOption.Update:
+                    this.Update();
+                    break;
+                case MainMenuOption.Delete:
+                    this.Delete();
+                    break;
+                case MainMenuOption.Filter:
+                    this.Filter();
+                    break;
+                case MainMenuOption.Sort:
+                    this.Sort();
+                    break;
+                case MainMenuOption.Search:
+                    this.Search();
+                    break;
+                case MainMenuOption.GenerateReport:
+                    this.DisplayReport();
+                    break;
+                case MainMenuOption.Exit:
+                    return true;
+                default:
+                    break;
             }
 
             return false;
@@ -49,23 +70,25 @@ namespace Assignment4ExpenseTracker.Controller
         {
             this._consoleView.DisplayAddHeader();
             decimal amount = this._consoleView.GetTransactionAmount();
-            TransactionType transactionType = this._consoleView.GetTransactionTypeChoice();
-            PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod();
-            TransactionCategory category = transactionType == TransactionType.Income ?
+            var transactionType = this._consoleView.GetTransactionTypeChoice();
+            var paymentMethod = this._consoleView.GetPaymentMethod();
+            var category = transactionType == TransactionType.Income ?
                                            this._consoleView.GetIncomeCategory() :
                                            this._consoleView.GetExpenseCategory();
+            DateTime? timestamp = this._consoleView.GetDateTime(isOptional: true);
             string? description = this._consoleView.GetTransactionDescription();
 
-            TransactionInputDto transactionDto = new TransactionInputDto
+            var transactionDto = new TransactionInputDto
             {
                 Amount = amount,
                 Type = transactionType,
                 Category = category,
                 Method = paymentMethod,
+                Timestamp = timestamp,
                 Description = description,
             };
 
-            ValidationResult result = this._transactionService.CreateTransaction(transactionDto);
+            var result = this._transactionService.CreateTransaction(transactionDto);
 
             if (!result.IsValid)
             {
@@ -81,14 +104,15 @@ namespace Assignment4ExpenseTracker.Controller
         public void Update()
         {
             this._consoleView.DisplayUpdateHeader();
-            if (!this.TryGetSelectedTransaction(out Transaction? selectedRecord) || selectedRecord == null)
+            Transaction? selectedRecord = this.GetTransactionByIndex();
+            if (selectedRecord == null)
             {
                 return;
             }
 
             decimal amount = this._consoleView.GetTransactionAmountToUpdate(selectedRecord.Amount);
-            TransactionType transactionType = this._consoleView.GetTransactionTypeChoice(selectedRecord.Type);
-            PaymentMethod paymentMethod = this._consoleView.GetPaymentMethod(selectedRecord.Method);
+            var transactionType = this._consoleView.GetTransactionTypeChoice(selectedRecord.Type);
+            var paymentMethod = this._consoleView.GetPaymentMethod(selectedRecord.Method);
             TransactionCategory category;
             if (transactionType == selectedRecord.Type)
             {
@@ -103,26 +127,24 @@ namespace Assignment4ExpenseTracker.Controller
                            this._consoleView.GetExpenseCategory();
             }
 
+            var timestamp = this._consoleView.GetDateTime(existingDateTime: selectedRecord.Timestamp) ?? selectedRecord.Timestamp;
             string? description = this._consoleView.GetTransactionDescriptionToUpdate(selectedRecord.Description);
 
-            TransactionUpdateDto updatedTransaction = new TransactionUpdateDto
+            var updatedTransaction = new TransactionUpdateDto
             {
                 Id = selectedRecord.Id,
                 Amount = amount,
-                Timestamp = selectedRecord.Timestamp,
+                Timestamp = timestamp,
                 Type = transactionType,
                 Category = category,
                 Method = paymentMethod,
                 Description = description,
             };
 
-            ValidationResult result = this._transactionService.UpdateTransaction(updatedTransaction);
+            var result = this._transactionService.UpdateTransaction(updatedTransaction);
+            this._consoleView.DisplayValidationResult(result);
 
-            if (!result.IsValid)
-            {
-                this._consoleView.DisplayValidationResult(result);
-            }
-            else
+            if (result.IsValid)
             {
                 this._consoleView.DisplayUpdateSuccessful();
             }
@@ -132,7 +154,7 @@ namespace Assignment4ExpenseTracker.Controller
         public void ViewAll()
         {
             this._consoleView.DisplayAllTransactionsHeader();
-            IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
+            var transactions = this._transactionService.GetAllTransactions();
             if (transactions == null || transactions.Count == 0)
             {
                 this._consoleView.DisplayTransactionsNotFound();
@@ -167,15 +189,91 @@ namespace Assignment4ExpenseTracker.Controller
         }
 
         /// <inheritdoc />
-        public void GenerateReport()
+        public void Search()
+        {
+            this._consoleView.DisplaySearchHeader();
+            var results = new List<Transaction>();
+
+            if (this.GetAllTransactionsCount() <= 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
+
+            var keyword = this._consoleView.GetSearchKeyword();
+            results = this._transactionService
+                .GetAllTransactions()
+                .Where(t => this.MatchesKeyword(t, keyword))
+                .ToList();
+
+            this._consoleView.DisplayAsTable(results);
+        }
+
+        /// <inheritdoc />
+        public void Sort()
+        {
+            if (this.GetAllTransactionsCount() <= 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
+
+            (SortBy sortBy, SortOrder order) = this._consoleView.GetSortingCriteria();
+            var results = this._transactionService.GetSortedTransactions(sortBy, order);
+
+            this._consoleView.DisplayAllTransactionsHeader();
+            if (results == null || results.Count == 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
+
+            this._consoleView.DisplayAsTable(results);
+        }
+
+        /// <inheritdoc />
+        public void Filter()
+        {
+            this._consoleView.DisplayFilterHeader();
+            var transactions = this._transactionService.GetAllTransactions();
+            if (transactions.Count <= 0)
+            {
+                this._consoleView.DisplayTransactionsNotFound();
+                return;
+            }
+
+            var filterType = this._consoleView.GetFilterTypeChoice();
+            var transactionType = this._consoleView.GetTransactionTypeChoice();
+            if (filterType == FilterType.TransactionType)
+            {
+                transactions = this._transactionService.FilterByTransactionType(transactionType);
+            }
+
+            if (filterType == FilterType.Category)
+            {
+                var category = transactionType == TransactionType.Income
+                    ? this._consoleView.GetIncomeCategory()
+                    : this._consoleView.GetExpenseCategory();
+
+                transactions = this._transactionService.FilterByCategory(category);
+            }
+
+            this._consoleView.DisplayFilteredTable(transactions);
+        }
+
+        /// <inheritdoc />
+        public void DisplayReport()
         {
             this._consoleView.DisplayReportHeader();
-            ReportDto report = this._transactionService.GenerateFinancialReport();
+            var report = this._transactionService.GenerateFinancialReport();
             this._consoleView.DisplayInsights(
                 report.TotalIncome,
                 report.TotalExpense,
                 report.NetBalance,
                 report.TransactionCount);
+
+            var transactions = this._transactionService.GetAllTransactions();
+            this._consoleView.DisplayVisualCharts(transactions);
         }
 
         /// <summary>
@@ -185,7 +283,7 @@ namespace Assignment4ExpenseTracker.Controller
         /// <returns>The index of the selected transaction.</returns>
         private Transaction? GetTransactionByIndex()
         {
-            IReadOnlyList<Transaction> transactions = this._transactionService.GetAllTransactions();
+            var transactions = this._transactionService.GetAllTransactions();
 
             if (transactions == null || transactions.Count == 0)
             {
@@ -200,6 +298,15 @@ namespace Assignment4ExpenseTracker.Controller
         }
 
         /// <summary>
+        /// Retrieves the count of transactions in the repository.
+        /// </summary>
+        /// <returns>An integer representing the count of transactions in the repository.</returns>
+        private int GetAllTransactionsCount()
+        {
+            return this._transactionService.GetTransactionCount();
+        }
+
+        /// <summary>
         /// Reusable flow helper to retrieve a selected transaction by index and perform validation.
         /// </summary>
         /// <param name="selectedRecord">The retrieved transaction if found; otherwise, null.</param>
@@ -208,6 +315,22 @@ namespace Assignment4ExpenseTracker.Controller
         {
             selectedRecord = this.GetTransactionByIndex();
             return selectedRecord != null;
+        }
+
+        /// <summary>
+        /// Checks if the given transaction details contains a match with the given keyword.
+        /// </summary>
+        /// <param name="t">The transaction to be inspected.</param>
+        /// <param name="keyword">The keyword to search for within the transaction.</param>
+        /// <returns>true if the transaction contains the given keyword; otherwise, false.</returns>
+        private bool MatchesKeyword(Transaction t, string keyword)
+        {
+            return t.Timestamp.ToString("yyyy-MM-dd HH:mm").Contains(keyword, StringComparison.OrdinalIgnoreCase)
+                || (t.Description != null && t.Description.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                || t.Amount.ToString().Equals(keyword)
+                || t.Category.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase)
+                || t.Type.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase)
+                || t.Method.ToString().Contains(keyword, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

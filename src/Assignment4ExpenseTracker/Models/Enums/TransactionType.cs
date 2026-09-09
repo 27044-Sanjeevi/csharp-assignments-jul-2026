@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.Models.Enums
+namespace Assignment4ExpenseTracker.Models.Enums
 {
     /// <summary>
     /// Specifies the flow of cash in a Transaction.

@@ -3,10 +3,12 @@ namespace Assignment4ExpenseTracker
     using Assignment4ExpenseTracker.Controller;
     using Assignment4ExpenseTracker.IO;
     using Assignment4ExpenseTracker.Persistence;
+    using Assignment4ExpenseTracker.Persistence.Csv;
     using Assignment4ExpenseTracker.Services;
     using Assignment4ExpenseTracker.Services.Validation;
     using Assignment4ExpenseTracker.Utilities;
     using Assignment4ExpenseTracker.View;
+    using Assignment4ExpenseTracker.View.Interfaces;
 
     /// <summary>
     /// Contains the Main entry point of the project.
@@ -20,8 +22,11 @@ namespace Assignment4ExpenseTracker
         {
             System.Console.OutputEncoding = System.Text.Encoding.UTF8; // Used for rendering the Rupees symbol.
 
+            // Serialization
+            ITransactionCsvSerializer csvSerializer = new TransactionCsvSerializer();
+
             // Repository
-            IRepository repository = new InMemoryRepository();
+            IRepository repository = new CsvFileRepository("transactions.csv", csvSerializer);
 
             // View and Utilities
             IConsoleIO consoleIo = new ConsoleIO();

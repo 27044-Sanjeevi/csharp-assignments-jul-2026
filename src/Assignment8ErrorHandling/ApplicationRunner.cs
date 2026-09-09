@@ -1,0 +1,53 @@
+namespace Assignment8ErrorHandling
+{
+    using Assignment8ErrorHandling.Controller;
+    using Assignment8ErrorHandling.View;
+
+    /// <summary>
+    /// Coordinates the main application workflow.
+    /// </summary>
+    internal class ApplicationRunner
+    {
+        private const int MinTaskChoice = 1;
+        private const int MaxTaskChoice = 6;
+
+        private readonly ConsoleView _view;
+        private readonly MainController _mainController;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationRunner"/> class.
+        /// </summary>
+        /// <param name="view">The console view for displaying information to the user.</param>
+        /// <param name="mainController">The main controller responsible for managing application logic.</param>
+        public ApplicationRunner(ConsoleView view, MainController mainController)
+        {
+            this._view = view;
+            this._mainController = mainController;
+        }
+
+        /// <summary>
+        /// Runs the main application loop, displaying the main menu and handling user choices until exit is requested.
+        /// </summary>
+        public void RunApplication()
+        {
+            bool exit = false;
+
+            while (!exit)
+            {
+                this._view.ClearScreen();
+                this._view.ShowMainMenu();
+
+                int choice = this._view.ReadChoice(MinTaskChoice, MaxTaskChoice);
+
+                this._view.ClearScreen();
+
+                exit = this._mainController.HandleMenu(choice);
+
+                if (!exit)
+                {
+                    this._view.PauseAndReturn();
+                }
+            }
+        }
+    }
+}

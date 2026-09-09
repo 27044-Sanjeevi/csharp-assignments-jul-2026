@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.Services.Validation
+namespace Assignment4ExpenseTracker.Services.Validation
 {
     /// <summary>
     /// Result pattern for validation of the transactions.
