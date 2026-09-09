@@ -1,4 +1,5 @@
-﻿using Assignment9LINQAdvanced.Models;
+﻿using System.Runtime.CompilerServices;
+using Assignment9LINQAdvanced.Models;
 using Assignment9LINQAdvanced.Models.Enums;
 using Assignment9LINQAdvanced.Repository;
 using ConsoleTables;
@@ -53,12 +54,17 @@ namespace Assignment9LINQAdvanced.Tasks
                 .Configure(options => options.EnableCount = false)
                 .Write();
 
-            IEnumerable<(ProductCategory Key, int Count, decimal ExpensiveProductPrice, string ExpensiveProductName)> projectionQuery = groupByQuery
-                .Select(group => (
-                    group.Key,
-                    group.Count(),
-                    group.Max(p => p.Price),
-                    group.OrderByDescending(p => p.Price).First().Name));
+            IEnumerable<(ProductCategory Key, int Count, decimal? ExpensiveProductPrice, string? ExpensiveProductName)> projectionQuery =
+                groupByQuery.Select(group =>
+                {
+                    Product? expensiveProduct = group.MaxBy(p => p.Price);
+
+                    return (
+                        group.Key,
+                        group.Count(),
+                        expensiveProduct?.Price,
+                        expensiveProduct?.Name);
+                });
 
             Console.WriteLine("Expensive Item in each group:\n");
             var projectionTable = new ConsoleTable("Category", "Count", "Expensive Product Price", "Expensive Product Name");

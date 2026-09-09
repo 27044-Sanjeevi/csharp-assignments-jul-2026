@@ -43,14 +43,7 @@ namespace Assignment9LINQAdvanced.Tasks
                 .ToList();
             toListStopwatch.Stop();
 
-            ConsoleTable toListTable = new ConsoleTable("Product Name", "Price");
-            foreach (var product in toListResult)
-            {
-                toListTable.AddRow(product.Name, $"{product.Price:C}");
-            }
-
             Stopwatch iEnumerableStopWatch = Stopwatch.StartNew();
-
             IEnumerable<Product> enumerableQuery = products
                 .Where(product => product.Category == ProductCategory.Book)
                 .OrderBy(product => product.Price);
@@ -62,14 +55,8 @@ namespace Assignment9LINQAdvanced.Tasks
             }
 
             iEnumerableStopWatch.Stop();
-            ConsoleTable enumerableTable = new ConsoleTable("Product Name", "Price");
-            foreach (var product in enumerableResultList)
-            {
-                enumerableTable.AddRow(product.Name, $"{product.Price:C}");
-            }
 
             Stopwatch lookupWatch = Stopwatch.StartNew();
-
             ILookup<ProductCategory, Product> categoryLookup = products.ToLookup(p => p.Category);
             List<Product> lookupResult = categoryLookup[ProductCategory.Book]
                 .OrderBy(product => product.Price)

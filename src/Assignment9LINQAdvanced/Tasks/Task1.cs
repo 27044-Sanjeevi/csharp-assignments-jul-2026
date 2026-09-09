@@ -25,7 +25,7 @@ namespace Assignment9LINQAdvanced.Tasks
         /// </summary>
         internal void RunTask1()
         {
-            IEnumerable<(string Name, decimal Price)> selectedProducts = this._productRepository.GetAllProducts()
+            List<(string Name, decimal Price)> selectedProducts = this._productRepository.GetAllProducts()
                 .Where(p => p.Category == ProductCategory.Electronics && p.Price > 500)
                 .Select(p => (p.Name, p.Price))
                 .OrderByDescending(p => p.Price)
