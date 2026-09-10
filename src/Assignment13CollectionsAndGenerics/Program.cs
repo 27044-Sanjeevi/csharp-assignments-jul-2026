@@ -6,11 +6,14 @@ namespace Assignments
     {
         static void Main(string[] args)
         {
-            BookList bookList = new BookList();
-            bookList.PerformOperations();
+            //BookList bookList = new BookList();
+            //bookList.PerformOperations();
 
-            StringStack stringStack = new StringStack();
-            stringStack.PerformOperations();
+            //StringStack stringStack = new StringStack();
+            //stringStack.PerformOperations();
+
+            StudentDictionary studentDictionary = new StudentDictionary();
+            studentDictionary.PerformOperations();
 
             Console.ReadKey();
         }
