@@ -30,7 +30,7 @@ namespace Assignment4ExpenseTracker.Services
         {
             ArgumentNullException.ThrowIfNull(transactionDto, nameof(transactionDto));
 
-            Transaction transaction = new Transaction
+            Transaction transaction = new ()
             {
                 Amount = transactionDto.Amount,
                 Type = transactionDto.Type,
