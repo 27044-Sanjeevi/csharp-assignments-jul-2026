@@ -75,5 +75,29 @@
         /// </summary>
         /// <value>A string holding the name of the student.</value>
         public static string StudentToRemove => "Bala";
+
+        public static List<int> integerList => new List<int>()
+        {
+            10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+        };
+
+        public static int[] integerArray => new int[]
+        {
+            10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+        };
+
+        public static Queue<int> integerQueue => new Queue<int>(new[]
+        {
+            10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+        });
+
+        public static Dictionary<string, int> InventoryDictionary => new Dictionary<string, int>()
+        {
+            { "Apple", 5 },
+            { "Banana", 8 },
+            { "Orange", 12 },
+            { "Mango", 7 },
+            { "Cherry", 15 },
+        };
     }
 }

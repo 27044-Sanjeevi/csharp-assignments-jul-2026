@@ -24,6 +24,8 @@ namespace Assignments
 
                 StudentDictionary<string, int> studentDictionary = new StudentDictionary<string, int>();
 
+                EnumerableAndReadonly enumerableAndReadonlyTask = new EnumerableAndReadonly();
+
                 MenuView view = new MenuView();
                 StringStack<char> stack = new StringStack<char>();
                 stack.PerformOperations(TestData.InitialStack);
@@ -49,6 +51,11 @@ namespace Assignments
                             break;
                         case MenuOptions.Task4Dictionary:
                             studentDictionary.PerformOperations(TestData.StudentGrades, TestData.StudentToRemove);
+                            break;
+                        case MenuOptions.Task5Generics:
+                            break;
+                        case MenuOptions.Task6EnumerableAndReadonly:
+                            enumerableAndReadonlyTask.PerformOperations(TestData.integerList, TestData.integerArray, TestData.integerQueue);
                             break;
                         case MenuOptions.Exit:
                             return;

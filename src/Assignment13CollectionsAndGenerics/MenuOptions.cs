@@ -26,8 +26,18 @@
         Task4Dictionary = 4,
 
         /// <summary>
+        /// Specifies task 5.
+        /// </summary>
+        Task5Generics = 5,
+
+        /// <summary>
+        /// Specifies task 6.
+        /// </summary>
+        Task6EnumerableAndReadonly = 6,
+
+        /// <summary>
         /// Specifies the exit option.
         /// </summary>
-        Exit = 5,
+        Exit = 7,
     }
 }

@@ -33,6 +33,14 @@
         }
 
         /// <summary>
+        /// Prints a line into the console.
+        /// </summary>
+        public static void PrintLine()
+        {
+            Console.WriteLine("\n" + new string('-', 40));
+        }
+
+        /// <summary>
         /// Writes the message as a colored text.
         /// </summary>
         /// <param name="message">Message to be written.</param>
