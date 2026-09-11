@@ -7,7 +7,7 @@ namespace Assignment12MemoryOptimization
     /// </summary>
     internal class View
     {
-        private const string AppName = "Assignment 11 - Memory Optimization Techniques";
+        private const string AppName = "Assignment 12 - Memory Optimization Techniques";
         private const string GetChoicePrompt = "Enter your choice : ";
 
         // used array instead of an enum for simplicity.

@@ -48,7 +48,7 @@ namespace Assignments
         }
 
         /// <summary>
-        /// Runs task 1 of the appication.
+        /// Runs task 1 of the application.
         /// </summary>
         internal static void RunTask1()
         {
@@ -57,7 +57,7 @@ namespace Assignments
         }
 
         /// <summary>
-        /// Runs task 2 with first technique of the appication.
+        /// Runs task 2 with first technique of the application.
         /// </summary>
         internal static void RunTask2Technique1()
         {
@@ -66,7 +66,7 @@ namespace Assignments
         }
 
         /// <summary>
-        /// Runs task 2 with second technique of the appication.
+        /// Runs task 2 with second technique of the application.
         /// </summary>
         internal static void RunTask2Technique2()
         {

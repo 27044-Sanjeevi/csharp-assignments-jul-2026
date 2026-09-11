@@ -1,7 +1,7 @@
 ﻿namespace Assignment12MemoryOptimization.Tasks
 {
     /// <summary>
-    /// Continuously allocates memory by adding integer arrays to a collection, leading to high memory usage.usage.
+    /// Continuously allocates memory by adding integer arrays to a collection, leading to high memory usage.
     /// </summary>
     public class MemoryEater
     {
