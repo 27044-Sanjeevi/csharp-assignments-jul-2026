@@ -1,4 +1,4 @@
-﻿namespace Assignment4ExpenseTracker.Models.DTOs
+namespace Assignment4ExpenseTracker.Models.DTOs
 {
     using Assignment4ExpenseTracker.Models.Enums;
 
@@ -30,6 +30,12 @@
         /// </summary>
         /// <value name="Method">Payment Method of the transaction.</value>
         public PaymentMethod Method { get; init; }
+
+        /// <summary>
+        /// Gets or sets the date and time of the transaction.
+        /// </summary>
+        /// <value name="Timestamp">Holds the date and time of the transaction.</value>
+        public DateTime? Timestamp { get; set; }
 
         /// <summary>
         /// Gets the description for the transaction.

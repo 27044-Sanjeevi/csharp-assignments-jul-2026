@@ -2,7 +2,7 @@ namespace Assignment4ExpenseTracker
 {
     using Assignment4ExpenseTracker.Controller;
     using Assignment4ExpenseTracker.Models.Enums;
-    using Assignment4ExpenseTracker.View;
+    using Assignment4ExpenseTracker.View.Interfaces;
 
     /// <summary>
     /// Coordinates the main application workflow.
@@ -45,15 +45,7 @@ namespace Assignment4ExpenseTracker
                         this._view.PauseAndReturn();
                     }
                 }
-                catch (ArgumentException ex)
-                {
-                    this._view.HandleError(ex.Message);
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    this._view.HandleError(ex.Message);
-                }
-                catch (OperationCanceledException ex)
+                catch (Exception ex) when (ex is ArgumentException or KeyNotFoundException or OperationCanceledException)
                 {
                     this._view.HandleError(ex.Message);
                 }
