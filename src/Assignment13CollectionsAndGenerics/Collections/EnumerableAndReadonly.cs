@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assignment13CollectionsAndGenerics.Data;
+﻿using Assignment13CollectionsAndGenerics.Data;
 
 namespace Assignment13CollectionsAndGenerics.Collections
 {
