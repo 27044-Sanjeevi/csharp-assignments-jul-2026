@@ -53,6 +53,7 @@ namespace Assignments
                             studentDictionary.PerformOperations(TestData.StudentGrades, TestData.StudentToRemove);
                             break;
                         case MenuOptions.Task5Generics:
+                            Program.Task5Description();
                             break;
                         case MenuOptions.Task6EnumerableAndReadonly:
                             enumerableAndReadonlyTask.PerformOperations(TestData.integerList, TestData.integerArray, TestData.integerQueue);
@@ -72,6 +73,23 @@ namespace Assignments
             }
 
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Describes the changes in Task 5 where collections were updated to use generic types for improved type safety.
+        /// and reusability.
+        /// </summary>
+        internal static void Task5Description()
+        {
+            ConsoleHelpers.DisplayTitle("TASK 5 : GENERICS");
+            Console.WriteLine("- The commit `32519cb` contains the version of Task 1 to 4 where generics is not used." +
+                "\n- For task 5, the collections are modified to use generic types:\n" +
+                "\t- List<T>" +
+                "\n\t- Stack<T>" +
+                "\n\t- Queue<T>" +
+                "\n\t- Dictionary<TKey, TValue>" +
+                "\n- Instead of creating separate classes for specific data types, generic type parameters were used so the same collection logic can be reused." +
+                "\n- Generics provide type safety, reusability, and reduced code duplication while allowing the compiler to enforce the expected data types.");
         }
     }
 }

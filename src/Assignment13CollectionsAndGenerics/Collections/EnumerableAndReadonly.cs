@@ -16,15 +16,15 @@ namespace Assignment13CollectionsAndGenerics.Collections
         internal void PerformOperations(List<int> integerList, int[] integerArray, Queue<int> integerQueue)
         {
             ConsoleHelpers.DisplayTitle("TASK 6 : WORKING WITH IENUMERABLE AND IREADONLY");
-            ConsoleHelpers.DisplayStatus("Passed a list of intergers to SumOfElements method.");
+            ConsoleHelpers.DisplayStatus("Passed a list of integers to SumOfElements method.");
             int sumOfList = this.SumOfElements(integerList);
             ConsoleHelpers.DisplayStatus($"SUM RESULT (LIST) = {sumOfList}");
 
-            ConsoleHelpers.DisplayStatus("Passed an array of intergers to SumOfElements method.");
+            ConsoleHelpers.DisplayStatus("Passed an array of integers to SumOfElements method.");
             int sumOfArray = this.SumOfElements(integerArray);
             ConsoleHelpers.DisplayStatus($"SUM RESULT (ARRAY) = {sumOfArray}");
 
-            ConsoleHelpers.DisplayStatus("Passed a queue of intergers to SumOfElements method.");
+            ConsoleHelpers.DisplayStatus("Passed a queue of integers to SumOfElements method.");
             int sumOfQueue = this.SumOfElements(integerQueue);
             ConsoleHelpers.DisplayStatus($"SUM RESULT (QUEUE) = {sumOfQueue}");
             ConsoleHelpers.PrintLine();
