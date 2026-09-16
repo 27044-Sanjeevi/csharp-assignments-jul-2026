@@ -1,6 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using Assignment15FileStreams;
+using Assignment15FileStreams.Menu;
+using Assignment15FileStreams.Task1;
+using Assignment15FileStreams.Task2;
 
 namespace Assignments
 {

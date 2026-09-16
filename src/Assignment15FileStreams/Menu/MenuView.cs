@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Assignment15FileStreams
+namespace Assignment15FileStreams.Menu
 {
     /// <summary>
     /// Represents the menu view for rendering UI.

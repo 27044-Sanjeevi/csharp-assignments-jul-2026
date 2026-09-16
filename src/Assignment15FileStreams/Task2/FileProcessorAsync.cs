@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment15FileStreams
+namespace Assignment15FileStreams.Task2
 {
     internal class FileProcessorAsync
     {
@@ -20,7 +20,7 @@ namespace Assignment15FileStreams
 
         public async Task FileStreamRead(string sourceFilePath, int bufferSize, string? destinationFilePath = null)
         {
-            this.ResetState();
+            ResetState();
 
             byte[] buffer = new byte[bufferSize];
             int bytesRead;
@@ -30,7 +30,7 @@ namespace Assignment15FileStreams
             {
                 while ((bytesRead = await fs.ReadAsync(buffer, 0, buffer.Length)) > 0)
                 {
-                    if (!this.ProcessChunk(buffer, bytesRead, destinationFilePath))
+                    if (!ProcessChunk(buffer, bytesRead, destinationFilePath))
                     {
                         continue;
                     }
@@ -38,24 +38,24 @@ namespace Assignment15FileStreams
 
                 if (destinationFilePath != null)
                 {
-                    this.ProcessFinalRemainingLine();
+                    ProcessFinalRemainingLine();
                 }
             }
 
             sw.Stop();
 
-            this._fileStreamElapsedTime = sw.Elapsed.TotalMilliseconds;
-            this.PrintTimeElapsed("File Stream", this._fileStreamElapsedTime, bufferSize);
+            _fileStreamElapsedTime = sw.Elapsed.TotalMilliseconds;
+            PrintTimeElapsed("File Stream", _fileStreamElapsedTime, bufferSize);
 
             if (destinationFilePath != null)
             {
-                await this.SaveProcessedData(destinationFilePath);
+                await SaveProcessedData(destinationFilePath);
             }
         }
 
         public async Task FileBufferedStream(string filePath, int bufferSize, string? destinationFilePath = null)
         {
-            this.ResetState();
+            ResetState();
 
             Stopwatch sw = Stopwatch.StartNew();
             using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -66,7 +66,7 @@ namespace Assignment15FileStreams
                 {
                     while ((bytesRead = await bufferedStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                     {
-                        if (!this.ProcessChunk(buffer, bytesRead, destinationFilePath))
+                        if (!ProcessChunk(buffer, bytesRead, destinationFilePath))
                         {
                             continue;
                         }
@@ -74,19 +74,19 @@ namespace Assignment15FileStreams
 
                     if (destinationFilePath != null)
                     {
-                        this.ProcessFinalRemainingLine();
+                        ProcessFinalRemainingLine();
                     }
                 }
             }
 
             sw.Stop();
 
-            this._bufferedStreammTime = sw.Elapsed.TotalMilliseconds;
-            this.PrintTimeElapsed("Buffered Stream", this._bufferedStreammTime, bufferSize);
+            _bufferedStreammTime = sw.Elapsed.TotalMilliseconds;
+            PrintTimeElapsed("Buffered Stream", _bufferedStreammTime, bufferSize);
 
             if (destinationFilePath != null)
             {
-                await this.SaveProcessedData(destinationFilePath);
+                await SaveProcessedData(destinationFilePath);
             }
         }
 
@@ -95,7 +95,7 @@ namespace Assignment15FileStreams
         /// </summary>
         private bool ProcessChunk(byte[] chunk, int bytesRead, string? destinationFilePath = null)
         {
-            string text = this._remainingText + Encoding.UTF8.GetString(chunk, 0, bytesRead);
+            string text = _remainingText + Encoding.UTF8.GetString(chunk, 0, bytesRead);
 
             if (destinationFilePath == null)
             {
@@ -107,11 +107,11 @@ namespace Assignment15FileStreams
 
             if (text.EndsWith("\n") || text.EndsWith("\r"))
             {
-                this._remainingText = string.Empty;
+                _remainingText = string.Empty;
             }
             else
             {
-                this._remainingText = lines[lines.Length - 1];
+                _remainingText = lines[lines.Length - 1];
                 processLimit -= 1;
             }
 
@@ -134,14 +134,14 @@ namespace Assignment15FileStreams
 
                 if (double.TryParse(components[2].Trim(), out double temperature))
                 {
-                    if (temperature < this._minTemperature)
+                    if (temperature < _minTemperature)
                     {
-                        this._minTemperature = temperature;
+                        _minTemperature = temperature;
                     }
 
-                    if (temperature > this._maxTemperature)
+                    if (temperature > _maxTemperature)
                     {
-                        this._maxTemperature = temperature;
+                        _maxTemperature = temperature;
                     }
 
                     chunkTotalTemperature += temperature;
@@ -152,10 +152,10 @@ namespace Assignment15FileStreams
             if (processedRows > 0)
             {
                 double currentChunkAverage = chunkTotalTemperature / processedRows;
-                long previousTotalRows = this._totalProcessedRows;
-                this._totalProcessedRows += processedRows;
+                long previousTotalRows = _totalProcessedRows;
+                _totalProcessedRows += processedRows;
 
-                this._averageTemperature = ((this._averageTemperature * previousTotalRows) + (currentChunkAverage * processedRows)) / this._totalProcessedRows;
+                _averageTemperature = (_averageTemperature * previousTotalRows + currentChunkAverage * processedRows) / _totalProcessedRows;
             }
 
             return true;
@@ -163,40 +163,40 @@ namespace Assignment15FileStreams
 
         private void ProcessFinalRemainingLine()
         {
-            if (string.IsNullOrWhiteSpace(this._remainingText))
+            if (string.IsNullOrWhiteSpace(_remainingText))
             {
                 return;
             }
 
-            string[] components = this._remainingText.Split(',');
+            string[] components = _remainingText.Split(',');
             if (components.Length >= 3 && double.TryParse(components[2].Trim(), out double temperature))
             {
-                if (temperature < this._minTemperature)
+                if (temperature < _minTemperature)
                 {
-                    this._minTemperature = temperature;
+                    _minTemperature = temperature;
                 }
 
-                if (temperature > this._maxTemperature)
+                if (temperature > _maxTemperature)
                 {
-                    this._maxTemperature = temperature;
+                    _maxTemperature = temperature;
                 }
 
-                long previousTotalRows = this._totalProcessedRows;
-                this._totalProcessedRows++;
-                this._averageTemperature = ((this._averageTemperature * previousTotalRows) + temperature) / this._totalProcessedRows;
+                long previousTotalRows = _totalProcessedRows;
+                _totalProcessedRows++;
+                _averageTemperature = (_averageTemperature * previousTotalRows + temperature) / _totalProcessedRows;
             }
 
-            this._remainingText = string.Empty;
+            _remainingText = string.Empty;
         }
 
         private async Task SaveProcessedData(string destinationFilePath)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("WEATHER DATA STATISTICS SUMMARY REPORT");
-            stringBuilder.AppendLine($"Total Processed Entries: {this._totalProcessedRows}");
-            stringBuilder.AppendLine($"Maximum Temperature    : {this._maxTemperature:F2}°C");
-            stringBuilder.AppendLine($"Minimum Temperature    : {this._minTemperature:F2}°C");
-            stringBuilder.AppendLine($"Weighted Average Temp  : {this._averageTemperature:F2}°C");
+            stringBuilder.AppendLine($"Total Processed Entries: {_totalProcessedRows}");
+            stringBuilder.AppendLine($"Maximum Temperature    : {_maxTemperature:F2}°C");
+            stringBuilder.AppendLine($"Minimum Temperature    : {_minTemperature:F2}°C");
+            stringBuilder.AppendLine($"Weighted Average Temp  : {_averageTemperature:F2}°C");
             byte[] processedDataBytes = Encoding.UTF8.GetBytes(stringBuilder.ToString());
 
             using (MemoryStream memoryStream = new MemoryStream(processedDataBytes))
@@ -212,16 +212,16 @@ namespace Assignment15FileStreams
 
         private void ResetState()
         {
-            this._minTemperature = double.MaxValue;
-            this._maxTemperature = double.MinValue;
-            this._averageTemperature = 0;
-            this._totalProcessedRows = 0;
-            this._remainingText = string.Empty;
+            _minTemperature = double.MaxValue;
+            _maxTemperature = double.MinValue;
+            _averageTemperature = 0;
+            _totalProcessedRows = 0;
+            _remainingText = string.Empty;
         }
 
         public void PrintCurrentElapsedTimeDifference()
         {
-            Console.WriteLine($"FileStream Time - BufferedStream Time = {this._fileStreamElapsedTime - this._bufferedStreammTime:F2} ms");
+            Console.WriteLine($"FileStream Time - BufferedStream Time = {_fileStreamElapsedTime - _bufferedStreammTime:F2} ms");
         }
 
         private void PrintTimeElapsed(string methodName, double timeInMs, int bufferSize)

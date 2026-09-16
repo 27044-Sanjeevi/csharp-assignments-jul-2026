@@ -8,5 +8,6 @@ namespace Assignment15FileStreams.Task3
 {
     internal class OptimizedLogger
     {
+        
     }
 }

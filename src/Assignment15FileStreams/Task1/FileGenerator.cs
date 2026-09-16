@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment15FileStreams
+namespace Assignment15FileStreams.Task1
 {
     internal class FileGenerator
     {
         public void GenerateWeatherFile(string filePath, long targertByteSize)
         {
-            if (this.CheckFileExistence(filePath, targertByteSize))
+            if (CheckFileExistence(filePath, targertByteSize))
             {
                 return;
             }

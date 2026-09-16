@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assignment15FileStreams
+namespace Assignment15FileStreams.Menu
 {
     internal enum MenuOptions
     {
