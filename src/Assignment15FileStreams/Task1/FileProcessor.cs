@@ -198,7 +198,7 @@ namespace Assignment15FileStreams
 
             using (MemoryStream memoryStream = new MemoryStream(processedDataBytes))
             {
-                using (FileStream fileStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 64 * 1024))
+                using (FileStream fileStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024))
                 {
                     memoryStream.CopyTo(fileStream);
                 }

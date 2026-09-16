@@ -37,10 +37,10 @@ namespace Assignments
                     switch (option)
                     {
                         case MenuOptions.Task1FileStreams:
-                            RunTask1(fileProcessor, weatherFilePath1, processedFilePath);
+                            RunTask1(fileProcessor, weatherFilePath1, weatherFilePath2, weatherFilePath3, processedFilePath);
                             break;
                         case MenuOptions.Task2AsyncFileStreams:
-                            await RunTask2(fileProcessorAsync, weatherFilePath1, processedFilePath);
+                            await RunTask2(fileProcessorAsync, weatherFilePath1, weatherFilePath2, weatherFilePath3, processedFilePath);
                             break;
                         case MenuOptions.Exit:
                             return;
@@ -59,14 +59,22 @@ namespace Assignments
             Console.ReadKey();
         }
 
-        private static void RunTask1(FileProcessor readFile, string sourceFilePath, string destinationFilePath)
+        private static void RunTask1(FileProcessor readFile, string sourceFilePath, string weatherFilePath2, string weatherFilePath3, string destinationFilePath)
         {
             Stopwatch sw1 = Stopwatch.StartNew();
             sw1.Start();
-            for (int i = 2; i <= 512; i *= 2)
+            for (int i = 1024; i <= 1024; i *= 2)
             {
                 readFile.FileStreamRead(sourceFilePath, i * 1024);
                 readFile.FileBufferedStream(sourceFilePath, i * 1024);
+                readFile.PrintCurrentElapsedTimeDifference();
+                ConsoleHelpers.PrintLine();
+                readFile.FileStreamRead(weatherFilePath2, i * 1024);
+                readFile.FileBufferedStream(weatherFilePath2, i * 1024);
+                readFile.PrintCurrentElapsedTimeDifference();
+                ConsoleHelpers.PrintLine();
+                readFile.FileStreamRead(weatherFilePath3, i * 1024);
+                readFile.FileBufferedStream(weatherFilePath3, i * 1024);
                 readFile.PrintCurrentElapsedTimeDifference();
                 ConsoleHelpers.PrintLine();
                 Console.WriteLine();
@@ -78,13 +86,20 @@ namespace Assignments
             Console.WriteLine($"Total time for task 1: {sw1.ElapsedMilliseconds}");
         }
 
-        private static async Task RunTask2(FileProcessorAsync fileProcessor, string sourceFilePath, string destinationFilePath)
+        private static async Task RunTask2(FileProcessorAsync fileProcessor, string sourceFilePath, string weatherFilePath2, string weatherFilePath3, string destinationFilePath)
         {
             Stopwatch sw1 = Stopwatch.StartNew();
-            for (int i = 2; i <= 512; i *= 2)
+            for (int i = 1024; i <= 1024; i *= 2)
             {
-                await fileProcessor.FileStreamRead(sourceFilePath, i * 1024);
-                await fileProcessor.FileBufferedStream(sourceFilePath, i * 1024);
+                await Task.WhenAll(
+                fileProcessor.FileStreamRead(sourceFilePath, i * 1024),
+                fileProcessor.FileBufferedStream(sourceFilePath, i * 1024),
+                fileProcessor.FileStreamRead(weatherFilePath2, i * 1024),
+                fileProcessor.FileBufferedStream(weatherFilePath2, i * 1024),
+                fileProcessor.FileStreamRead(weatherFilePath3, i * 1024),
+                fileProcessor.FileBufferedStream(weatherFilePath3, i * 1024)
+                );
+
                 fileProcessor.PrintCurrentElapsedTimeDifference();
                 ConsoleHelpers.PrintLine();
                 Console.WriteLine();
@@ -93,7 +108,7 @@ namespace Assignments
             Console.WriteLine("Process and save weather statistics:");
             await fileProcessor.FileBufferedStream(sourceFilePath, 64 * 1024, destinationFilePath);
             sw1.Stop();
-            Console.WriteLine($"Total time for task 1: {sw1.ElapsedMilliseconds}");
+            Console.WriteLine($"Total time for task 2: {sw1.ElapsedMilliseconds}");
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Assignment15FileStreams
 
             if (destinationFilePath != null)
             {
-                this.SaveProcessedData(destinationFilePath);
+                await this.SaveProcessedData(destinationFilePath);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Assignment15FileStreams
 
             if (destinationFilePath != null)
             {
-                this.SaveProcessedData(destinationFilePath);
+                await this.SaveProcessedData(destinationFilePath);
             }
         }
 
@@ -189,7 +189,7 @@ namespace Assignment15FileStreams
             this._remainingText = string.Empty;
         }
 
-        private void SaveProcessedData(string destinationFilePath)
+        private async Task SaveProcessedData(string destinationFilePath)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("WEATHER DATA STATISTICS SUMMARY REPORT");
@@ -201,9 +201,9 @@ namespace Assignment15FileStreams
 
             using (MemoryStream memoryStream = new MemoryStream(processedDataBytes))
             {
-                using (FileStream fileStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 64 * 1024))
+                using (FileStream fileStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024))
                 {
-                    memoryStream.CopyToAsync(fileStream);
+                    await memoryStream.CopyToAsync(fileStream);
                 }
             }
 
