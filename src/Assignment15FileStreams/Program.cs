@@ -1,4 +1,6 @@
-﻿using Assignment15FileStreams;
+﻿using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
+using Assignment15FileStreams;
 
 namespace Assignments
 {
@@ -14,13 +16,14 @@ namespace Assignments
 
                 const string processedFilePath = "WeatherStatistics.txt";
 
-                FileGeneratorAsync generator = new FileGeneratorAsync();
+                FileGenerator generator = new FileGenerator();
 
-                await generator.GenerateWeatherFileAsync(weatherFilePath1, 1024 * 1024 * 1024);
-                await generator.GenerateWeatherFileAsync(weatherFilePath2, 1024 * 1024 * 1024);
-                await generator.GenerateWeatherFileAsync(weatherFilePath3, 1024 * 1024 * 1024);
+                generator.GenerateWeatherFile(weatherFilePath1, 1024 * 1024 * 1024);
+                generator.GenerateWeatherFile(weatherFilePath2, 1024 * 1024 * 1024);
+                generator.GenerateWeatherFile(weatherFilePath3, 1024 * 1024 * 1024);
 
                 FileProcessor fileProcessor = new FileProcessor();
+                FileProcessorAsync fileProcessorAsync = new FileProcessorAsync();
 
                 MenuView view = new MenuView();
                 MenuOptions option = MenuOptions.Task1FileStreams;
@@ -37,7 +40,7 @@ namespace Assignments
                             RunTask1(fileProcessor, weatherFilePath1, processedFilePath);
                             break;
                         case MenuOptions.Task2AsyncFileStreams:
-                            RunTask2();
+                            await RunTask2(fileProcessorAsync, weatherFilePath1, processedFilePath);
                             break;
                         case MenuOptions.Exit:
                             return;
@@ -58,6 +61,8 @@ namespace Assignments
 
         private static void RunTask1(FileProcessor readFile, string sourceFilePath, string destinationFilePath)
         {
+            Stopwatch sw1 = Stopwatch.StartNew();
+            sw1.Start();
             for (int i = 2; i <= 512; i *= 2)
             {
                 readFile.FileStreamRead(sourceFilePath, i * 1024);
@@ -69,11 +74,26 @@ namespace Assignments
 
             Console.WriteLine("Process and save weather statistics:");
             readFile.FileBufferedStream(sourceFilePath, 64 * 1024, destinationFilePath);
+            sw1.Stop();
+            Console.WriteLine($"Total time for task 1: {sw1.ElapsedMilliseconds}");
         }
 
-        private static void RunTask2()
+        private static async Task RunTask2(FileProcessorAsync fileProcessor, string sourceFilePath, string destinationFilePath)
         {
+            Stopwatch sw1 = Stopwatch.StartNew();
+            for (int i = 2; i <= 512; i *= 2)
+            {
+                await fileProcessor.FileStreamRead(sourceFilePath, i * 1024);
+                await fileProcessor.FileBufferedStream(sourceFilePath, i * 1024);
+                fileProcessor.PrintCurrentElapsedTimeDifference();
+                ConsoleHelpers.PrintLine();
+                Console.WriteLine();
+            }
 
+            Console.WriteLine("Process and save weather statistics:");
+            await fileProcessor.FileBufferedStream(sourceFilePath, 64 * 1024, destinationFilePath);
+            sw1.Stop();
+            Console.WriteLine($"Total time for task 1: {sw1.ElapsedMilliseconds}");
         }
     }
 }
