@@ -1,36 +1,79 @@
-﻿using System.Runtime.CompilerServices;
-using Assignment15FileStreams;
+﻿using Assignment15FileStreams;
 
 namespace Assignments
 {
     internal class Program
     {
-        internal static void Main(string[] args)
+        internal static async Task Main(string[] args)
         {
-            const string weatherFilePath = "Weather.txt";
-            FileGenerator generator = new FileGenerator();
-            generator.GenerateWeatherFile(weatherFilePath, 1024 * 1024 * 1024);
-            ReadFile readFile = new ReadFile();
+            try
+            {
+                const string weatherFilePath1 = "Weather1.txt";
+                const string weatherFilePath2 = "Weather2.txt";
+                const string weatherFilePath3 = "Weather3.txt";
 
-            readFile.FileStreamRead(weatherFilePath, 1024 * 1024);
-            readFile.FileStreamRead(weatherFilePath, 512 * 1024);
-            readFile.FileStreamRead(weatherFilePath, 256 * 1024);
-            readFile.FileStreamRead(weatherFilePath, 128 * 1024);
-            readFile.FileStreamRead(weatherFilePath, 64 * 1024);
-            readFile.FileStreamRead(weatherFilePath, 32 * 1024);
-            readFile.FileStreamRead(weatherFilePath, 16 * 1024);
-            readFile.FileStreamRead(weatherFilePath, 8 * 1024);
+                const string processedFilePath = "WeatherStatistics.txt";
 
-            Console.WriteLine();
-            readFile.FileBufferedStream(weatherFilePath, 1024 * 1024);
-            readFile.FileBufferedStream(weatherFilePath, 512 * 1024);
-            readFile.FileBufferedStream(weatherFilePath, 256 * 1024);
-            readFile.FileBufferedStream(weatherFilePath, 128 * 1024);
-            readFile.FileBufferedStream(weatherFilePath, 64 * 1024);
-            readFile.FileBufferedStream(weatherFilePath, 32 * 1024);
-            readFile.FileBufferedStream(weatherFilePath, 16 * 1024);
-            readFile.FileBufferedStream(weatherFilePath, 8 * 1024);
+                FileGeneratorAsync generator = new FileGeneratorAsync();
+
+                await generator.GenerateWeatherFileAsync(weatherFilePath1, 1024 * 1024 * 1024);
+                await generator.GenerateWeatherFileAsync(weatherFilePath2, 1024 * 1024 * 1024);
+                await generator.GenerateWeatherFileAsync(weatherFilePath3, 1024 * 1024 * 1024);
+
+                FileProcessor fileProcessor = new FileProcessor();
+
+                MenuView view = new MenuView();
+                MenuOptions option = MenuOptions.Task1FileStreams;
+
+                while (option != MenuOptions.Exit)
+                {
+                    Console.Clear();
+                    view.DisplayMenu();
+                    option = view.GetMenuChoice();
+                    Console.Clear();
+                    switch (option)
+                    {
+                        case MenuOptions.Task1FileStreams:
+                            RunTask1(fileProcessor, weatherFilePath1, processedFilePath);
+                            break;
+                        case MenuOptions.Task2AsyncFileStreams:
+                            RunTask2();
+                            break;
+                        case MenuOptions.Exit:
+                            return;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(option));
+                    }
+
+                    view.Pause();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\n[EXCEPTION] : " + ex.Message);
+            }
+
             Console.ReadKey();
+        }
+
+        private static void RunTask1(FileProcessor readFile, string sourceFilePath, string destinationFilePath)
+        {
+            for (int i = 2; i <= 512; i *= 2)
+            {
+                readFile.FileStreamRead(sourceFilePath, i * 1024);
+                readFile.FileBufferedStream(sourceFilePath, i * 1024);
+                readFile.PrintCurrentElapsedTimeDifference();
+                ConsoleHelpers.PrintLine();
+                Console.WriteLine();
+            }
+
+            Console.WriteLine("Process and save weather statistics:");
+            readFile.FileBufferedStream(sourceFilePath, 64 * 1024, destinationFilePath);
+        }
+
+        private static void RunTask2()
+        {
+
         }
     }
 }

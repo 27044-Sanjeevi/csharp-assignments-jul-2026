@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Assignment15FileStreams
 {
-    internal class FileGenerator
+    internal class FileGeneratorAsync
     {
-        public void GenerateWeatherFile(string filePath, long targertByteSize)
+        public async Task GenerateWeatherFileAsync(string filePath, long targertByteSize)
         {
             if (this.CheckFileExistence(filePath, targertByteSize))
             {
@@ -17,7 +17,6 @@ namespace Assignment15FileStreams
             }
 
             Stopwatch stopwatch = Stopwatch.StartNew();
-
             int fileStreamBufferSize = 64 * 1024; // 64KB
 
             using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, fileStreamBufferSize))
@@ -35,12 +34,12 @@ namespace Assignment15FileStreams
                         DateTime dateTime = DateTime.Now;
                         string dataLine = $"{dateTime:dd-MM-yyyy HH:mm:ss}, {city}, {temperature:F2}\n";
 
-                        streamWriter.Write(dataLine);
+                        await streamWriter.WriteAsync(dataLine);
 
                         currentSizeBytes += Encoding.UTF8.GetByteCount(dataLine);
                     }
 
-                    streamWriter.Flush();
+                    await streamWriter.FlushAsync();
                 }
             }
 
