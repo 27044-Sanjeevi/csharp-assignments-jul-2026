@@ -131,7 +131,6 @@ namespace Assignments
 
         private static void RunTask4(LoadTester loadTester)
         {
-            ConsoleHelpers.DisplayTitle("Task 4: File Logger");
             loadTester.RunLoadTest();
         }
     }

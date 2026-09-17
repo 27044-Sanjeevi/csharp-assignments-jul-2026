@@ -71,7 +71,7 @@ namespace Assignment15FileStreams.Task4
         private void PrintReport(LoadTestResult result)
         {
             Console.WriteLine(new string('=', 110));
-            Console.WriteLine($"{"Strategy",-35} | {"Time (ms)",-10} | {"Success",-8} | {"Failed (Locks)",-15} | {"Throughput",-15}");
+            Console.WriteLine($"{"Strategy",-45} | {"Time (ms)",-10} | {"Success",-8} | {"Failed (Locks)",-15} | {"Throughput",-15}");
             Console.WriteLine(new string('-', 110));
 
             string status = result.FailureCount > 0 ? $"{result.FailureCount} Errors" : "0 (No Errors)";

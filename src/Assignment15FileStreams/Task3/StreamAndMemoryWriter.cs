@@ -13,8 +13,6 @@ namespace Assignment15FileStreams.Task3
         /// </summary>
         public void RunDiagnosis()
         {
-            ConsoleHelpers.DisplayTitle("Task 3: File Usage and Fixes");
-
             string testData = this.GenerateSampleData(5000);
             string unoptimizedFile = "task3_unoptimized.txt";
             string optimizedFile = "task3_optimized.txt";

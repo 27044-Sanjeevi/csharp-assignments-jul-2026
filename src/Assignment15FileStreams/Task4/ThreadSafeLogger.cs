@@ -1,30 +1,30 @@
-﻿using System.Text;
+﻿    using System.Text;
 
-namespace Assignment15FileStreams.Task4
-{
-    /// <summary>
-    /// Represents thread-safe logging.
-    /// </summary>
-    internal class ThreadSafeLogger
+    namespace Assignment15FileStreams.Task4
     {
-        private static readonly string LogFilePath = "thread_safe_log.txt";
-        private static readonly object FileLock = new object();
-
         /// <summary>
-        /// Logs an error message safely across multiple threads using a synchronization lock.
+        /// Represents thread-safe logging.
         /// </summary>
-        /// <param name="errorMessage">The error message to be logged.</param>
-        public static void LogError(string errorMessage)
+        internal class ThreadSafeLogger
         {
-            byte[] errorBytes = Encoding.UTF8.GetBytes(errorMessage + Environment.NewLine);
+            private static readonly string LogFilePath = "thread_safe_log.txt";
+            private static readonly object FileLock = new object();
 
-            lock (FileLock)
+            /// <summary>
+            /// Logs an error message safely across multiple threads using a synchronization lock.
+            /// </summary>
+            /// <param name="errorMessage">The error message to be logged.</param>
+            public static void LogError(string errorMessage)
             {
-                using (FileStream fileStream = new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
+                byte[] errorBytes = Encoding.UTF8.GetBytes(errorMessage + Environment.NewLine);
+
+                lock (FileLock)
                 {
-                    fileStream.Write(errorBytes, 0, errorBytes.Length);
+                    using (FileStream fileStream = new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.Read))
+                    {
+                        fileStream.Write(errorBytes, 0, errorBytes.Length);
+                    }
                 }
             }
         }
     }
-}
