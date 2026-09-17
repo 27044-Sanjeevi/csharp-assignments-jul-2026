@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Assignment15FileStreams.Task1
 {
+    /// <summary>
+    /// Implements the file processing for task 1.
+    /// </summary>
     internal class FileProcessor
     {
         private double _fileStreamElapsedTime;
@@ -15,9 +18,15 @@ namespace Assignment15FileStreams.Task1
         private double _averageTemperature = 0;
         private int _totalProcessedRows = 0;
 
+        /// <summary>
+        /// Reads the file <paramref name="sourceFilePath"/> using FileStream.
+        /// </summary>
+        /// <param name="sourceFilePath">The file to read.</param>
+        /// <param name="bufferSize">The buffer size.</param>
+        /// <param name="destinationFilePath">The destination path to store the processed text.</param>
         public void FileStreamRead(string sourceFilePath, int bufferSize, string? destinationFilePath = null)
         {
-            ResetState();
+            this.ResetState();
 
             byte[] buffer = new byte[bufferSize];
             int bytesRead;
@@ -27,7 +36,7 @@ namespace Assignment15FileStreams.Task1
             {
                 while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
                 {
-                    if (!ProcessChunk(buffer, bytesRead, destinationFilePath))
+                    if (!this.ProcessChunk(buffer, bytesRead, destinationFilePath))
                     {
                         continue;
                     }
@@ -35,27 +44,33 @@ namespace Assignment15FileStreams.Task1
 
                 if (destinationFilePath != null)
                 {
-                    ProcessFinalRemainingLine();
+                    this.ProcessFinalRemainingLine();
                 }
             }
 
             sw.Stop();
 
-            _fileStreamElapsedTime = sw.Elapsed.TotalMilliseconds;
-            PrintTimeElapsed("File Stream", _fileStreamElapsedTime, bufferSize);
+            this._fileStreamElapsedTime = sw.Elapsed.TotalMilliseconds;
+            this.PrintTimeElapsed("File Stream", this._fileStreamElapsedTime, bufferSize);
 
             if (destinationFilePath != null)
             {
-                SaveProcessedData(destinationFilePath);
+                this.SaveProcessedData(destinationFilePath);
             }
         }
 
-        public void FileBufferedStream(string filePath, int bufferSize, string? destinationFilePath = null)
+        /// <summary>
+        /// Reads the file <paramref name="sourceFilePath"/> using BufferedStream.
+        /// </summary>
+        /// <param name="sourceFilePath">The file to read.</param>
+        /// <param name="bufferSize">The buffer size.</param>
+        /// <param name="destinationFilePath">The destination path to store the processed text.</param>
+        public void FileBufferedStream(string sourceFilePath, int bufferSize, string? destinationFilePath = null)
         {
-            ResetState();
+            this.ResetState();
 
             Stopwatch sw = Stopwatch.StartNew();
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream fileStream = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 byte[] buffer = new byte[bufferSize];
                 int bytesRead;
@@ -63,7 +78,7 @@ namespace Assignment15FileStreams.Task1
                 {
                     while ((bytesRead = bufferedStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
-                        if (!ProcessChunk(buffer, bytesRead, destinationFilePath))
+                        if (!this.ProcessChunk(buffer, bytesRead, destinationFilePath))
                         {
                             continue;
                         }
@@ -71,28 +86,33 @@ namespace Assignment15FileStreams.Task1
 
                     if (destinationFilePath != null)
                     {
-                        ProcessFinalRemainingLine();
+                        this.ProcessFinalRemainingLine();
                     }
                 }
             }
 
             sw.Stop();
 
-            _bufferedStreammTime = sw.Elapsed.TotalMilliseconds;
-            PrintTimeElapsed("Buffered Stream", _bufferedStreammTime, bufferSize);
+            this._bufferedStreammTime = sw.Elapsed.TotalMilliseconds;
+            this.PrintTimeElapsed("Buffered Stream", this._bufferedStreammTime, bufferSize);
 
             if (destinationFilePath != null)
             {
-                SaveProcessedData(destinationFilePath);
+                this.SaveProcessedData(destinationFilePath);
             }
         }
 
         /// <summary>
-        /// Processes the data chunk and returns false if processing should terminate early.
+        /// Prints the current elapsed time difference of file stream and buffered stream methods.
         /// </summary>
+        public void PrintCurrentElapsedTimeDifference()
+        {
+            Console.WriteLine($"FileStream Time - BufferedStream Time = {this._fileStreamElapsedTime - this._bufferedStreammTime:F2} ms");
+        }
+
         private bool ProcessChunk(byte[] chunk, int bytesRead, string? destinationFilePath = null)
         {
-            string text = _remainingText + Encoding.UTF8.GetString(chunk, 0, bytesRead);
+            string text = this._remainingText + Encoding.UTF8.GetString(chunk, 0, bytesRead);
 
             if (destinationFilePath == null)
             {
@@ -104,11 +124,11 @@ namespace Assignment15FileStreams.Task1
 
             if (text.EndsWith("\n") || text.EndsWith("\r"))
             {
-                _remainingText = string.Empty;
+                this._remainingText = string.Empty;
             }
             else
             {
-                _remainingText = lines[lines.Length - 1];
+                this._remainingText = lines[lines.Length - 1];
                 processLimit -= 1;
             }
 
@@ -131,14 +151,14 @@ namespace Assignment15FileStreams.Task1
 
                 if (double.TryParse(components[2].Trim(), out double temperature))
                 {
-                    if (temperature < _minTemperature)
+                    if (temperature < this._minTemperature)
                     {
-                        _minTemperature = temperature;
+                        this._minTemperature = temperature;
                     }
 
-                    if (temperature > _maxTemperature)
+                    if (temperature > this._maxTemperature)
                     {
-                        _maxTemperature = temperature;
+                        this._maxTemperature = temperature;
                     }
 
                     chunkTotalTemperature += temperature;
@@ -149,10 +169,10 @@ namespace Assignment15FileStreams.Task1
             if (processedRows > 0)
             {
                 double currentChunkAverage = chunkTotalTemperature / processedRows;
-                long previousTotalRows = _totalProcessedRows;
-                _totalProcessedRows += processedRows;
+                long previousTotalRows = this._totalProcessedRows;
+                this._totalProcessedRows += processedRows;
 
-                _averageTemperature = (_averageTemperature * previousTotalRows + currentChunkAverage * processedRows) / _totalProcessedRows;
+                this._averageTemperature = ((this._averageTemperature * previousTotalRows) + (currentChunkAverage * processedRows)) / this._totalProcessedRows;
             }
 
             return true;
@@ -160,40 +180,40 @@ namespace Assignment15FileStreams.Task1
 
         private void ProcessFinalRemainingLine()
         {
-            if (string.IsNullOrWhiteSpace(_remainingText))
+            if (string.IsNullOrWhiteSpace(this._remainingText))
             {
                 return;
             }
 
-            string[] components = _remainingText.Split(',');
+            string[] components = this._remainingText.Split(',');
             if (components.Length >= 3 && double.TryParse(components[2].Trim(), out double temperature))
             {
-                if (temperature < _minTemperature)
+                if (temperature < this._minTemperature)
                 {
-                    _minTemperature = temperature;
+                    this._minTemperature = temperature;
                 }
 
-                if (temperature > _maxTemperature)
+                if (temperature > this._maxTemperature)
                 {
-                    _maxTemperature = temperature;
+                    this._maxTemperature = temperature;
                 }
 
-                long previousTotalRows = _totalProcessedRows;
-                _totalProcessedRows++;
-                _averageTemperature = (_averageTemperature * previousTotalRows + temperature) / _totalProcessedRows;
+                long previousTotalRows = this._totalProcessedRows;
+                this._totalProcessedRows++;
+                this._averageTemperature = ((this._averageTemperature * previousTotalRows) + temperature) / this._totalProcessedRows;
             }
 
-            _remainingText = string.Empty;
+            this._remainingText = string.Empty;
         }
 
         private void SaveProcessedData(string destinationFilePath)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("WEATHER DATA STATISTICS SUMMARY REPORT");
-            stringBuilder.AppendLine($"Total Processed Entries: {_totalProcessedRows}");
-            stringBuilder.AppendLine($"Maximum Temperature    : {_maxTemperature:F2}°C");
-            stringBuilder.AppendLine($"Minimum Temperature    : {_minTemperature:F2}°C");
-            stringBuilder.AppendLine($"Weighted Average Temp  : {_averageTemperature:F2}°C");
+            stringBuilder.AppendLine($"Total Processed Entries: {this._totalProcessedRows}");
+            stringBuilder.AppendLine($"Maximum Temperature    : {this._maxTemperature:F2}°C");
+            stringBuilder.AppendLine($"Minimum Temperature    : {this._minTemperature:F2}°C");
+            stringBuilder.AppendLine($"Weighted Average Temp  : {this._averageTemperature:F2}°C");
             byte[] processedDataBytes = Encoding.UTF8.GetBytes(stringBuilder.ToString());
 
             using (MemoryStream memoryStream = new MemoryStream(processedDataBytes))
@@ -208,16 +228,11 @@ namespace Assignment15FileStreams.Task1
 
         private void ResetState()
         {
-            _minTemperature = double.MaxValue;
-            _maxTemperature = double.MinValue;
-            _averageTemperature = 0;
-            _totalProcessedRows = 0;
-            _remainingText = string.Empty;
-        }
-
-        public void PrintCurrentElapsedTimeDifference()
-        {
-            Console.WriteLine($"FileStream Time - BufferedStream Time = {_fileStreamElapsedTime - _bufferedStreammTime:F2} ms");
+            this._minTemperature = double.MaxValue;
+            this._maxTemperature = double.MinValue;
+            this._averageTemperature = 0;
+            this._totalProcessedRows = 0;
+            this._remainingText = string.Empty;
         }
 
         private void PrintTimeElapsed(string methodName, double timeInMs, int bufferSize)
