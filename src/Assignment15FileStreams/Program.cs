@@ -1,32 +1,33 @@
 ﻿using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
 using Assignment15FileStreams;
 using Assignment15FileStreams.Menu;
 using Assignment15FileStreams.Task1;
 using Assignment15FileStreams.Task2;
+using Assignment15FileStreams.Task3;
+using Assignment15FileStreams.Task4;
 
 namespace Assignments
 {
+    /// <summary>
+    /// Contains the entry point of the application.
+    /// </summary>
     internal class Program
     {
-        internal static async Task Main(string[] args)
+        private const int OneKBInBytes = 1024;
+        private const int OneGBInBytes = OneKBInBytes * OneKBInBytes * OneKBInBytes;
+
+        /// <summary>
+        /// Entry point of the application.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous file generation operation.</returns>
+        internal static async Task Main()
         {
             try
             {
-                const string weatherFilePath1 = "Weather1.txt";
-                const string weatherFilePath2 = "Weather2.txt";
-                const string weatherFilePath3 = "Weather3.txt";
-
-                const string processedFilePath = "WeatherStatistics.txt";
-
-                FileGenerator generator = new FileGenerator();
-
-                generator.GenerateWeatherFile(weatherFilePath1, 1024 * 1024 * 1024);
-                generator.GenerateWeatherFile(weatherFilePath2, 1024 * 1024 * 1024);
-                generator.GenerateWeatherFile(weatherFilePath3, 1024 * 1024 * 1024);
-
                 FileProcessor fileProcessor = new FileProcessor();
                 FileProcessorAsync fileProcessorAsync = new FileProcessorAsync();
+                LoadTester loadTester = new LoadTester();
+                StreamAndMemoryWriter streamAndMemoryWriter = new StreamAndMemoryWriter();
 
                 MenuView view = new MenuView();
                 MenuOptions option = MenuOptions.Task1FileStreams;
@@ -40,10 +41,16 @@ namespace Assignments
                     switch (option)
                     {
                         case MenuOptions.Task1FileStreams:
-                            RunTask1(fileProcessor, weatherFilePath1, weatherFilePath2, weatherFilePath3, processedFilePath);
+                            RunTask1(fileProcessor);
                             break;
                         case MenuOptions.Task2AsyncFileStreams:
-                            await RunTask2(fileProcessorAsync, weatherFilePath1, weatherFilePath2, weatherFilePath3, processedFilePath);
+                            await RunTask2(fileProcessorAsync);
+                            break;
+                        case MenuOptions.Task3StreamMemoryWriterOptimization:
+                            RunTask3(streamAndMemoryWriter);
+                            break;
+                        case MenuOptions.Task4Logger:
+                            RunTask4(loadTester);
                             break;
                         case MenuOptions.Exit:
                             return;
@@ -62,56 +69,70 @@ namespace Assignments
             Console.ReadKey();
         }
 
-        private static void RunTask1(FileProcessor readFile, string sourceFilePath, string weatherFilePath2, string weatherFilePath3, string destinationFilePath)
+        private static void RunTask1(FileProcessor readFile)
         {
+            ConsoleHelpers.DisplayTitle("Task 1: Synchronous file operations.");
+            string weatherFilePath1 = "Weather1.txt";
+
+            const string processedFilePath = "WeatherStatistics.txt";
+
+            FileGenerator generator = new FileGenerator();
+
+            generator.GenerateWeatherFile(weatherFilePath1, OneGBInBytes);
+
             Stopwatch sw1 = Stopwatch.StartNew();
             sw1.Start();
-            for (int i = 1024; i <= 1024; i *= 2)
+            for (int i = 4; i <= 256; i *= 2)
             {
-                readFile.FileStreamRead(sourceFilePath, i * 1024);
-                readFile.FileBufferedStream(sourceFilePath, i * 1024);
+                readFile.FileStreamRead(weatherFilePath1, i * OneKBInBytes);
+                readFile.FileBufferedStream(weatherFilePath1, i * OneKBInBytes);
                 readFile.PrintCurrentElapsedTimeDifference();
                 ConsoleHelpers.PrintLine();
-                readFile.FileStreamRead(weatherFilePath2, i * 1024);
-                readFile.FileBufferedStream(weatherFilePath2, i * 1024);
-                readFile.PrintCurrentElapsedTimeDifference();
-                ConsoleHelpers.PrintLine();
-                readFile.FileStreamRead(weatherFilePath3, i * 1024);
-                readFile.FileBufferedStream(weatherFilePath3, i * 1024);
-                readFile.PrintCurrentElapsedTimeDifference();
-                ConsoleHelpers.PrintLine();
-                Console.WriteLine();
             }
 
             Console.WriteLine("Process and save weather statistics:");
-            readFile.FileBufferedStream(sourceFilePath, 64 * 1024, destinationFilePath);
+            readFile.FileBufferedStream(weatherFilePath1, 64 * OneKBInBytes, processedFilePath);
             sw1.Stop();
             Console.WriteLine($"Total time for task 1: {sw1.ElapsedMilliseconds}");
         }
 
-        private static async Task RunTask2(FileProcessorAsync fileProcessor, string sourceFilePath, string weatherFilePath2, string weatherFilePath3, string destinationFilePath)
+        private static async Task RunTask2(FileProcessorAsync fileProcessorAsync)
         {
+            ConsoleHelpers.DisplayTitle("Task 2: Synchronous Sequential vs Asynchronous Concurrent File Processing");
+
             Stopwatch sw1 = Stopwatch.StartNew();
-            for (int i = 1024; i <= 1024; i *= 2)
-            {
-                await Task.WhenAll(
-                fileProcessor.FileStreamRead(sourceFilePath, i * 1024),
-                fileProcessor.FileBufferedStream(sourceFilePath, i * 1024),
-                fileProcessor.FileStreamRead(weatherFilePath2, i * 1024),
-                fileProcessor.FileBufferedStream(weatherFilePath2, i * 1024),
-                fileProcessor.FileStreamRead(weatherFilePath3, i * 1024),
-                fileProcessor.FileBufferedStream(weatherFilePath3, i * 1024)
-                );
 
-                fileProcessor.PrintCurrentElapsedTimeDifference();
-                ConsoleHelpers.PrintLine();
-                Console.WriteLine();
-            }
+            string weatherFilePath1 = "Weather1.txt";
+            string weatherFilePath2 = "Weather2.txt";
+            string weatherFilePath3 = "Weather3.txt";
 
-            Console.WriteLine("Process and save weather statistics:");
-            await fileProcessor.FileBufferedStream(sourceFilePath, 64 * 1024, destinationFilePath);
+            const string processedFolderPath = "WeatherStatisticsAsync";
+
+            FileGeneratorAsync generator = new FileGeneratorAsync();
+
+            await Task.WhenAll(
+                generator.GenerateWeatherFileAsync(weatherFilePath1, OneGBInBytes),
+                generator.GenerateWeatherFileAsync(weatherFilePath2, OneGBInBytes),
+                generator.GenerateWeatherFileAsync(weatherFilePath3, OneGBInBytes));
+
+            string[] sourceFiles = new string[] { weatherFilePath1, weatherFilePath2, weatherFilePath3 };
+
+            await fileProcessorAsync.CompareSyncVsAsync(sourceFiles, processedFolderPath);
+
             sw1.Stop();
             Console.WriteLine($"Total time for task 2: {sw1.ElapsedMilliseconds}");
+        }
+
+        private static void RunTask3(StreamAndMemoryWriter streamAndMemoryWriter)
+        {
+            ConsoleHelpers.DisplayTitle("Task 3: Identifying issues in Basic File usage");
+            streamAndMemoryWriter.RunDiagnosis();
+        }
+
+        private static void RunTask4(LoadTester loadTester)
+        {
+            ConsoleHelpers.DisplayTitle("Task 4: File Logger");
+            loadTester.RunLoadTest();
         }
     }
 }

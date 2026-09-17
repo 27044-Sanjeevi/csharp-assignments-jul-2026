@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 
 namespace Assignment15FileStreams.Task1
@@ -223,6 +222,7 @@ namespace Assignment15FileStreams.Task1
                     memoryStream.CopyTo(fileStream);
                 }
             }
+
             Console.WriteLine($"Analysis summary written to: {destinationFilePath}");
         }
 

@@ -1,17 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Assignment15FileStreams.Task1
 {
+    /// <summary>
+    /// Represents the synchronous file generator.
+    /// </summary>
     internal class FileGenerator
     {
+        /// <summary>
+        /// Generates a weather file of given target size.
+        /// </summary>
+        /// <param name="filePath">Path of the file to be stored.</param>
+        /// <param name="targertByteSize">Size of the file.</param>
         public void GenerateWeatherFile(string filePath, long targertByteSize)
         {
-            if (CheckFileExistence(filePath, targertByteSize))
+            if (this.CheckFileExistence(filePath, targertByteSize))
             {
                 return;
             }
@@ -50,6 +54,12 @@ namespace Assignment15FileStreams.Task1
             Console.WriteLine($"Elapsed Time: {stopwatch.Elapsed.TotalMilliseconds}");
         }
 
+        /// <summary>
+        /// Checks if the file already exists.
+        /// </summary>
+        /// <param name="filePath">Path of the file for existence check.</param>
+        /// <param name="targertByteSize">Target size of the file.</param>
+        /// <returns>true if the file exists; otherwise false.</returns>
         public bool CheckFileExistence(string filePath, long targertByteSize)
         {
             if (File.Exists(filePath))

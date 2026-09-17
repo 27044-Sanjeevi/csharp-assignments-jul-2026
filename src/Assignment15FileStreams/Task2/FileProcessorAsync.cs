@@ -1,232 +1,232 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Assignment15FileStreams.Task2
 {
+    /// <summary>
+    /// Implements Task 2.
+    /// </summary>
     internal class FileProcessorAsync
     {
-        private double _fileStreamElapsedTime;
-        private double _bufferedStreammTime;
-
-        private string _remainingText = string.Empty;
-        private double _minTemperature = double.MaxValue;
-        private double _maxTemperature = double.MinValue;
-        private double _averageTemperature = 0;
-        private int _totalProcessedRows = 0;
-
-        public async Task FileStreamRead(string sourceFilePath, int bufferSize, string? destinationFilePath = null)
+        /// <summary>
+        /// Compares the asynchronous and synchronous operations.
+        /// </summary>
+        /// <param name="filePaths">Paths of multiple files.</param>
+        /// <param name="destinationFolder">The folder for destination.</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous file generation operation.</returns>
+        public async Task CompareSyncVsAsync(string[] filePaths, string destinationFolder)
         {
-            ResetState();
-
-            byte[] buffer = new byte[bufferSize];
-            int bytesRead;
-
-            Stopwatch sw = Stopwatch.StartNew();
-            using (FileStream fs = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize))
+            foreach (string path in filePaths)
             {
-                while ((bytesRead = await fs.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                if (!File.Exists(path))
                 {
-                    if (!ProcessChunk(buffer, bytesRead, destinationFilePath))
-                    {
-                        continue;
-                    }
-                }
-
-                if (destinationFilePath != null)
-                {
-                    ProcessFinalRemainingLine();
+                    ConsoleHelpers.DisplayFailure($"Required file not found: {path}.");
+                    return;
                 }
             }
 
-            sw.Stop();
+            Directory.CreateDirectory(destinationFolder);
 
-            _fileStreamElapsedTime = sw.Elapsed.TotalMilliseconds;
-            PrintTimeElapsed("File Stream", _fileStreamElapsedTime, bufferSize);
+            ConsoleHelpers.DisplayStatus("Phase 1: Running SEQUENTIAL SYNCHRONOUS processing across files...");
+            Stopwatch syncSw = Stopwatch.StartNew();
+            List<WeatherFileStats> syncResults = new List<WeatherFileStats>();
 
-            if (destinationFilePath != null)
+            foreach (string file in filePaths)
             {
-                await SaveProcessedData(destinationFilePath);
-            }
-        }
-
-        public async Task FileBufferedStream(string filePath, int bufferSize, string? destinationFilePath = null)
-        {
-            ResetState();
-
-            Stopwatch sw = Stopwatch.StartNew();
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                byte[] buffer = new byte[bufferSize];
-                int bytesRead;
-                using (BufferedStream bufferedStream = new BufferedStream(fileStream, 64 * 1024))
-                {
-                    while ((bytesRead = await bufferedStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
-                    {
-                        if (!ProcessChunk(buffer, bytesRead, destinationFilePath))
-                        {
-                            continue;
-                        }
-                    }
-
-                    if (destinationFilePath != null)
-                    {
-                        ProcessFinalRemainingLine();
-                    }
-                }
+                string dest = $"Sync_Report_{Path.GetFileName(file)}";
+                WeatherFileStats stats = this.ProcessFileSynchronous(file, dest);
+                syncResults.Add(stats);
             }
 
-            sw.Stop();
+            syncSw.Stop();
+            double syncTotalMs = syncSw.Elapsed.TotalMilliseconds;
+            Console.WriteLine($"Sequential Synchronous Total Elapsed Time: {syncTotalMs:F1} ms\n");
 
-            _bufferedStreammTime = sw.Elapsed.TotalMilliseconds;
-            PrintTimeElapsed("Buffered Stream", _bufferedStreammTime, bufferSize);
+            ConsoleHelpers.DisplayStatus("Phase 2: Running CONCURRENT ASYNCHRONOUS processing (Task.WhenAll) across files...");
+            Stopwatch asyncSw = Stopwatch.StartNew();
 
-            if (destinationFilePath != null)
+            List<Task<WeatherFileStats>> asyncTasks = new List<Task<WeatherFileStats>>();
+            foreach (string file in filePaths)
             {
-                await SaveProcessedData(destinationFilePath);
+                string dest = $"Async_Report_{Path.GetFileName(file)}";
+                asyncTasks.Add(this.ProcessFileAsync(file, dest));
             }
+
+            WeatherFileStats[] asyncResults = await Task.WhenAll(asyncTasks);
+            asyncSw.Stop();
+            double asyncTotalMs = asyncSw.Elapsed.TotalMilliseconds;
+            Console.WriteLine($"Concurrent Asynchronous Total Elapsed Time: {asyncTotalMs:F1} ms\n");
+
+            this.PrintComparisonReport(syncTotalMs, asyncTotalMs, filePaths.Length, asyncResults);
         }
 
         /// <summary>
-        /// Processes the data chunk and returns false if processing should terminate early.
+        /// Process a file asynchronously.
         /// </summary>
-        private bool ProcessChunk(byte[] chunk, int bytesRead, string? destinationFilePath = null)
+        /// <param name="sourceFilePath">The file to read.</param>
+        /// <param name="destinationFilePath">The destination path to store the processed text.</param>
+        /// <param name="bufferSize">The buffer size.</param>
+        /// <returns>A Task that represents the asynchronous file processing.</returns>
+        public async Task<WeatherFileStats> ProcessFileAsync(string sourceFilePath, string destinationFilePath, int bufferSize = 64 * 1024)
         {
-            string text = _remainingText + Encoding.UTF8.GetString(chunk, 0, bytesRead);
+            WeatherFileStats stats = new WeatherFileStats { FilePath = sourceFilePath };
+            Stopwatch sw = Stopwatch.StartNew();
 
-            if (destinationFilePath == null)
+            FileStreamOptions options = new FileStreamOptions
             {
-                return false;
-            }
+                Mode = FileMode.Open,
+                Access = FileAccess.Read,
+                Share = FileShare.Read,
+                BufferSize = bufferSize,
+                Options = FileOptions.Asynchronous | FileOptions.SequentialScan,
+            };
 
-            string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-            int processLimit = lines.Length;
-
-            if (text.EndsWith("\n") || text.EndsWith("\r"))
+            using (FileStream fs = new FileStream(sourceFilePath, options))
             {
-                _remainingText = string.Empty;
-            }
-            else
-            {
-                _remainingText = lines[lines.Length - 1];
-                processLimit -= 1;
-            }
-
-            double chunkTotalTemperature = 0;
-            int processedRows = 0;
-
-            for (int i = 0; i < processLimit; i++)
-            {
-                string line = lines[i];
-                if (string.IsNullOrWhiteSpace(line))
+                using (BufferedStream bs = new BufferedStream(fs, bufferSize))
                 {
-                    continue;
-                }
-
-                string[] components = line.Split(',');
-                if (components.Length < 3)
-                {
-                    continue;
-                }
-
-                if (double.TryParse(components[2].Trim(), out double temperature))
-                {
-                    if (temperature < _minTemperature)
+                    using (StreamReader reader = new StreamReader(bs, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, bufferSize: bufferSize))
                     {
-                        _minTemperature = temperature;
+                        string? line;
+                        while ((line = await reader.ReadLineAsync()) != null)
+                        {
+                            this.UpdateStats(stats, line);
+                        }
                     }
-
-                    if (temperature > _maxTemperature)
-                    {
-                        _maxTemperature = temperature;
-                    }
-
-                    chunkTotalTemperature += temperature;
-                    processedRows++;
                 }
             }
 
-            if (processedRows > 0)
-            {
-                double currentChunkAverage = chunkTotalTemperature / processedRows;
-                long previousTotalRows = _totalProcessedRows;
-                _totalProcessedRows += processedRows;
+            sw.Stop();
+            stats.ElapsedMilliseconds = sw.Elapsed.TotalMilliseconds;
 
-                _averageTemperature = (_averageTemperature * previousTotalRows + currentChunkAverage * processedRows) / _totalProcessedRows;
-            }
-
-            return true;
+            await this.SaveReportAsync(stats, destinationFilePath);
+            return stats;
         }
 
-        private void ProcessFinalRemainingLine()
+        /// <summary>
+        /// Synchronous processing for a single file.
+        /// </summary>
+        /// <param name="sourceFilePath">The file to read.</param>
+        /// <param name="destinationFilePath">The destination path to store the processed text.</param>
+        /// <param name="bufferSize">The buffer size.</param>
+        /// <returns>A Task that represents the asynchronous file processing.</returns>
+        public WeatherFileStats ProcessFileSynchronous(string sourceFilePath, string destinationFilePath, int bufferSize = 64 * 1024)
         {
-            if (string.IsNullOrWhiteSpace(_remainingText))
+            WeatherFileStats stats = new WeatherFileStats { FilePath = sourceFilePath };
+            Stopwatch sw = Stopwatch.StartNew();
+
+            using (FileStream fs = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize))
+            {
+                using (BufferedStream bs = new BufferedStream(fs, bufferSize))
+                {
+                    using (StreamReader reader = new StreamReader(bs, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, bufferSize: bufferSize))
+                    {
+                        string? line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            this.UpdateStats(stats, line);
+                        }
+                    }
+                }
+            }
+
+            sw.Stop();
+            stats.ElapsedMilliseconds = sw.Elapsed.TotalMilliseconds;
+
+            this.SaveReportSynchronous(stats, destinationFilePath);
+            return stats;
+        }
+
+        private async Task SaveReportAsync(WeatherFileStats stats, string destinationFilePath)
+        {
+            string reportText = this.BuildReportString(stats);
+            byte[] reportBytes = Encoding.UTF8.GetBytes(reportText);
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await memoryStream.WriteAsync(reportBytes, 0, reportBytes.Length);
+                memoryStream.Position = 0;
+
+                FileStreamOptions writeOptions = new FileStreamOptions
+                {
+                    Mode = FileMode.Create,
+                    Access = FileAccess.Write,
+                    Share = FileShare.None,
+                    BufferSize = 64 * 1024,
+                    Options = FileOptions.Asynchronous,
+                };
+
+                using (FileStream destinationStream = new FileStream(destinationFilePath, writeOptions))
+                {
+                    await memoryStream.CopyToAsync(destinationStream);
+                }
+            }
+        }
+
+        private void SaveReportSynchronous(WeatherFileStats stats, string destinationFilePath)
+        {
+            string reportText = this.BuildReportString(stats);
+            byte[] reportBytes = Encoding.UTF8.GetBytes(reportText);
+
+            using (MemoryStream memoryStream = new MemoryStream(reportBytes))
+            {
+                using (FileStream destinationStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 64 * 1024))
+                {
+                    memoryStream.CopyTo(destinationStream);
+                }
+            }
+        }
+
+        private void UpdateStats(WeatherFileStats stats, string line)
+        {
+            if (string.IsNullOrWhiteSpace(line))
             {
                 return;
             }
 
-            string[] components = _remainingText.Split(',');
-            if (components.Length >= 3 && double.TryParse(components[2].Trim(), out double temperature))
+            string[] components = line.Split(',');
+            if (components.Length < 3)
             {
-                if (temperature < _minTemperature)
-                {
-                    _minTemperature = temperature;
-                }
-
-                if (temperature > _maxTemperature)
-                {
-                    _maxTemperature = temperature;
-                }
-
-                long previousTotalRows = _totalProcessedRows;
-                _totalProcessedRows++;
-                _averageTemperature = (_averageTemperature * previousTotalRows + temperature) / _totalProcessedRows;
+                return;
             }
 
-            _remainingText = string.Empty;
-        }
-
-        private async Task SaveProcessedData(string destinationFilePath)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("WEATHER DATA STATISTICS SUMMARY REPORT");
-            stringBuilder.AppendLine($"Total Processed Entries: {_totalProcessedRows}");
-            stringBuilder.AppendLine($"Maximum Temperature    : {_maxTemperature:F2}°C");
-            stringBuilder.AppendLine($"Minimum Temperature    : {_minTemperature:F2}°C");
-            stringBuilder.AppendLine($"Weighted Average Temp  : {_averageTemperature:F2}°C");
-            byte[] processedDataBytes = Encoding.UTF8.GetBytes(stringBuilder.ToString());
-
-            using (MemoryStream memoryStream = new MemoryStream(processedDataBytes))
+            if (double.TryParse(components[2].Trim(), out double temperature))
             {
-                using (FileStream fileStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024))
+                if (temperature < stats.MinTemperature)
                 {
-                    await memoryStream.CopyToAsync(fileStream);
+                    stats.MinTemperature = temperature;
                 }
+
+                if (temperature > stats.MaxTemperature)
+                {
+                    stats.MaxTemperature = temperature;
+                }
+
+                long previousTotal = stats.TotalProcessedRows;
+                stats.TotalProcessedRows++;
+
+                stats.AverageTemperature = ((stats.AverageTemperature * previousTotal) + temperature) / stats.TotalProcessedRows;
             }
-
-            Console.WriteLine($"Analysis summary written to: {destinationFilePath}");
         }
 
-        private void ResetState()
+        private string BuildReportString(WeatherFileStats stats)
         {
-            _minTemperature = double.MaxValue;
-            _maxTemperature = double.MinValue;
-            _averageTemperature = 0;
-            _totalProcessedRows = 0;
-            _remainingText = string.Empty;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Source File            : {Path.GetFileName(stats.FilePath)}");
+            sb.AppendLine($"Total Processed Rows   : {stats.TotalProcessedRows}");
+            sb.AppendLine($"Maximum Temperature    : {stats.MaxTemperature:F2} C");
+            sb.AppendLine($"Minimum Temperature    : {stats.MinTemperature:F2} C");
+            sb.AppendLine($"Weighted Average Temp  : {stats.AverageTemperature:F2} C");
+            sb.AppendLine($"Processing Time        : {stats.ElapsedMilliseconds:F2} ms");
+            return sb.ToString();
         }
 
-        public void PrintCurrentElapsedTimeDifference()
+        private void PrintComparisonReport(double syncMs, double asyncMs, int fileCount, WeatherFileStats[] results)
         {
-            Console.WriteLine($"FileStream Time - BufferedStream Time = {_fileStreamElapsedTime - _bufferedStreammTime:F2} ms");
-        }
-
-        private void PrintTimeElapsed(string methodName, double timeInMs, int bufferSize)
-        {
-            Console.WriteLine($"Method: {methodName} | Buffer size: {bufferSize} bytes | Elapsed Time: {timeInMs:F2} ms");
+            Console.WriteLine($"Total Files Processed     : {fileCount}");
+            Console.WriteLine($"Sequential Sync Duration  : {syncMs:F2} ms");
+            Console.WriteLine($"Concurrent Async Duration : {asyncMs:F2} ms");
+            Console.WriteLine($"Performance Variance      : {syncMs - asyncMs:F2} ms");
         }
     }
 }

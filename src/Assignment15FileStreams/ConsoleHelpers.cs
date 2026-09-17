@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment15FileStreams
+﻿namespace Assignment15FileStreams
 {
     /// <summary>
     /// Represents the helper for console operations.
@@ -38,6 +32,10 @@ namespace Assignment15FileStreams
             WriteColored($"{message}\n", ConsoleColor.Red);
         }
 
+        /// <summary>
+        /// Displays a result message.
+        /// </summary>
+        /// <param name="message">The message to be displayed.</param>
         public static void DisplayResult(string message)
         {
             WriteColored($"{message}", ConsoleColor.Cyan);
