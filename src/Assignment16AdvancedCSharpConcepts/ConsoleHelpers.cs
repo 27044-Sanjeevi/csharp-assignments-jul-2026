@@ -1,6 +1,4 @@
-﻿using System.Net.Http.Headers;
-
-namespace Assignment16AdvancedCSharpConcepts
+﻿namespace Assignment16AdvancedCSharpConcepts
 {
     /// <summary>
     /// Represents the helper for console operations.
@@ -16,6 +14,10 @@ namespace Assignment16AdvancedCSharpConcepts
             WriteColored($"----- {title} -----\n", ConsoleColor.Cyan);
         }
 
+        /// <summary>
+        /// Displays the message in subtitled format.
+        /// </summary>
+        /// <param name="subtitle">The subtitle text to be displayed.</param>
         public static void DisplaySubtitle(string subtitle)
         {
             WriteColored($"\n> {subtitle}\n", ConsoleColor.Cyan);
@@ -48,11 +50,13 @@ namespace Assignment16AdvancedCSharpConcepts
             WriteColored($"{message}\n", ConsoleColor.Red);
         }
 
+        /// <summary>
+        /// Prints the given code snippet with newlines.
+        /// </summary>
+        /// <param name="codeSnippet">The code snippet to be printed.</param>
         public static void PrintCodeSnippet(string codeSnippet)
         {
-            PrintLine();
-            Console.Write(codeSnippet);
-            PrintLine();
+            Console.WriteLine(Environment.NewLine + codeSnippet + Environment.NewLine);
         }
 
         /// <summary>

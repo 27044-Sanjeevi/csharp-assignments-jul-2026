@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment16AdvancedCSharpConcepts.Task2
+﻿namespace Assignment16AdvancedCSharpConcepts.Task2
 {
+    /// <summary>
+    /// Represents the operations to demonstrate the var keyword in task 2.
+    /// </summary>
     internal class VarKeywordDemo
     {
+        /// <summary>
+        /// Runs the operations to demonstrate the var keyword in task 2.
+        /// </summary>
         public void RunDemo()
         {
             ConsoleHelpers.DisplaySubtitle("Var Keyword Demo");
-            ConsoleHelpers.DisplayStatus("1. Initializing a new varible with var keyword..");
+            ConsoleHelpers.DisplayStatus("1. Initializing a new variable with var keyword..");
             ConsoleHelpers.PrintCodeSnippet("var stringValue = \"String value\";");
             var stringValue = "String value";
 
@@ -20,8 +20,12 @@ namespace Assignment16AdvancedCSharpConcepts.Task2
             // stringValue = 10; Compiler Error CS0029: Cannot implicitly convert type 'type' to 'type'
             ConsoleHelpers.PrintCodeSnippet("stringValue = 10;");
             ConsoleHelpers.DisplayFailure("This causes a Compiler Error CS0029: Cannot implicitly convert type 'type' to 'type'");
+            stringValue = "Another string value.";
+            ConsoleHelpers.PrintCodeSnippet("stringValue = \"Another string value.\";");
+            ConsoleHelpers.DisplayStatus("Assigning same type value is possible.");
+            Console.WriteLine(stringValue);
 
-            ConsoleHelpers.DisplayStatus("3. Trying to create a varible with var keyword with no initialization...");
+            ConsoleHelpers.DisplayStatus("3. Trying to create a variable with var keyword with no initialization...");
 
             // var value;
             ConsoleHelpers.PrintCodeSnippet("var value;");

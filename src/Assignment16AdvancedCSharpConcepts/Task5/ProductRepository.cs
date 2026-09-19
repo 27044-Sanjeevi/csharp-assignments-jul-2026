@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment16AdvancedCSharpConcepts.Task5
+﻿namespace Assignment16AdvancedCSharpConcepts.Task5
 {
+    /// <summary>
+    /// Represents the product repository.
+    /// </summary>
     internal class ProductRepository
     {
         private readonly List<Product> _products = new List<Product>()
@@ -30,7 +26,10 @@ namespace Assignment16AdvancedCSharpConcepts.Task5
             new Product("Murukku", ProductCategory.Snack, 30m),
         };
 
+        /// <summary>
+        /// Retrieves all the products in the repository.
+        /// </summary>
+        /// <returns>A <see cref="IReadOnlyList{T}"/> containing the list of products.</returns>
         public IReadOnlyList<Product> GetProducts() => this._products;
-
     }
 }

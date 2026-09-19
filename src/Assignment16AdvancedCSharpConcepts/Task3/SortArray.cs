@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Assignment16AdvancedCSharpConcepts.Task3
+﻿namespace Assignment16AdvancedCSharpConcepts.Task3
 {
     /// <summary>
     /// Provides functionality to sort arrays using anonymous function.
@@ -37,6 +35,8 @@ namespace Assignment16AdvancedCSharpConcepts.Task3
             {
                 Console.Write(item + " ");
             }
+
+            Console.WriteLine();
         }
     }
 }

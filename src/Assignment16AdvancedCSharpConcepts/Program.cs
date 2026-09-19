@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Text;
 using Assignment16AdvancedCSharpConcepts;
 using Assignment16AdvancedCSharpConcepts.Menu;
 using Assignment16AdvancedCSharpConcepts.Task1;
@@ -6,12 +6,20 @@ using Assignment16AdvancedCSharpConcepts.Task2;
 using Assignment16AdvancedCSharpConcepts.Task3;
 using Assignment16AdvancedCSharpConcepts.Task4;
 using Assignment16AdvancedCSharpConcepts.Task5;
+using Assignment16AdvancedCSharpConcepts.Task6;
+using Assignment16AdvancedCSharpConcepts.Task7;
 
 namespace Assignments
 {
+    /// <summary>
+    /// Contains the entry point of the application.
+    /// </summary>
     internal class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// The entry point of the application.
+        /// </summary>
+        internal static void Main()
         {
             try
             {
@@ -33,8 +41,14 @@ namespace Assignments
                 SortStrategy sortStrategy = new SortStrategy();
                 ProductSorter productSorter = new ProductSorter();
                 List<Product> products = productRepository
-                .GetProducts()
-                .ToList();
+                    .GetProducts()
+                    .ToList();
+
+                // Task 6
+                BookRecordDemo bookRecordDemo = new BookRecordDemo();
+
+                // Task 7
+                ShapesDemo shapesDemo = new ShapesDemo();
 
                 // Menu view
                 MenuView view = new MenuView();
@@ -64,8 +78,10 @@ namespace Assignments
                             RunTask5(products, sortStrategy, productSorter);
                             break;
                         case MenuOptions.Task6Records:
+                            RunTask6(bookRecordDemo);
                             break;
                         case MenuOptions.Task7PatternMatching:
+                            RunTask7(shapesDemo);
                             break;
                         case MenuOptions.Exit:
                             return;
@@ -84,34 +100,58 @@ namespace Assignments
             Console.ReadKey();
         }
 
-        public static void RunTask1(Notifier notifier)
+        /// <summary>
+        /// Runs task 1.
+        /// </summary>
+        /// <param name="notifier">The notifier class instance driving the event broadcast.</param>
+        internal static void RunTask1(Notifier notifier)
         {
             ConsoleHelpers.DisplayTitle("Task 1: Events and Delegates");
 
             notifier.OnAction += PrintConsoleNotification; // Subscriber
             notifier.SendNotification("This is a sample notification."); // Publishing to the subscriber
+            notifier.OnAction -= PrintConsoleNotification;
         }
 
-        public static void RunTask2(VarKeywordDemo varKeywordDemo, DynamicKeywordDemo dynamicKeywordDemo)
+        /// <summary>
+        /// Runs task 2.
+        /// </summary>
+        /// <param name="varKeywordDemo">The instance to run task 2 var keyword operations.</param>
+        /// <param name="dynamicKeywordDemo">The instance to run the task 2 dynamic keyword operations.</param>
+        internal static void RunTask2(VarKeywordDemo varKeywordDemo, DynamicKeywordDemo dynamicKeywordDemo)
         {
             ConsoleHelpers.DisplayTitle("Task 2: var vs dynamic keywords");
             varKeywordDemo.RunDemo();
             dynamicKeywordDemo.RunDemo();
         }
 
-        public static void RunTask3(SortArray sortArray)
+        /// <summary>
+        /// Runs task 3.
+        /// </summary>
+        /// <param name="sortArray">The instance to perform the task 3 operations.</param>
+        internal static void RunTask3(SortArray sortArray)
         {
             ConsoleHelpers.DisplayTitle("Task 3: Sorting Array using anonymous method");
             sortArray.Run();
         }
 
-        public static void RunTask4(LambdaExpressionsDemo lambdaExpressionsDemo)
+        /// <summary>
+        /// Runs task 4.
+        /// </summary>
+        /// <param name="lambdaExpressionsDemo">The instance to perform the task 4 operations.</param>
+        internal static void RunTask4(LambdaExpressionsDemo lambdaExpressionsDemo)
         {
             ConsoleHelpers.DisplayTitle("Task 4: Lambda Expressions and Statements");
             lambdaExpressionsDemo.RunDemo();
         }
 
-        public static void RunTask5(List<Product> products, SortStrategy sortStrategy, ProductSorter productSorter)
+        /// <summary>
+        /// Runs task 5.
+        /// </summary>
+        /// <param name="products">The list of operations to perform the operations.</param>
+        /// <param name="sortStrategy">The instance to inject the sorting strategy.</param>
+        /// <param name="productSorter">The instance to perform the sorting operations.</param>
+        internal static void RunTask5(List<Product> products, SortStrategy sortStrategy, ProductSorter productSorter)
         {
             ConsoleHelpers.DisplayTitle("Task 5: Lambda Expressions and Statements");
 
@@ -123,6 +163,26 @@ namespace Assignments
 
             ConsoleHelpers.DisplayStatus("Sorting by Price...");
             productSorter.SortAndDisplay(products, sortStrategy.SortByPrice);
+        }
+
+        /// <summary>
+        /// Runs task 6.
+        /// </summary>
+        /// <param name="demo">The instance to run the task 6 operations.</param>
+        internal static void RunTask6(BookRecordDemo demo)
+        {
+            ConsoleHelpers.DisplayTitle("Task 6: Book Records");
+            demo.RunDemo();
+        }
+
+        /// <summary>
+        /// Runs task 7.
+        /// </summary>
+        /// <param name="demo">The instance to run the task 7 operations.</param>
+        internal static void RunTask7(ShapesDemo demo)
+        {
+            ConsoleHelpers.DisplayTitle("Task 7: Pattern Matching");
+            demo.RunDemo();
         }
 
         private static void PrintConsoleNotification(string message)

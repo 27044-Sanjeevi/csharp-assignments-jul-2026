@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment16AdvancedCSharpConcepts.Menu
+﻿namespace Assignment16AdvancedCSharpConcepts.Menu
 {
     /// <summary>
     /// Specifies the menu options.

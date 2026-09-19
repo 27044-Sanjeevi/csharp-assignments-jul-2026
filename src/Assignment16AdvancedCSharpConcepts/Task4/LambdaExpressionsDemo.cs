@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assignment16AdvancedCSharpConcepts.Task4
+﻿namespace Assignment16AdvancedCSharpConcepts.Task4
 {
+    /// <summary>
+    /// Represents the operations to demonstrate task 4.
+    /// </summary>
     internal class LambdaExpressionsDemo
     {
+        /// <summary>
+        /// Runs the operations to demonstrate task 4.
+        /// </summary>
         public void RunDemo()
         {
             List<int> integerList = new List<int>()
