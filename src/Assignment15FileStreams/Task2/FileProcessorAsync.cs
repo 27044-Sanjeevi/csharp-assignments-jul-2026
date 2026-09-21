@@ -48,8 +48,8 @@ namespace Assignment15FileStreams.Task2
             List<Task<WeatherFileStats>> asyncTasks = new List<Task<WeatherFileStats>>();
             foreach (string file in filePaths)
             {
-                string dest = $"Async_Report_{Path.GetFileName(file)}";
-                asyncTasks.Add(this.ProcessFileAsync(file, dest));
+                string destination = $"Async_Report_{Path.GetFileName(file)}";
+                asyncTasks.Add(this.ProcessFileAsync(file, destination));
             }
 
             WeatherFileStats[] asyncResults = await Task.WhenAll(asyncTasks);
@@ -117,16 +117,12 @@ namespace Assignment15FileStreams.Task2
 
             using (FileStream fs = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize))
             {
-                using (BufferedStream bs = new BufferedStream(fs, bufferSize))
+                using BufferedStream bs = new BufferedStream(fs, bufferSize);
+                using StreamReader reader = new StreamReader(bs, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, bufferSize: bufferSize);
+                string? line;
+                while ((line = reader.ReadLine()) != null)
                 {
-                    using (StreamReader reader = new StreamReader(bs, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, bufferSize: bufferSize))
-                    {
-                        string? line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            this.UpdateStats(stats, line);
-                        }
-                    }
+                    this.UpdateStats(stats, line);
                 }
             }
 
@@ -142,24 +138,22 @@ namespace Assignment15FileStreams.Task2
             string reportText = this.BuildReportString(stats);
             byte[] reportBytes = Encoding.UTF8.GetBytes(reportText);
 
-            using (MemoryStream memoryStream = new MemoryStream())
+            using MemoryStream memoryStream = new MemoryStream();
+            await memoryStream.WriteAsync(reportBytes, 0, reportBytes.Length);
+            memoryStream.Position = 0;
+
+            FileStreamOptions writeOptions = new FileStreamOptions
             {
-                await memoryStream.WriteAsync(reportBytes, 0, reportBytes.Length);
-                memoryStream.Position = 0;
+                Mode = FileMode.Create,
+                Access = FileAccess.Write,
+                Share = FileShare.None,
+                BufferSize = 64 * 1024,
+                Options = FileOptions.Asynchronous,
+            };
 
-                FileStreamOptions writeOptions = new FileStreamOptions
-                {
-                    Mode = FileMode.Create,
-                    Access = FileAccess.Write,
-                    Share = FileShare.None,
-                    BufferSize = 64 * 1024,
-                    Options = FileOptions.Asynchronous,
-                };
-
-                using (FileStream destinationStream = new FileStream(destinationFilePath, writeOptions))
-                {
-                    await memoryStream.CopyToAsync(destinationStream);
-                }
+            using (FileStream destinationStream = new FileStream(destinationFilePath, writeOptions))
+            {
+                await memoryStream.CopyToAsync(destinationStream);
             }
         }
 
@@ -226,7 +220,7 @@ namespace Assignment15FileStreams.Task2
             Console.WriteLine($"Total Files Processed     : {fileCount}");
             Console.WriteLine($"Sequential Sync Duration  : {syncMs:F2} ms");
             Console.WriteLine($"Concurrent Async Duration : {asyncMs:F2} ms");
-            Console.WriteLine($"Performance Variance      : {syncMs - asyncMs:F2} ms");
+            Console.WriteLine($"Time Variance             : {syncMs - asyncMs:F2} ms");
         }
     }
 }

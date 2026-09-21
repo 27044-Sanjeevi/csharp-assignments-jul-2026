@@ -40,7 +40,7 @@ namespace Assignment15FileStreams.Task3
         }
 
         /// <summary>
-        /// Runs the unpotimized code.
+        /// Runs the unoptimized code.
         /// </summary>
         /// <param name="path">Path of the file.</param>
         /// <param name="data">Data to be processed.</param>
@@ -101,7 +101,7 @@ namespace Assignment15FileStreams.Task3
                 while ((bytesRead = fileStream.Read(byteBuffer, 0, byteBuffer.Length)) > 0)
                 {
                     totalBytesRead += bytesRead;
-                    Encoding.ASCII.GetString(byteBuffer);
+                    Encoding.UTF8.GetString(byteBuffer);
                 }
             }
         }
@@ -117,12 +117,12 @@ namespace Assignment15FileStreams.Task3
             return sb.ToString();
         }
 
-        private void PrintDiagnosisReport(double unoptMs, double optMs)
+        private void PrintDiagnosisReport(double unoptimizedMs, double optimizedMs)
         {
             Console.WriteLine(new string('=', 90));
             Console.WriteLine($"{"Metric",-35} | {"Unoptimized Code",-23} | {"Optimized Code",-23}");
             Console.WriteLine(new string('-', 90));
-            Console.WriteLine($"{"Execution Time",-35} | {unoptMs,19:F2} ms | {optMs,19:F2} ms");
+            Console.WriteLine($"{"Execution Time",-35} | {unoptimizedMs,19:F2} ms | {optimizedMs,19:F2} ms");
             Console.WriteLine(new string('-', 90));
             Console.WriteLine("\nINFERENCES");
             Console.WriteLine("1. MemoryStream was used as a redundant logic, calling .ToArray()" +

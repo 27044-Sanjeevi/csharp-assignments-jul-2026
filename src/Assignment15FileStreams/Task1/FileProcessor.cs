@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using Microsoft.Win32.SafeHandles;
 
 namespace Assignment15FileStreams.Task1
 {
@@ -9,7 +10,7 @@ namespace Assignment15FileStreams.Task1
     internal class FileProcessor
     {
         private double _fileStreamElapsedTime;
-        private double _bufferedStreammTime;
+        private double _bufferedStreamTime;
 
         private string _remainingText = string.Empty;
         private double _minTemperature = double.MaxValue;
@@ -30,7 +31,7 @@ namespace Assignment15FileStreams.Task1
             byte[] buffer = new byte[bufferSize];
             int bytesRead;
 
-            Stopwatch sw = Stopwatch.StartNew();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             using (FileStream fs = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize))
             {
                 while ((bytesRead = fs.Read(buffer, 0, buffer.Length)) > 0)
@@ -47,9 +48,9 @@ namespace Assignment15FileStreams.Task1
                 }
             }
 
-            sw.Stop();
+            stopwatch.Stop();
 
-            this._fileStreamElapsedTime = sw.Elapsed.TotalMilliseconds;
+            this._fileStreamElapsedTime = stopwatch.Elapsed.TotalMilliseconds;
             this.PrintTimeElapsed("File Stream", this._fileStreamElapsedTime, bufferSize);
 
             if (destinationFilePath != null)
@@ -68,7 +69,7 @@ namespace Assignment15FileStreams.Task1
         {
             this.ResetState();
 
-            Stopwatch sw = Stopwatch.StartNew();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             using (FileStream fileStream = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 byte[] buffer = new byte[bufferSize];
@@ -90,10 +91,10 @@ namespace Assignment15FileStreams.Task1
                 }
             }
 
-            sw.Stop();
+            stopwatch.Stop();
 
-            this._bufferedStreammTime = sw.Elapsed.TotalMilliseconds;
-            this.PrintTimeElapsed("Buffered Stream", this._bufferedStreammTime, bufferSize);
+            this._bufferedStreamTime = stopwatch.Elapsed.TotalMilliseconds;
+            this.PrintTimeElapsed("Buffered Stream", this._bufferedStreamTime, bufferSize);
 
             if (destinationFilePath != null)
             {
@@ -106,7 +107,22 @@ namespace Assignment15FileStreams.Task1
         /// </summary>
         public void PrintCurrentElapsedTimeDifference()
         {
-            Console.WriteLine($"FileStream Time - BufferedStream Time = {this._fileStreamElapsedTime - this._bufferedStreammTime:F2} ms");
+            double elapsedDifference = this._fileStreamElapsedTime - this._bufferedStreamTime;
+
+            if (elapsedDifference > 0)
+            {
+                double percentageFaster = ((this._fileStreamElapsedTime - this._bufferedStreamTime) / this._fileStreamElapsedTime) * 100;
+                ConsoleHelpers.DisplayResult($"BufferedStream is faster than FileStream by {percentageFaster:F2}% ({elapsedDifference:F2} ms)");
+            }
+            else if (this._bufferedStreamTime > this._fileStreamElapsedTime)
+            {
+                double percentageFaster = ((this._bufferedStreamTime - this._fileStreamElapsedTime) / this._bufferedStreamTime) * 100;
+                ConsoleHelpers.DisplayResult($"FileStream is faster than BufferedStream by {percentageFaster:F2}% ({-elapsedDifference:F2}) ms");
+            }
+            else
+            {
+                ConsoleHelpers.DisplayResult("Both streams performed at exactly the same speed.");
+            }
         }
 
         private bool ProcessChunk(byte[] chunk, int bytesRead, string? destinationFilePath = null)

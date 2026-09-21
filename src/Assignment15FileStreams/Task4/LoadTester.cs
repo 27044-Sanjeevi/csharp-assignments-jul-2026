@@ -15,7 +15,7 @@ namespace Assignment15FileStreams.Task4
         /// </summary>
         public void RunLoadTest()
         {
-            ConsoleHelpers.DisplayTitle($"Task 4: Multi-User Logging Load Test ({TotalUsers} Users x {LogsPerUser} Logs = {TotalUsers * LogsPerUser} Operations)");
+            ConsoleHelpers.DisplayStatus($"{TotalUsers} Users x {LogsPerUser} Logs = {TotalUsers * LogsPerUser} Operations..");
 
             LoadTestResult threadSafeResult = this.TestLogger(
                 "Thread-Safe Single Shared File",

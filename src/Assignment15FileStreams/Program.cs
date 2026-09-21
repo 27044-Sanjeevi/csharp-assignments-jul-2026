@@ -34,28 +34,47 @@ namespace Assignments
 
                 while (option != MenuOptions.Exit)
                 {
-                    Console.Clear();
-                    view.DisplayMenu();
-                    option = view.GetMenuChoice();
-                    Console.Clear();
-                    switch (option)
+                    try
                     {
-                        case MenuOptions.Task1FileStreams:
-                            RunTask1(fileProcessor);
-                            break;
-                        case MenuOptions.Task2AsyncFileStreams:
-                            await RunTask2(fileProcessorAsync);
-                            break;
-                        case MenuOptions.Task3StreamMemoryWriterOptimization:
-                            RunTask3(streamAndMemoryWriter);
-                            break;
-                        case MenuOptions.Task4Logger:
-                            RunTask4(loadTester);
-                            break;
-                        case MenuOptions.Exit:
-                            return;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(option));
+                        Console.Clear();
+                        view.DisplayMenu();
+                        option = view.GetMenuChoice();
+                        Console.Clear();
+                        switch (option)
+                        {
+                            case MenuOptions.Task1FileStreams:
+                                RunTask1(fileProcessor);
+                                break;
+                            case MenuOptions.Task2AsyncFileStreams:
+                                await RunTask2(fileProcessorAsync);
+                                break;
+                            case MenuOptions.Task3StreamMemoryWriterOptimization:
+                                RunTask3(streamAndMemoryWriter);
+                                break;
+                            case MenuOptions.Task4Logger:
+                                RunTask4(loadTester);
+                                break;
+                            case MenuOptions.Exit:
+                                return;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(option));
+                        }
+                    }
+                    catch (FileNotFoundException ex)
+                    {
+                        Console.WriteLine($"\n[FILE NOT FOUND] : {ex.Message}");
+                    }
+                    catch (IOException ex)
+                    {
+                        Console.WriteLine($"\n[IO EXCEPTION] : {ex.Message}");
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+                        Console.WriteLine($"\n[ARGUMENT OUT OF RANGE] : {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"\n[EXCEPTION] : {ex.Message}");
                     }
 
                     view.Pause();
@@ -71,18 +90,18 @@ namespace Assignments
 
         private static void RunTask1(FileProcessor readFile)
         {
-            ConsoleHelpers.DisplayTitle("Task 1: Synchronous file operations.");
-            string weatherFilePath1 = "Weather1.txt";
-
+            const int LowerBufferLimitKB = 4;
+            const int UpperBufferLimitKB = 256;
             const string processedFilePath = "WeatherStatistics.txt";
+            const string weatherFilePath1 = "Weather1.txt";
+
+            ConsoleHelpers.DisplayTitle("Task 1: Synchronous file operations.");
 
             FileGenerator generator = new FileGenerator();
-
             generator.GenerateWeatherFile(weatherFilePath1, OneGBInBytes);
 
-            Stopwatch sw1 = Stopwatch.StartNew();
-            sw1.Start();
-            for (int i = 4; i <= 256; i *= 2)
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            for (int i = LowerBufferLimitKB; i <= UpperBufferLimitKB; i *= 2)
             {
                 readFile.FileStreamRead(weatherFilePath1, i * OneKBInBytes);
                 readFile.FileBufferedStream(weatherFilePath1, i * OneKBInBytes);
@@ -92,15 +111,15 @@ namespace Assignments
 
             Console.WriteLine("Process and save weather statistics:");
             readFile.FileBufferedStream(weatherFilePath1, 64 * OneKBInBytes, processedFilePath);
-            sw1.Stop();
-            Console.WriteLine($"Total time for task 1: {sw1.ElapsedMilliseconds}");
+            stopwatch.Stop();
+            Console.WriteLine($"Total time for task 1: {stopwatch.ElapsedMilliseconds} ms");
         }
 
         private static async Task RunTask2(FileProcessorAsync fileProcessorAsync)
         {
             ConsoleHelpers.DisplayTitle("Task 2: Synchronous Sequential vs Asynchronous Concurrent File Processing");
 
-            Stopwatch sw1 = Stopwatch.StartNew();
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
             string weatherFilePath1 = "Weather1.txt";
             string weatherFilePath2 = "Weather2.txt";
@@ -119,8 +138,8 @@ namespace Assignments
 
             await fileProcessorAsync.CompareSyncVsAsync(sourceFiles, processedFolderPath);
 
-            sw1.Stop();
-            Console.WriteLine($"Total time for task 2: {sw1.ElapsedMilliseconds}");
+            stopwatch.Stop();
+            Console.WriteLine($"Total time for task 2: {stopwatch.ElapsedMilliseconds} ms");
         }
 
         private static void RunTask3(StreamAndMemoryWriter streamAndMemoryWriter)
@@ -131,6 +150,8 @@ namespace Assignments
 
         private static void RunTask4(LoadTester loadTester)
         {
+            ConsoleHelpers.DisplayTitle($"Task 4: Multi-User Logging Load Test");
+
             loadTester.RunLoadTest();
         }
     }

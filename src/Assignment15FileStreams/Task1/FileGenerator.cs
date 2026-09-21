@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using System.Text;
+using Microsoft.VisualBasic.FileIO;
 
 namespace Assignment15FileStreams.Task1
 {
@@ -12,14 +14,15 @@ namespace Assignment15FileStreams.Task1
         /// Generates a weather file of given target size.
         /// </summary>
         /// <param name="filePath">Path of the file to be stored.</param>
-        /// <param name="targertByteSize">Size of the file.</param>
-        public void GenerateWeatherFile(string filePath, long targertByteSize)
+        /// <param name="targetByteSize">Size of the file.</param>
+        public void GenerateWeatherFile(string filePath, long targetByteSize)
         {
-            if (this.CheckFileExistence(filePath, targertByteSize))
+            if (this.CheckFileExistence(filePath))
             {
                 return;
             }
 
+            ConsoleHelpers.DisplayStatus($"Generating file : {filePath}...");
             Stopwatch stopwatch = Stopwatch.StartNew();
 
             int fileStreamBufferSize = 64 * 1024; // 64KB
@@ -30,17 +33,17 @@ namespace Assignment15FileStreams.Task1
                 {
                     long currentSizeBytes = 0;
                     Random random = new Random();
-                    string[] cities = { "Coimbatore", "Chennai", "Tiruppur", "Erode", "Palani", "Madurai" };
+                    string[] cities = { "Coimbatore", "Chennai", "Tirupur", "Erode", "Palani", "Madurai" };
+                    DateTime currentDateTime = DateTime.Now.AddDays(-30);
 
-                    while (currentSizeBytes < targertByteSize)
+                    while (currentSizeBytes < targetByteSize)
                     {
                         double temperature = random.NextDouble() * 40.0;
                         string city = cities[random.Next(0, cities.Length)];
-                        DateTime dateTime = DateTime.Now;
-                        string dataLine = $"{dateTime:dd-MM-yyyy HH:mm:ss}, {city}, {temperature:F2}\n";
+                        string dataLine = $"{currentDateTime:dd-MM-yyyy HH:mm:ss}, {city}, {temperature:F2}\n";
 
                         streamWriter.Write(dataLine);
-
+                        currentDateTime = currentDateTime.AddMinutes(1);
                         currentSizeBytes += Encoding.UTF8.GetByteCount(dataLine);
                     }
 
@@ -58,9 +61,8 @@ namespace Assignment15FileStreams.Task1
         /// Checks if the file already exists.
         /// </summary>
         /// <param name="filePath">Path of the file for existence check.</param>
-        /// <param name="targertByteSize">Target size of the file.</param>
         /// <returns>true if the file exists; otherwise false.</returns>
-        public bool CheckFileExistence(string filePath, long targertByteSize)
+        public bool CheckFileExistence(string filePath)
         {
             if (File.Exists(filePath))
             {
