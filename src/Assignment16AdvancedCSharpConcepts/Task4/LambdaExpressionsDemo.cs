@@ -25,7 +25,10 @@
 
             ConsoleHelpers.DisplayStatus("Using SELECT LINQ method to square the filtered numbers...");
             IEnumerable<int> squareQuery = filterQuery
-                .Select(number => number * number);
+                .Select(number =>
+                {
+                    return number * number;
+                });
             this.PrintCollection(squareQuery);
         }
 

@@ -54,7 +54,7 @@
         /// Prints the given code snippet with newlines.
         /// </summary>
         /// <param name="codeSnippet">The code snippet to be printed.</param>
-        public static void PrintCodeSnippet(string codeSnippet)
+        public static void DisplayCodeSnippet(string codeSnippet)
         {
             Console.WriteLine(Environment.NewLine + codeSnippet + Environment.NewLine);
         }
@@ -62,7 +62,7 @@
         /// <summary>
         /// Prints a line into the console.
         /// </summary>
-        public static void PrintLine()
+        public static void DisplayLine()
         {
             Console.WriteLine("\n" + new string('-', 40));
         }

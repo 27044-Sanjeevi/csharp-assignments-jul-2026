@@ -18,7 +18,7 @@
             };
 
             ConsoleHelpers.DisplayStatus("Created three shapes (circle, rectangle, triangle).");
-            ConsoleHelpers.DisplayStatus("Displaying the book records details...");
+            ConsoleHelpers.DisplayStatus("Displaying the shape details...");
             foreach (var shape in shapes)
             {
                 this.DisplayShapeDetails(shape);

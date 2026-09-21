@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Assignment16AdvancedCSharpConcepts;
+﻿using Assignment16AdvancedCSharpConcepts;
 using Assignment16AdvancedCSharpConcepts.Menu;
 using Assignment16AdvancedCSharpConcepts.Task1;
 using Assignment16AdvancedCSharpConcepts.Task2;
@@ -56,37 +55,52 @@ namespace Assignments
 
                 while (option != MenuOptions.Exit)
                 {
-                    Console.Clear();
-                    view.DisplayMenu();
-                    option = view.GetMenuChoice();
-                    Console.Clear();
-                    switch (option)
+                    try
                     {
-                        case MenuOptions.Task1Notifier:
-                            RunTask1(notifier);
-                            break;
-                        case MenuOptions.Task2VarAndDynamic:
-                            RunTask2(varKeywordDemo, dynamicKeywordDemo);
-                            break;
-                        case MenuOptions.Task3AnonymousMethods:
-                            RunTask3(sortArrayDemo);
-                            break;
-                        case MenuOptions.Task4LambdaExpressionsAndStatements:
-                            RunTask4(lambdaExpressionsDemo);
-                            break;
-                        case MenuOptions.Task5DelegatesForSorting:
-                            RunTask5(products, sortStrategy, productSorter);
-                            break;
-                        case MenuOptions.Task6Records:
-                            RunTask6(bookRecordDemo);
-                            break;
-                        case MenuOptions.Task7PatternMatching:
-                            RunTask7(shapesDemo);
-                            break;
-                        case MenuOptions.Exit:
-                            return;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(option));
+                        Console.Clear();
+                        view.DisplayMenu();
+                        option = view.GetMenuChoice();
+                        Console.Clear();
+                        switch (option)
+                        {
+                            case MenuOptions.Task1Notifier:
+                                RunTask1(notifier);
+                                break;
+                            case MenuOptions.Task2VarAndDynamic:
+                                RunTask2(varKeywordDemo, dynamicKeywordDemo);
+                                break;
+                            case MenuOptions.Task3AnonymousMethods:
+                                RunTask3(sortArrayDemo);
+                                break;
+                            case MenuOptions.Task4LambdaExpressionsAndStatements:
+                                RunTask4(lambdaExpressionsDemo);
+                                break;
+                            case MenuOptions.Task5DelegatesForSorting:
+                                RunTask5(products, sortStrategy, productSorter);
+                                break;
+                            case MenuOptions.Task6Records:
+                                RunTask6(bookRecordDemo);
+                                break;
+                            case MenuOptions.Task7PatternMatching:
+                                RunTask7(shapesDemo);
+                                break;
+                            case MenuOptions.Exit:
+                                return;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(option));
+                        }
+                    }
+                    catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException ex)
+                    {
+                        Console.WriteLine("\n[RUNTIME BINDING EXCEPTION] : " + ex.Message);
+                    }
+                    catch (ArgumentNullException ex)
+                    {
+                        Console.WriteLine("\n[ARGUMENT NULL EXCEPTION] : " + ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("\n[EXCEPTION] : " + ex.Message);
                     }
 
                     view.Pause();
