@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -15,12 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BMathApp\BMathApp.csproj" />
     <ProjectReference Include="..\DUtilityApp\DUtilityApp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Images\" />
   </ItemGroup>
 
 </Project>

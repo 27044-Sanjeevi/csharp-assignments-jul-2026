@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using BMathApp;
 using DUtilityApp;
 
@@ -6,7 +7,11 @@ namespace Assignments
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private const string LogFileName = "math_history_log.txt";
+        private static readonly string SolutionDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\"));
+        private static readonly string LogFilePath = Path.Combine(SolutionDir, LogFileName);
+
+        private static void Main(string[] args)
         {
             try
             {
@@ -42,7 +47,24 @@ namespace Assignments
                 ConsoleHelpers.DisplayFailure(ex.Message);
             }
 
-            Console.WriteLine($"Result: {leftOperand} {operatorSymbol} {rightOperand} = {result:F2}");
+            ConsoleHelpers.DisplaySuccess($"Result: {leftOperand} {operatorSymbol} {rightOperand} = {result:F2}");
+            LogToFile($"{leftOperand} {operatorSymbol} {rightOperand} = {result:F2}");
+        }
+
+        private static void LogToFile(string calculationDetails)
+        {
+            try
+            {
+                string logEntry = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {calculationDetails}";
+
+                File.AppendAllText(LogFilePath, logEntry + Environment.NewLine);
+
+                ConsoleHelpers.WriteColored($"[Calculation saved to {LogFilePath}]", ConsoleColor.DarkGray);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to write log file: {ex.Message}");
+            }
         }
     }
 }
