@@ -1,5 +1,8 @@
-﻿using System.Text;
-using Assignment17Reflection.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Assignment17Reflection.Menu
 {
@@ -8,7 +11,7 @@ namespace Assignment17Reflection.Menu
     /// </summary>
     internal class MenuView
     {
-        private const string AppName = "Assignment 17 - Reflection";
+        private const string AppName = "Assignment 17 - Reflection in C#";
         private const string GetChoicePrompt = "Enter your choice : ";
 
         private static readonly string[] Options = Enum.GetNames(typeof(MenuOptions));
