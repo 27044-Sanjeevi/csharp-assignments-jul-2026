@@ -1,36 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BMathApp
+﻿namespace BMathApp
 {
+    /// <summary>
+    /// Contains utility methods to perform basic mathematical operations.
+    /// </summary>
     public static class MathOperations
     {
-        public static int Add(int a, int b)
+        /// <summary>
+        /// Adds two integers together and returns the sum.
+        /// </summary>
+        /// <param name="leftOperand">The first integer to add.</param>
+        /// <param name="rightOperand">The second integer to add.</param>
+        /// <returns>The sum of the left and right operands.</returns>
+        public static int Add(int leftOperand, int rightOperand)
         {
-            return a + b;
+            return leftOperand + rightOperand;
         }
 
-        public static int Subtract(int a, int b)
+        /// <summary>
+        /// Subtracts the right integer from the left integer.
+        /// </summary>
+        /// <param name="leftOperand">The base integer value.</param>
+        /// <param name="rightOperand">The value to subtract from the base integer.</param>
+        /// <returns>The difference after subtraction.</returns>
+        public static int Subtract(int leftOperand, int rightOperand)
         {
-            return a - b;
+            return leftOperand - rightOperand;
         }
 
-        public static int Multiply(int a, int b)
+        /// <summary>
+        /// Multiplies two integers together.
+        /// </summary>
+        /// <param name="leftOperand">The first integer factor.</param>
+        /// <param name="rightOperand">The second integer factor.</param>
+        /// <returns>The product of the multiplication.</returns>
+        public static int Multiply(int leftOperand, int rightOperand)
         {
-            return a * b;
+            return leftOperand * rightOperand;
         }
 
-        public static double Divide(int a, int b)
+        /// <summary>
+        /// Divides the left integer by the right integer and returns a precise double.
+        /// </summary>
+        /// <param name="leftOperand">The dividend value.</param>
+        /// <param name="rightOperand">The divisor value (must not be zero).</param>
+        /// <returns>The floating-point quotient resulting from the division.</returns>
+        /// <exception cref="DivideByZeroException">Thrown when the right operand is 0.</exception>
+        public static double Divide(int leftOperand, int rightOperand)
         {
-            if (b == 0)
+            if (rightOperand == 0)
             {
                 throw new DivideByZeroException("Cannot divide by zero.");
             }
 
-            return (double)a / b;
+            return (double)leftOperand / rightOperand;
         }
     }
 }

@@ -1,17 +1,18 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using BMathApp;
+﻿using BMathApp;
 using DUtilityApp;
 
 namespace Assignments
 {
+    /// <summary>
+    /// Contains the entry point of Project C - Display App.
+    /// </summary>
     internal class Program
     {
         private const string LogFileName = "math_history_log.txt";
         private static readonly string SolutionDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\"));
         private static readonly string LogFilePath = Path.Combine(SolutionDir, LogFileName);
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             try
             {
