@@ -1,4 +1,5 @@
-﻿using Assignment9LINQAdvanced.Models;
+﻿using System.Runtime.CompilerServices;
+using Assignment9LINQAdvanced.Models;
 using Assignment9LINQAdvanced.Models.Enums;
 using Assignment9LINQAdvanced.Repository;
 using ConsoleTables;
