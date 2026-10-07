@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Runtime.InteropServices;
 using Assignment17Reflection.Menu;
 using Assignment17Reflection.Tasks;
 using Contracts;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.Win32.SafeHandles;
 
 namespace Assignments
 {
@@ -11,6 +12,19 @@ namespace Assignments
     {
         internal static void Main(string[] args)
         {
+            // Sample image object
+            byte[,] samplePixels = new byte[2, 2]
+            {
+                { 255, 128 }, // Row 0
+                { 64,  0 }, // Row 1
+            };
+
+            ImageData sampleImage = new ImageData(
+                height: 1080,
+                width: 1920,
+                format: "PNG",
+                pixels: samplePixels);
+
             // Menu View
             MenuView view = new MenuView();
             MenuOptions option = MenuOptions.Task1InspectAssemblyMetadata;
@@ -31,14 +45,17 @@ namespace Assignments
                                 RunTask1();
                                 break;
                             case MenuOptions.Task2DynamicObjectInspector:
-                                RunTask2();
+                                RunTask2(sampleImage);
                                 break;
-                            //case MenuOptions.Task3DynamicMethodInvoker:
-                            //    RunTask3(multithreadingTask);
-                            //    break;
+                            case MenuOptions.Task3DynamicMethodInvoker:
+                                RunTask3(sampleImage);
+                                break;
                             //case MenuOptions.Task4DynamicTypeBuilder:
                             //    await RunTask4(cascadingAsyncOperations);
                             //    break;
+                            case MenuOptions.Task5PluginSystem:
+                                RunTask5(sampleImage);
+                                break;
                             //case MenuOptions.Exit:
                             //    return;
                             default:
@@ -72,22 +89,23 @@ namespace Assignments
             assemblyMetadataInspector.RunInspection(assemblyFilePath);
         }
 
-        private static void RunTask2()
+        private static void RunTask2(ImageData sampleImage)
         {
             var inspector = new DynamicObjectInspector();
-            byte[,] samplePixels = new byte[2, 2]
-            {
-                { 255, 128 }, // Row 0
-                { 64,  0 }, // Row 1
-            };
-
-            ImageData sampleImage = new ImageData(
-                height: 1080,
-                width: 1920,
-                format: "PNG",
-                pixels: samplePixels);
-
             inspector.RunInspection(sampleImage);
+        }
+
+        private static void RunTask3(ImageData sampleImage)
+        {
+            string methodName = "DisplayDimensions";
+            var invoker = new DynamicMethodInvoker();
+            invoker.InvokeMethod(sampleImage, methodName, null);
+        }
+
+        private static void RunTask5(ImageData sampleImage)
+        {
+            PluginApplication application = new PluginApplication();
+            application.RunImageProcessor(sampleImage);
         }
     }
 }

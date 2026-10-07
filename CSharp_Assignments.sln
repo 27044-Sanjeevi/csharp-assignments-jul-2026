@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment17Reflection", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "src\Assignment17ReflectionInCSharp\Contracts\Contracts.csproj", "{3E1D8337-82CF-4E67-91C1-80DA9B7C1839}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins", "src\Assignment17ReflectionInCSharp\Plugins\Plugins.csproj", "{7A322A09-2BC8-4979-9DFA-30F75409D15A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,10 @@ Global
 		{3E1D8337-82CF-4E67-91C1-80DA9B7C1839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E1D8337-82CF-4E67-91C1-80DA9B7C1839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E1D8337-82CF-4E67-91C1-80DA9B7C1839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A322A09-2BC8-4979-9DFA-30F75409D15A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A322A09-2BC8-4979-9DFA-30F75409D15A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A322A09-2BC8-4979-9DFA-30F75409D15A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A322A09-2BC8-4979-9DFA-30F75409D15A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +131,7 @@ Global
 		{241CEC8C-ECC9-42A6-9520-619E7CC92BD0} = {DCAA095E-2796-41FA-A1D0-1134E29309E7}
 		{35B7B2A0-D55D-4B60-BB33-97FC9B99867D} = {DCAA095E-2796-41FA-A1D0-1134E29309E7}
 		{3E1D8337-82CF-4E67-91C1-80DA9B7C1839} = {DCAA095E-2796-41FA-A1D0-1134E29309E7}
+		{7A322A09-2BC8-4979-9DFA-30F75409D15A} = {DCAA095E-2796-41FA-A1D0-1134E29309E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4CECB66-8E11-49D9-AA1E-464EE0231450}

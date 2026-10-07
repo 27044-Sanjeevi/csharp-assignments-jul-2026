@@ -31,5 +31,11 @@ namespace Contracts
         public string Format { get; set; }
 
         public byte[,] Pixels { get; set; }
+
+        public void DisplayDimensions()
+        {
+            Console.WriteLine($"Height: {this.Height}" +
+                $"\nWidth: {this.Width}");
+        }
     }
 }
