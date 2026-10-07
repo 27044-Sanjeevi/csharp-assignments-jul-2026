@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Net;
 using System.Text;
-using Microsoft.VisualBasic.FileIO;
 
 namespace Assignment15FileStreams.Task1
 {

@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using Assignment17Reflection.Utilities;
 using Contracts;
 
 namespace Assignment17Reflection.Tasks
 {
+    /// <summary>
+    /// Represents the plugin application.
+    /// </summary>
     internal class PluginApplication
     {
+        /// <summary>
+        /// Runs the image processor.
+        /// </summary>
+        /// <param name="sampleImage">The image data to be processed.</param>
         public void RunImageProcessor(ImageData sampleImage)
         {
             string pluginsFolder = Path.Combine(AppContext.BaseDirectory, "Plugins");

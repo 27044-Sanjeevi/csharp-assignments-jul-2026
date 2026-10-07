@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using Microsoft.Win32.SafeHandles;
 
 namespace Assignment15FileStreams.Task1
 {

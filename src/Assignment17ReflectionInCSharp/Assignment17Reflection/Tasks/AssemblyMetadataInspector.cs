@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Reflection;
 using Assignment17Reflection.Utilities;
 
 namespace Assignment17Reflection.Tasks
 {
+    /// <summary>
+    /// Represents an assembly metadata inspector.
+    /// </summary>
     internal class AssemblyMetadataInspector
     {
+        /// <summary>
+        /// Runs the inspection process on the given assembly file path.
+        /// </summary>
+        /// <param name="assemblyFilePath">File path of the assembly.</param>
         public void RunInspection(string assemblyFilePath)
         {
             try
@@ -63,11 +64,6 @@ namespace Assignment17Reflection.Tasks
             ConsoleHelpers.WriteLineColored($"{methods.Length} methods found.", ConsoleColor.Cyan);
             foreach (MethodInfo method in methods)
             {
-                //if (method.IsSpecialName)
-                //{
-                //    continue;
-                //}
-
                 string visibility = method.IsPublic ? "Public" : "Private/NonPublic";
                 ConsoleHelpers.WriteLineColored($"-> [{visibility}] Returns: {method.ReturnType.Name} | Signature: {method.Name}()", ConsoleColor.Green);
             }

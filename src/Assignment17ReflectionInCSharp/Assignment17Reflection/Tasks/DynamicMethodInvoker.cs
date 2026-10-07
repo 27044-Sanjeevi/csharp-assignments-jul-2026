@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using Assignment17Reflection.Utilities;
 
 namespace Assignment17Reflection.Tasks
 {
+    /// <summary>
+    /// Represents dynamic method invoker.
+    /// </summary>
     internal class DynamicMethodInvoker
     {
         /// <summary>

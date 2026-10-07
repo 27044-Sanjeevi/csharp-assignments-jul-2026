@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using Assignment17Reflection.Utilities;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Assignment17Reflection.Tasks
 {
+    /// <summary>
+    /// Represents dynamic object inspector.
+    /// </summary>
     internal class DynamicObjectInspector
     {
+        /// <summary>
+        /// Runs the inspection process on the given target object.
+        /// </summary>
+        /// <param name="targetObject">The target object to be inspected.</param>
         public void RunInspection(object targetObject)
         {
             this.InspectObject(targetObject);
             this.TryUpdatePropertyValue(targetObject);
         }
 
-        /// <summary>
-        /// Scans an object instance dynamically and displays all properties.
-        /// </summary>
-        public void InspectObject(object targetObject)
+        private void InspectObject(object targetObject)
         {
             if (targetObject == null)
             {
@@ -44,10 +42,7 @@ namespace Assignment17Reflection.Tasks
             Console.WriteLine();
         }
 
-        /// <summary>
-        /// Step 5: Modifies a target property string key dynamically using defensive runtime type conversion.
-        /// </summary>
-        public bool TryUpdatePropertyValue(object targetObject)
+        private bool TryUpdatePropertyValue(object targetObject)
         {
             if (targetObject == null)
             {

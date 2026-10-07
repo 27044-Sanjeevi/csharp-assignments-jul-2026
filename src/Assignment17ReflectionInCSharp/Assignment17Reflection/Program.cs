@@ -1,16 +1,18 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using System.Runtime.InteropServices;
-using Assignment17Reflection.Menu;
+﻿using Assignment17Reflection.Menu;
 using Assignment17Reflection.Tasks;
 using Contracts;
-using Microsoft.Win32.SafeHandles;
 
 namespace Assignments
 {
+    /// <summary>
+    /// Contains the entry point of the application.
+    /// </summary>
     internal class Program
     {
-        internal static void Main(string[] args)
+        /// <summary>
+        /// The entry point of the application.
+        /// </summary>
+        internal static void Main()
         {
             // Sample image object
             byte[,] samplePixels = new byte[2, 2]
@@ -50,14 +52,15 @@ namespace Assignments
                             case MenuOptions.Task3DynamicMethodInvoker:
                                 RunTask3(sampleImage);
                                 break;
-                            //case MenuOptions.Task4DynamicTypeBuilder:
+
+                            // case MenuOptions.Task4DynamicTypeBuilder:
                             //    await RunTask4(cascadingAsyncOperations);
                             //    break;
                             case MenuOptions.Task5PluginSystem:
                                 RunTask5(sampleImage);
                                 break;
-                            //case MenuOptions.Exit:
-                            //    return;
+                            case MenuOptions.Exit:
+                                return;
                             default:
                                 throw new ArgumentOutOfRangeException(nameof(option));
                         }
