@@ -1,10 +1,15 @@
-﻿using Assignment17Reflection.Menu;
+﻿using System;
+using System.Diagnostics.Contracts;
+using Assignment17Reflection.Menu;
+using Assignment17Reflection.Tasks;
+using Contracts;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Assignments
 {
     internal class Program
     {
-        static void Main(string[] args)
+        internal static void Main(string[] args)
         {
             // Menu View
             MenuView view = new MenuView();
@@ -22,12 +27,12 @@ namespace Assignments
                         Console.Clear();
                         switch (option)
                         {
-                            //case MenuOptions.Task1InspectAssemblyMetadata:
-                            //    RunTask1();
-                            //    break;
-                            //case MenuOptions.Task2DynamicObjectInspector:
-                            //    RunTask2(tplTask);
-                            //    break;
+                            case MenuOptions.Task1InspectAssemblyMetadata:
+                                RunTask1();
+                                break;
+                            case MenuOptions.Task2DynamicObjectInspector:
+                                RunTask2();
+                                break;
                             //case MenuOptions.Task3DynamicMethodInvoker:
                             //    RunTask3(multithreadingTask);
                             //    break;
@@ -58,6 +63,31 @@ namespace Assignments
             }
 
             Console.ReadKey();
+        }
+
+        private static void RunTask1()
+        {
+            string assemblyFilePath = @"C:\Users\Sanjeevi.senivasan\Documents\SANJEEVI\csharp_assignments_pod5\csharp-assignments-jul-2026\src\Assignment17ReflectionInCSharp\Contracts\bin\Debug\net6.0\Contracts.dll";
+            var assemblyMetadataInspector = new AssemblyMetadataInspector();
+            assemblyMetadataInspector.RunInspection(assemblyFilePath);
+        }
+
+        private static void RunTask2()
+        {
+            var inspector = new DynamicObjectInspector();
+            byte[,] samplePixels = new byte[2, 2]
+            {
+                { 255, 128 }, // Row 0
+                { 64,  0 }, // Row 1
+            };
+
+            ImageData sampleImage = new ImageData(
+                height: 1080,
+                width: 1920,
+                format: "PNG",
+                pixels: samplePixels);
+
+            inspector.RunInspection(sampleImage);
         }
     }
 }

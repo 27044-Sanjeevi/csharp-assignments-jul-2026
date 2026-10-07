@@ -11,7 +11,7 @@ namespace Core
     {
         public void Write(ImageData imageData, string filePath)
         {
-            
+            //something
         }
     }
 }

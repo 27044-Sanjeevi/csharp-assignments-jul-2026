@@ -5,7 +5,7 @@ namespace ConsoleApplication
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             string pluginPath =
                 Path.Combine(

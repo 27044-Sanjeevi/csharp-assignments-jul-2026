@@ -9,7 +9,7 @@ using Assignment17Reflection.Utilities;
 
 namespace Assignment17Reflection.Tasks
 {
-    internal class AssemblyMetadataInspection
+    internal class AssemblyMetadataInspector
     {
         public void RunInspection(string assemblyFilePath)
         {
@@ -33,6 +33,7 @@ namespace Assignment17Reflection.Tasks
                     this.DisplayTypeFields(type, searchCriteria);
                     this.DisplayTypeMethods(type, searchCriteria);
                     this.DisplayTypeEvents(type, searchCriteria);
+                    ConsoleHelpers.PrintLine();
                 }
             }
             catch (ArgumentException)
@@ -48,37 +49,37 @@ namespace Assignment17Reflection.Tasks
         private void DisplayTypeFields(Type type, BindingFlags searchCriteria)
         {
             FieldInfo[] fields = type.GetFields(searchCriteria);
-            ConsoleHelpers.WriteColored($"{fields.Length} fields found.", ConsoleColor.Cyan);
+            ConsoleHelpers.WriteLineColored($"{fields.Length} fields found.", ConsoleColor.Cyan);
             foreach (FieldInfo field in fields)
             {
                 string visibility = field.IsPublic ? "Public" : "Private/NonPublic";
-                Console.WriteLine($"-> [{visibility}] Type: {field.FieldType.Name} | Identifier: {field.Name}");
+                ConsoleHelpers.WriteLineColored($"-> [{visibility}] Type: {field.FieldType.Name} | Identifier: {field.Name}", ConsoleColor.DarkBlue);
             }
         }
 
         private void DisplayTypeMethods(Type type, BindingFlags searchCriteria)
         {
             MethodInfo[] methods = type.GetMethods(searchCriteria);
-            ConsoleHelpers.WriteColored($"{methods.Length} methods found.", ConsoleColor.Cyan);
+            ConsoleHelpers.WriteLineColored($"{methods.Length} methods found.", ConsoleColor.Cyan);
             foreach (MethodInfo method in methods)
             {
-                if (method.IsSpecialName)
-                {
-                    continue;
-                }
+                //if (method.IsSpecialName)
+                //{
+                //    continue;
+                //}
 
                 string visibility = method.IsPublic ? "Public" : "Private/NonPublic";
-                Console.WriteLine($"-> [{visibility}] Returns: {method.ReturnType.Name} | Signature: {method.Name}()");
+                ConsoleHelpers.WriteLineColored($"-> [{visibility}] Returns: {method.ReturnType.Name} | Signature: {method.Name}()", ConsoleColor.Green);
             }
         }
 
         private void DisplayTypeEvents(Type type, BindingFlags searchCriteria)
         {
             EventInfo[] events = type.GetEvents(searchCriteria);
-            ConsoleHelpers.WriteColored($"{events.Length} events found.", ConsoleColor.Cyan);
+            ConsoleHelpers.WriteLineColored($"{events.Length} events found.", ConsoleColor.Cyan);
             foreach (EventInfo ev in events)
             {
-                Console.WriteLine($"-> Handler: {ev.EventHandlerType?.Name} | Identifier: {ev.Name}");
+                ConsoleHelpers.WriteLineColored($"-> Handler: {ev.EventHandlerType?.Name} | Identifier: {ev.Name}", ConsoleColor.Magenta);
             }
         }
     }

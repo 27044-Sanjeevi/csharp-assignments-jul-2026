@@ -65,6 +65,18 @@ namespace Assignment17Reflection.Utilities
         }
 
         /// <summary>
+        /// Writes the message as a colored text with a newline.
+        /// </summary>
+        /// <param name="message">Message to be written.</param>
+        /// <param name="color">Color of the text message.</param>
+        public static void WriteLineColored(string message, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(message);
+            Console.ResetColor();
+        }
+
+        /// <summary>
         /// Writes the message as a colored text.
         /// </summary>
         /// <param name="message">Message to be written.</param>
@@ -74,6 +86,36 @@ namespace Assignment17Reflection.Utilities
             Console.ForegroundColor = color;
             Console.Write(message);
             Console.ResetColor();
+        }
+
+        /// <summary>
+        /// Prompts the user for a non-empty string.
+        /// </summary>
+        /// <param name="prompt">The prompt message.</param>
+        /// <returns>The validated string input.</returns>
+        public static string ReadString(string prompt)
+        {
+            while (true)
+            {
+                string? input = ReadLine(prompt);
+                if (!string.IsNullOrWhiteSpace(input))
+                {
+                    return input.Trim();
+                }
+
+                WriteColored("[INPUT ERROR] Input cannot be empty. Please try again.\n", ConsoleColor.Red);
+            }
+        }
+
+        /// <summary>
+        /// Reads the input from the user as string.
+        /// </summary>
+        /// <param name="prompt">Optional prompt to be displayed.</param>
+        /// <returns>The read string value.</returns>
+        private static string? ReadLine(string? prompt = "")
+        {
+            Console.Write(prompt);
+            return Console.ReadLine();
         }
     }
 }

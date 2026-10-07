@@ -31,6 +31,5 @@ namespace Contracts
         public string Format { get; set; }
 
         public byte[,] Pixels { get; set; }
-
     }
 }
