@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Assignment17Reflection.Menu
 {
-    internal class MenuOptions
+    internal enum MenuOptions
     {
+        
     }
 }

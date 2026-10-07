@@ -95,4 +95,9 @@
 
 ### Constructors
 - type.GetConstructors(): Returns all the constructors of the type
-- 
+
+
+
+method.IsSpecialName
+GetTypes()
+field.FieldType.Name

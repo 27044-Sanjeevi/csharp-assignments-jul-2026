@@ -1,4 +1,6 @@
-﻿namespace Assignments
+﻿using Assignment17Reflection.Menu;
+
+namespace Assignments
 {
     internal class Program
     {
