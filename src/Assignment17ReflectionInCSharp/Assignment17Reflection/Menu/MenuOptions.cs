@@ -31,8 +31,18 @@
         Task5PluginSystem = 5,
 
         /// <summary>
+        /// Specifies task 6.
+        /// </summary>
+        Task6MockFramework = 6,
+
+        /// <summary>
+        /// Specifies task 7.
+        /// </summary>
+        Task7Serialization = 7,
+
+        /// <summary>
         /// Specifies the option to exit the application.
         /// </summary>
-        Exit = 6,
+        Exit = 8,
     }
 }

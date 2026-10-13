@@ -1,5 +1,7 @@
 ﻿using Assignment17Reflection.Menu;
 using Assignment17Reflection.Tasks;
+using Assignment17Reflection.Tasks.Task6;
+using Assignment17Reflection.Tasks.Task7;
 using Contracts;
 
 namespace Assignments
@@ -52,12 +54,17 @@ namespace Assignments
                             case MenuOptions.Task3DynamicMethodInvoker:
                                 RunTask3(sampleImage);
                                 break;
-
-                            // case MenuOptions.Task4DynamicTypeBuilder:
-                            //    await RunTask4(cascadingAsyncOperations);
-                            //    break;
+                            case MenuOptions.Task4DynamicTypeBuilder:
+                                RunTask4();
+                                break;
                             case MenuOptions.Task5PluginSystem:
                                 RunTask5(sampleImage);
+                                break;
+                            case MenuOptions.Task6MockFramework:
+                                RunTask6();
+                                break;
+                            case MenuOptions.Task7Serialization:
+                                RunTask7();
                                 break;
                             case MenuOptions.Exit:
                                 return;
@@ -105,10 +112,28 @@ namespace Assignments
             invoker.InvokeMethod(sampleImage, methodName, null);
         }
 
+        private static void RunTask4()
+        {
+            var builder = new DynamicTypeBuilder();
+            builder.RunTask();
+        }
+
         private static void RunTask5(ImageData sampleImage)
         {
             PluginApplication application = new PluginApplication();
             application.RunImageProcessor(sampleImage);
+        }
+
+        private static void RunTask6()
+        {
+            MockFramework mockFramework = new MockFramework();
+            mockFramework.RunTask();
+        }
+
+        private static void RunTask7()
+        {
+            RunComparison runComparision = new RunComparison();
+            runComparision.RunTask();
         }
     }
 }

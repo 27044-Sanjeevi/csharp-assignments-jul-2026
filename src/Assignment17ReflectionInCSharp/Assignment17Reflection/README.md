@@ -1,5 +1,8 @@
 # Assignment 16 - Reflection in C#
 
+## Task 1
+
+
 ## LEARNINGS
 ### Type Object
 - The reflection concept mainly rely on the `Type` Object.
@@ -93,11 +96,3 @@
 - If an exception is thrown by the method invoked using .Invoke(), then any exceptions which occurs inside the invoked method gets bundled up and thrown as `TargetInvocationException`.
 - To see the actual exception thrown by the invoked method, inner exceptions has to be seen.
 
-### Constructors
-- type.GetConstructors(): Returns all the constructors of the type
-
-
-
-method.IsSpecialName
-GetTypes()
-field.FieldType.Name
